@@ -19,3 +19,12 @@ public enum Player {
         }
     }
 }
+
+extension Player: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .white: return "white"
+        case .black: return "black"
+        }
+    }
+}

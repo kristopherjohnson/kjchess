@@ -8,12 +8,13 @@
 import Foundation
 
 /// A chess move.
-public enum Move: CustomStringConvertible {
+public enum Move {
     case move(piece: Piece, from: Location, to: Location)
     case capture(piece: Piece, from: Location, to: Location, capturedPiece: Piece)
     case enPassantCapture(piece: Piece, from: Location, to: Location, capturedPiece: Piece)
     case castleKingside(player: Player)
     case castleQueenside(player: Player)
+    case resign(player: Player)
 
     /// Return the `Player` that made the move.
     public var player: Player {
@@ -23,11 +24,14 @@ public enum Move: CustomStringConvertible {
              .enPassantCapture(let piece, _, _, _):
             return piece.player
         case .castleKingside(let player),
-             .castleQueenside(let player):
+             .castleQueenside(let player),
+             .resign(let player):
             return player
         }
     }
+}
 
+extension Move: CustomStringConvertible {
     public var description: String {
         switch self {
         case let .move(piece, from, to):
@@ -35,11 +39,13 @@ public enum Move: CustomStringConvertible {
         case let .capture(piece, from, to, capturedPiece):
             return "\(piece.symbol)\(from.symbol)x\(capturedPiece.symbol)\(to.symbol)"
         case let .enPassantCapture(piece, from, to, capturedPiece):
-            return "\(piece.symbol)\(from.symbol)x\(capturedPiece.symbol)\(to.symbol)ep"
+            return "\(piece.symbol)\(from.symbol)x\(capturedPiece.symbol)\(to.symbol)e.p."
         case .castleKingside:
             return "O-O"
         case .castleQueenside:
             return "O-O-O"
+        case .resign:
+            return "resigns"
         }
     }
 }

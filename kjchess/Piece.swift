@@ -28,6 +28,19 @@ public enum PieceKind {
     }
 }
 
+extension PieceKind: CustomStringConvertible {
+    public var description: String {
+        switch self {
+        case .pawn:   return "pawn"
+        case .knight: return "knight"
+        case .bishop: return "bishop"
+        case .rook:   return "rook"
+        case .queen:  return "queen"
+        case .king:   return "king"
+        }
+    }
+}
+
 /// A chess piece.
 public struct Piece {
     public let player: Player
@@ -40,6 +53,18 @@ public struct Piece {
 
     public var symbol: String {
         return "\(player.symbol)\(kind.symbol)"
+    }
+}
+
+extension Piece: CustomStringConvertible {
+    public var description: String {
+        return "\(player) \(kind)"
+    }
+}
+
+extension Piece: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return symbol
     }
 }
 

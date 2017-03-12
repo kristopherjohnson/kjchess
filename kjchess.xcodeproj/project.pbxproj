@@ -10,6 +10,13 @@
 		4EF6CF6F1E747D76001103A8 /* kjchess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF6CF651E747D76001103A8 /* kjchess.framework */; };
 		4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF731E747D76001103A8 /* kjchessTests.swift */; };
 		4EF6CF761E747D76001103A8 /* kjchess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF6CF681E747D76001103A8 /* kjchess.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		4EF6CF801E747D8D001103A8 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF7F1E747D8D001103A8 /* Position.swift */; };
+		4EF6CF821E74CA9F001103A8 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF811E74CA9F001103A8 /* Location.swift */; };
+		4EF6CF841E74CAF2001103A8 /* PieceConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF831E74CAF2001103A8 /* PieceConstants.swift */; };
+		4EF6CF861E7572CF001103A8 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF851E7572CF001103A8 /* Player.swift */; };
+		4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF871E7572F9001103A8 /* Piece.swift */; };
+		4EF6CF8A1E757328001103A8 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF891E757328001103A8 /* Board.swift */; };
+		4EF6CF8C1E757350001103A8 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF8B1E757350001103A8 /* Move.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -29,6 +36,13 @@
 		4EF6CF6E1E747D76001103A8 /* kjchessTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = kjchessTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF6CF731E747D76001103A8 /* kjchessTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = kjchessTests.swift; sourceTree = "<group>"; };
 		4EF6CF751E747D76001103A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		4EF6CF7F1E747D8D001103A8 /* Position.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position.swift; sourceTree = "<group>"; };
+		4EF6CF811E74CA9F001103A8 /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		4EF6CF831E74CAF2001103A8 /* PieceConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PieceConstants.swift; sourceTree = "<group>"; };
+		4EF6CF851E7572CF001103A8 /* Player.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Player.swift; sourceTree = "<group>"; };
+		4EF6CF871E7572F9001103A8 /* Piece.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Piece.swift; sourceTree = "<group>"; };
+		4EF6CF891E757328001103A8 /* Board.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Board.swift; sourceTree = "<group>"; };
+		4EF6CF8B1E757350001103A8 /* Move.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Move.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,8 +85,15 @@
 		4EF6CF671E747D76001103A8 /* kjchess */ = {
 			isa = PBXGroup;
 			children = (
-				4EF6CF681E747D76001103A8 /* kjchess.h */,
+				4EF6CF891E757328001103A8 /* Board.swift */,
 				4EF6CF691E747D76001103A8 /* Info.plist */,
+				4EF6CF681E747D76001103A8 /* kjchess.h */,
+				4EF6CF811E74CA9F001103A8 /* Location.swift */,
+				4EF6CF8B1E757350001103A8 /* Move.swift */,
+				4EF6CF871E7572F9001103A8 /* Piece.swift */,
+				4EF6CF831E74CAF2001103A8 /* PieceConstants.swift */,
+				4EF6CF851E7572CF001103A8 /* Player.swift */,
+				4EF6CF7F1E747D8D001103A8 /* Position.swift */,
 			);
 			path = kjchess;
 			sourceTree = "<group>";
@@ -149,6 +170,7 @@
 					4EF6CF641E747D76001103A8 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = D5E423632K;
+						LastSwiftMigration = 0820;
 						ProvisioningStyle = Automatic;
 					};
 					4EF6CF6D1E747D76001103A8 = {
@@ -198,6 +220,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EF6CF8C1E757350001103A8 /* Move.swift in Sources */,
+				4EF6CF861E7572CF001103A8 /* Player.swift in Sources */,
+				4EF6CF841E74CAF2001103A8 /* PieceConstants.swift in Sources */,
+				4EF6CF8A1E757328001103A8 /* Board.swift in Sources */,
+				4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */,
+				4EF6CF821E74CA9F001103A8 /* Location.swift in Sources */,
+				4EF6CF801E747D8D001103A8 /* Position.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -299,6 +328,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -319,6 +349,7 @@
 		4EF6CF7A1E747D76001103A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -333,6 +364,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = net.kristopherjohnson.kjchess;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
@@ -340,6 +372,7 @@
 		4EF6CF7B1E747D76001103A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -361,6 +394,7 @@
 		4EF6CF7D1E747D76001103A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = D5E423632K;
 				INFOPLIST_FILE = kjchessTests/Info.plist;
@@ -374,6 +408,7 @@
 		4EF6CF7E1E747D76001103A8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = D5E423632K;
 				INFOPLIST_FILE = kjchessTests/Info.plist;

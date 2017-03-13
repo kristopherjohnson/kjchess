@@ -19,6 +19,12 @@ public class Board {
     public static let ranksCount = 8
     public static let filesCount = 8
 
+    public static let firstRank = 0
+    public static let lastRank = ranksCount - 1
+
+    public static let firstFile = 0
+    public static let lastFile = filesCount - 1
+
     public static let emptyRank: [Piece?]
         = Array(repeating: nil, count: Board.filesCount)
 
@@ -51,8 +57,26 @@ public class Board {
     }
 
     /// Return `Piece` at the specified location.
-    public func at(_ file: Int, _ rank: Int) -> Piece? {
+    public func at(file: Int, rank: Int) -> Piece? {
         return ranks[rank][file]
+    }
+
+    /// Return `true` if specified `Location` has no piece on it.
+    public func isEmpty(_ location: Location) -> Bool {
+        return self[location] == nil
+    }
+
+    /// Return `true` if specified square has no piece on it.
+    public func isEmpty(file: Int, rank: Int) -> Bool {
+        return at(file: file, rank: rank) == nil
+    }
+
+    /// Return `true` if specified square has a piece of the specified color.
+    public func hasPiece(file: Int, rank: Int, player: Player) -> Bool {
+        if let piece = at(file: file, rank: rank), piece.player == player {
+            return true
+        }
+        return false
     }
 
     /// Return copy of board after applying the given `Move`.
@@ -70,6 +94,12 @@ public class Board {
                 .with(piece, at: to)
                 .with(nil, at: from)
 
+        case .promote:
+            return self
+
+        case .promoteCapture:
+            return self
+            
         case .enPassantCapture(let piece, let from, let to, _):
             let capturedPieceRank
                 = (piece.player == .white)
@@ -118,9 +148,9 @@ public class Board {
     }
 
     /// Return copy of board with the given `Piece` at the given `Location`.
-    public func with(_ piece: Piece?, at: Location) -> Board {
-        let file = at.file
-        let rank = at.rank
+    public func with(_ piece: Piece?, at location: Location) -> Board {
+        let file = location.file
+        let rank = location.rank
 
         var newRank = Array(ranks[rank])
         newRank[file] = piece
@@ -129,5 +159,20 @@ public class Board {
         newRanks[rank] = newRank
 
         return Board(newRanks)
+    }
+
+    /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
+    public func pieces(player: Player) -> AnySequence<(Piece, Location)> {
+        // TODO: Create the result sequence lazily
+        var result = [(Piece, Location)]()
+        for rank in 0..<Board.ranksCount {
+            let rankArray = ranks[rank]
+            for file in 0..<Board.filesCount {
+                if let piece = rankArray[file], piece.player == player {
+                    result.append((piece, Location(file, rank)))
+                }
+            }
+        }
+        return AnySequence(result)
     }
 }

@@ -16,6 +16,10 @@ public enum PieceKind {
     case queen
     case king
 
+    /// Kinds to which a pawn can be promoted.
+    public static let promotionKinds: [PieceKind]
+        = [.knight, .bishop, .rook, .queen]
+
     public var symbol: String {
         switch self {
         case .pawn:   return "P"
@@ -71,6 +75,12 @@ extension Piece: CustomDebugStringConvertible {
 extension Piece: Equatable {}
 public func ==(lhs: Piece, rhs: Piece) -> Bool {
     return lhs.player == rhs.player && lhs.kind == rhs.kind
+}
+
+extension Piece: Hashable {
+    public var hashValue: Int {
+        return (player.hashValue << 3) | kind.hashValue
+    }
 }
 
 public let WP = Piece(.white, .pawn)

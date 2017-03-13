@@ -61,6 +61,18 @@ public struct Location {
     }
 }
 
+extension Location: Equatable {}
+public func == (_ lhs: Location, _ rhs: Location) -> Bool {
+    return lhs.file == rhs.file
+        && lhs.rank == rhs.rank
+}
+
+extension Location: Hashable {
+    public var hashValue: Int {
+        return (file << 3) | rank
+    }
+}
+
 // Algebraic-notation symbols for `Locations` on a `Board`.
 
 public let a1 = Location(0, 0)

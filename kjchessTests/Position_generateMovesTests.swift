@@ -16,21 +16,21 @@ class Position_generateMovesTests: XCTestCase {
         let moves = Array(pos.generateMoves())
 
         let expectedMoves = [
-            (a2, a3),
-            (b2, b3),
-            (c2, c3),
-            (d2, d3),
-            (e2, e3),
-            (f2, f3),
-            (g2, g3),
-            (h2, h3)
+            (WP, a2, a3), (WP, a2, a4),
+            (WP, b2, b3), (WP, b2, b4),
+            (WP, c2, c3), (WP, c2, c4),
+            (WP, d2, d3), (WP, d2, d4),
+            (WP, e2, e3), (WP, e2, e4),
+            (WP, f2, f3), (WP, f2, f4),
+            (WP, g2, g3), (WP, g2, g4),
+            (WP, h2, h3), (WP, h2, h4)
         ]
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
         for move in expectedMoves {
-            XCTAssertTrue(moves.contains { $0.matches(from: move.0, to: move.1) },
-                          "Expected \(move)")
+            XCTAssertTrue(moves.contains { $0.matches(piece: move.0, from: move.1, to: move.2) },
+                          "Expected \(move), but it's missing")
         }
     }
 
@@ -44,21 +44,21 @@ class Position_generateMovesTests: XCTestCase {
         let moves = Array(pos.generateMoves())
 
         let expectedMoves = [
-            (a7, a6),
-            (b7, b6),
-            (c7, c6),
-            (d7, d6),
-            (e7, e6),
-            (f7, f6),
-            (g7, g6),
-            (h7, h6)
+            (BP, a7, a6), (BP, a7, a5),
+            (BP, b7, b6), (BP, b7, b5),
+            (BP, c7, c6), (BP, c7, c5),
+            (BP, d7, d6), (BP, d7, d5),
+            (BP, e7, e6), (BP, e7, e5),
+            (BP, f7, f6), (BP, f7, f5),
+            (BP, g7, g6), (BP, g7, g5),
+            (BP, h7, h6), (BP, h7, h5)
         ]
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
         for move in expectedMoves {
-            XCTAssertTrue(moves.contains { $0.matches(from: move.0, to: move.1) },
-                          "Expected \(move)")
+            XCTAssertTrue(moves.contains { $0.matches(piece: move.0, from: move.1, to: move.2) },
+                          "Expected \(move), but it's missing")
         }
     }
 

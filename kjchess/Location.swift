@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// Denotes a location on the chessboard.
+/// Specifies a location on the chessboard.
 ///
 /// `file` is the "X-coordinate", and `rank` is the
 /// "Y-coordinate".  The zeroth rank is on the white
@@ -61,11 +61,16 @@ public struct Location {
     }
 }
 
+// MARK: - Equatable
+
 extension Location: Equatable {}
+
 public func == (_ lhs: Location, _ rhs: Location) -> Bool {
     return lhs.file == rhs.file
         && lhs.rank == rhs.rank
 }
+
+// MARK:- Hashable
 
 extension Location: Hashable {
     public var hashValue: Int {
@@ -73,7 +78,18 @@ extension Location: Hashable {
     }
 }
 
-// Algebraic-notation symbols for `Locations` on a `Board`.
+// MARK:- CustomStringConvertible
+
+extension Location: CustomStringConvertible {
+    public var description: String {
+        if (0...7).contains(rank) && (0...7).contains(file) {
+            return symbol
+        }
+        return "Location(file: \(file), rank:\(rank)"
+    }
+}
+
+// MARK:- Algebraic-notation symbols
 
 public let a1 = Location(0, 0)
 public let a2 = Location(0, 1)

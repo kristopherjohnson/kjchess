@@ -21,16 +21,38 @@ public enum Move {
     /// Return the `Player` that made the move.
     public var player: Player {
         switch self {
+
         case .move(let piece, _, _),
              .capture(let piece, _, _, _),
              .enPassantCapture(let piece, _, _, _):
             return piece.player
+
         case .promote(let player, _, _, _),
              .promoteCapture(let player, _, _, _, _),
              .castleKingside(let player),
              .castleQueenside(let player),
              .resign(let player):
             return player
+        }
+    }
+
+    /// Return the `Piece` that made the move.
+    public var piece: Piece {
+        switch self {
+
+        case .move(let piece, _, _),
+             .capture(let piece, _, _, _),
+             .enPassantCapture(let piece, _, _, _):
+            return piece
+
+        case .promote(let player, _, _, _),
+             .promoteCapture(let player, _, _, _, _):
+            return Piece(player, .pawn)
+
+        case.castleKingside(let player),
+            .castleQueenside(let player),
+            .resign(let player):
+            return Piece(player, .king)
         }
     }
 
@@ -180,8 +202,23 @@ public enum Move {
             && to == self.to
     }
 
+    /// Determine whether this move has the specified piece, start, and end location.
+    public func matches(piece: Piece, from: Location, to: Location) -> Bool {
+        return piece == self.piece
+            && from == self.from
+            && to == self.to
+    }
+
+    /// Determine whether this move has the specified piece kind, start, and end location.
+    public func matches(kind: PieceKind, from: Location, to: Location) -> Bool {
+        return kind == self.piece.kind
+            && from == self.from
+            && to == self.to
+    }
+
     /// Return long-algebraic representation of a `Move`.
     public var longAlgebraicForm: String {
+        
         /// Return the symbol for a piece, unless it is a
         /// pawn, in which case return an empty string.
         func symbol(_ piece: Piece) -> String {

@@ -48,6 +48,9 @@ extension Position {
                     }
                     else {
                         result.append(.move(piece: piece, from: location, to: to))
+                        if rank == 1 && board.isEmpty(file: file, rank: 3) {
+                            result.append(.move(piece: piece, from: location, to: Location(file, 3)))
+                        }
                     }
                 }
             }
@@ -66,6 +69,9 @@ extension Position {
                     }
                     else {
                         result.append(.move(piece: piece, from: location, to: to))
+                        if rank == 6 && board.isEmpty(file: file, rank: 4) {
+                            result.append(.move(piece: piece, from: location, to: Location(file, 4)))
+                        }
                     }
                 }
             }

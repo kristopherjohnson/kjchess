@@ -19,11 +19,23 @@ public class Board {
     public static let ranksCount = 8
     public static let filesCount = 8
 
-    public static let firstRank = 0
-    public static let lastRank = ranksCount - 1
+    public static let minRank = 0
+    public static let maxRank = ranksCount - 1
 
-    public static let firstFile = 0
-    public static let lastFile = filesCount - 1
+    public static let minFile = 0
+    public static let maxFile = filesCount - 1
+
+    public static func isValid(file: Int) -> Bool {
+        return (minFile...maxFile).contains(file)
+    }
+
+    public static func isValid(rank: Int) -> Bool {
+        return (minRank...maxRank).contains(rank)
+    }
+
+    public static func isValid(file: Int, rank: Int) -> Bool {
+        return isValid(file: file) && isValid(rank: rank)
+    }
 
     public static let emptyRank: [Piece?]
         = Array(repeating: nil, count: Board.filesCount)

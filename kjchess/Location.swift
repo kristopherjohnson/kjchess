@@ -23,10 +23,17 @@ public struct Location {
     let rank: Int
 
     public init(_ file: Int, _ rank: Int) {
-        assert(0 <= file && file < 8, "file must be in the range 0...7")
-        assert(0 <= rank && rank < 8, "rank must be in the range 0...7")
+        assert(Board.isValid(file: file, rank: rank), "file and rank must be valid")
         self.file = file
         self.rank = rank
+    }
+
+    /// Create a new `Location` if the given file and rank are valid.
+    static func ifValid(file: Int, rank: Int) -> Location? {
+        if !Board.isValid(file: file, rank: rank) {
+            return nil
+        }
+        return Location(file, rank)
     }
 
     /// Return location in algebraic notation.

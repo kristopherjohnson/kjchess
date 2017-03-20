@@ -25,19 +25,22 @@ public class Board {
     public static let minFile = 0
     public static let maxFile = filesCount - 1
 
+    /// Return true if the given file index is in the range 0...7.
     public static func isValid(file: Int) -> Bool {
         return (minFile...maxFile).contains(file)
     }
 
+    /// Return true if the given rank index is in the range 0...7.
     public static func isValid(rank: Int) -> Bool {
         return (minRank...maxRank).contains(rank)
     }
 
+    /// Return true if given file and rank are in the range 0...7.
     public static func isValid(file: Int, rank: Int) -> Bool {
         return isValid(file: file) && isValid(rank: rank)
     }
 
-    public static let emptyRank: [Piece?]
+    private static let emptyRank: [Piece?]
         = Array(repeating: nil, count: Board.filesCount)
 
     public static let empty
@@ -112,13 +115,13 @@ public class Board {
         case .promoteCapture:
             return self
             
-        case .enPassantCapture(let piece, let from, let to, _):
+        case .enPassantCapture(let player, let from, let to, _):
             let capturedPieceRank
-                = (piece.player == .white)
+                = (player == .white)
                     ? to.rank - 1
                     : to.rank + 1
             return self
-                .with(piece, at: to)
+                .with(Piece(player, .pawn), at: to)
                 .with(nil, at: from)
                 .with(nil, at: Location(to.file, capturedPieceRank))
 

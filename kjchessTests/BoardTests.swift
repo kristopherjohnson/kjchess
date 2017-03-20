@@ -17,7 +17,8 @@ class BoardTests: XCTestCase {
     func testAfterMove() {
         let b1 = Board.newGame
 
-        let b2 = b1.after(.move(piece: WP, from: e2, to: e4))
+        let b2 = b1.after(.move(piece: WP,
+                                from: e2, to: e4))
 
         XCTAssertEqual(WP, b1[e2], "b1 should be unaffected")
         XCTAssertEqual(nil, b1[e4], "b1 should be unaffected")
@@ -31,7 +32,9 @@ class BoardTests: XCTestCase {
             .with(WQ, at: d1)
             .with(BQ, at: d8)
 
-        let b2 = b1.after(.capture(piece: WQ, from: d1, to: d8, capturedPiece: BQ))
+        let b2 = b1.after(.capture(piece: WQ,
+                                   from: d1, to: d8,
+                                   capturedPiece: BQ))
 
         XCTAssertEqual(WQ, b1[d1], "b1 should be unaffected")
         XCTAssertEqual(BQ, b1[d8], "b1 should be unaffected")
@@ -45,7 +48,9 @@ class BoardTests: XCTestCase {
             .with(WP, at: e5)
             .with(BP, at: d5)
 
-        let b2 = b1.after(.enPassantCapture(piece: WP, from: e5, to: d6, capturedPiece: BP))
+        let b2 = b1.after(.enPassantCapture(player: .white,
+                                            from: e5, to: d6,
+                                            capturedPiece: BP))
 
         XCTAssertEqual(WP, b1[e5], "b1 should be unaffected")
         XCTAssertEqual(BP, b1[d5], "b1 should be unaffected")
@@ -60,7 +65,9 @@ class BoardTests: XCTestCase {
             .with(WP, at: f4)
             .with(BP, at: g4)
 
-        let b2 = b1.after(.enPassantCapture(piece: BP, from: g4, to: f3, capturedPiece: WP))
+        let b2 = b1.after(.enPassantCapture(player: .black,
+                                            from: g4, to: f3,
+                                            capturedPiece: WP))
 
         XCTAssertEqual(WP, b1[f4], "b1 should be unaffected")
         XCTAssertEqual(BP, b1[g4], "b1 should be unaffected")

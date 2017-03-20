@@ -33,59 +33,94 @@ extension Position {
         }
     }
 
+    // MARK:- Pawn
+
+    static let whitePawnCaptureMoves = [(-1,  1), (1,  1)]
+    static let blackPawnCaptureMoves = [(-1, -1), (1, -1)]
+
+    static func pawnCaptureMoves(player: Player) -> [(Int, Int)] {
+        switch player {
+        case .white: return whitePawnCaptureMoves
+        case .black: return blackPawnCaptureMoves
+        }
+    }
+
+    static func pawnMoveDirection(player: Player) -> Int {
+        switch player {
+        case .white: return 1
+        case .black: return -1
+        }
+    }
+
+    static func pawnPromotionRank(player: Player) -> Int {
+        switch player {
+        case .white: return Board.maxRank
+        case .black: return Board.minRank
+        }
+    }
+
+    static func pawnStartRank(player: Player) -> Int {
+        switch player {
+        case .white: return Board.minRank + 1
+        case .black: return Board.maxRank - 1
+        }
+    }
+
     func generatePawnMoves(player: Player, location: Location) -> AnySequence<Move> {
+        let piece = Piece(player, .pawn)
         let file = location.file
         let rank = location.rank
-        let piece = Piece(player, .pawn)
 
         var result = [Move]()
-        switch player {
 
-        case .white:
-            if rank < Board.maxRank {
-                if board.isEmpty(file: file, rank: rank + 1) {
-                    let to = Location(file, rank + 1)
-                    if to.rank == Board.maxRank {
-                        for kind in PieceKind.promotionKinds {
-                            result.append(.promote(player: player,
-                                                   from: location,
-                                                   to: to,
-                                                   promotedPiece: Piece(player, kind)))
-                        }
+        if Board.minRank < rank && rank < Board.maxRank {
+            let moveDirection = Position.pawnMoveDirection(player: player)
+            let nextRank = rank + moveDirection
+            if board.isEmpty(file: file, rank: nextRank) {
+                let to = Location(file, nextRank)
+
+                let promotionRank = Position.pawnPromotionRank(player: player)
+                if to.rank == promotionRank {
+                    for kind in PieceKind.promotionKinds {
+                        result.append(.promote(player: player,
+                                               from: location,
+                                               to: to,
+                                               promotedPiece: Piece(player, kind)))
                     }
-                    else {
-                        result.append(.move(piece: piece, from: location, to: to))
-                        if rank == 1 && board.isEmpty(file: file, rank: 3) {
-                            result.append(.move(piece: piece, from: location, to: Location(file, 3)))
+                }
+                else {
+                    result.append(.move(piece: piece, from: location, to: to))
+
+                    let startRank = Position.pawnStartRank(player: player)
+                    if rank == startRank {
+                        let jumpRank = startRank + 2 * moveDirection
+                        if board.isEmpty(file: file, rank: jumpRank) {
+                            result.append(.move(piece: piece, from: location, to: Location(file, jumpRank)))
                         }
                     }
                 }
             }
 
-        case .black:
-            if rank > 0 {
-                if board.isEmpty(file: file, rank: rank - 1) {
-                    let to = Location(file, rank - 1)
-                    if to.rank == Board.minRank {
-                        for kind in PieceKind.promotionKinds {
-                            result.append(.promote(player: player,
+            let opponent = player.opponent
+            let captureMoves = Position.pawnCaptureMoves(player: player)
+            for (h, v) in captureMoves {
+                if let captureLocation = Location.ifValid(file: file + h, rank: rank + v) {
+                    if let occupant = board[captureLocation] {
+                        if occupant.player == opponent {
+                            result.append(.capture(piece: piece,
                                                    from: location,
-                                                   to: to,
-                                                   promotedPiece: Piece(player, kind)))
-                        }
-                    }
-                    else {
-                        result.append(.move(piece: piece, from: location, to: to))
-                        if rank == 6 && board.isEmpty(file: file, rank: 4) {
-                            result.append(.move(piece: piece, from: location, to: Location(file, 4)))
+                                                   to: captureLocation,
+                                                   capturedPiece: occupant))
                         }
                     }
                 }
             }
         }
-        
+
         return AnySequence(result)
     }
+
+    // MARK:- Knight
 
     static let knightJumps = [
         ( 1, 2), ( 1, -2),

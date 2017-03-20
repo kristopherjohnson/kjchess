@@ -9,26 +9,57 @@ import Foundation
 
 /// A chess move.
 public enum Move {
-    case move(piece: Piece, from: Location, to: Location)
-    case capture(piece: Piece, from: Location, to: Location, capturedPiece: Piece)
-    case promote(player: Player, from: Location, to: Location, promotedPiece: Piece)
-    case promoteCapture(player: Player, from: Location, to: Location, capturedPiece: Piece, promotedPiece: Piece)
-    case enPassantCapture(piece: Piece, from: Location, to: Location, capturedPiece: Piece)
-    case castleKingside(player: Player)
-    case castleQueenside(player: Player)
-    case resign(player: Player)
+
+    case move(
+        piece: Piece,
+        from: Location,
+        to: Location)
+
+    case capture(
+        piece: Piece,
+        from: Location,
+        to: Location,
+        capturedPiece: Piece)
+
+    case promote(
+        player: Player,
+        from: Location,
+        to: Location,
+        promotedPiece: Piece)
+
+    case promoteCapture(
+        player: Player,
+        from: Location,
+        to: Location,
+        capturedPiece: Piece,
+        promotedPiece: Piece)
+
+    case enPassantCapture(
+        player: Player,
+        from: Location,
+        to: Location,
+        capturedPiece: Piece)
+
+    case castleKingside(
+        player: Player)
+
+    case castleQueenside(
+        player: Player)
+
+    case resign(
+        player: Player)
 
     /// Return the `Player` that made the move.
     public var player: Player {
         switch self {
 
         case .move(let piece, _, _),
-             .capture(let piece, _, _, _),
-             .enPassantCapture(let piece, _, _, _):
+             .capture(let piece, _, _, _):
             return piece.player
 
         case .promote(let player, _, _, _),
              .promoteCapture(let player, _, _, _, _),
+             .enPassantCapture(let player, _, _, _),
              .castleKingside(let player),
              .castleQueenside(let player),
              .resign(let player):
@@ -41,12 +72,12 @@ public enum Move {
         switch self {
 
         case .move(let piece, _, _),
-             .capture(let piece, _, _, _),
-             .enPassantCapture(let piece, _, _, _):
+             .capture(let piece, _, _, _):
             return piece
 
         case .promote(let player, _, _, _),
-             .promoteCapture(let player, _, _, _, _):
+             .promoteCapture(let player, _, _, _, _),
+             .enPassantCapture(let player, _, _, _):
             return Piece(player, .pawn)
 
         case.castleKingside(let player),
@@ -257,6 +288,8 @@ public enum Move {
     }
 }
 
+// MARK:- CustomStringConvertible
+
 extension Move: CustomStringConvertible {
     /// Return textual representation of a `Move`.
     ///
@@ -289,5 +322,52 @@ extension Move: CustomStringConvertible {
         case .resign:
             return "\(player.symbol) resigns"
         }
+    }
+}
+
+// MARK:- Equatable
+
+extension Move: Equatable {}
+
+public func ==(lhs: Move, rhs: Move) -> Bool {
+    switch (lhs, rhs) {
+
+    case let (.move(l0, l1, l2), .move(r0, r1, r2)):
+        return l0 == r0
+            && l1 == r1
+            && l2 == r2
+
+    case let (.capture(l0, l1, l2, l3), .capture(r0, r1, r2, r3)):
+        return l0 == r0
+            && l1 == r1
+            && l2 == r2
+            && l3 == r3
+
+    case let (.promote(l0, l1, l2, l3), .promote(r0, r1, r2, r3)):
+        return l0 == r0
+            && l1 == r1
+            && l2 == r2
+            && l3 == r3
+
+    case let (.promoteCapture(l0, l1, l2, l3, l4), .promoteCapture(r0, r1, r2, r3, r4)):
+        return l0 == r0
+            && l1 == r1
+            && l2 == r2
+            && l3 == r3
+            && l4 == r4
+
+    case let (.enPassantCapture(l0, l1, l2, l3), .enPassantCapture(r0, r1, r2, r3)):
+        return l0 == r0
+            && l1 == r1
+            && l2 == r2
+            && l3 == r3
+
+    case let (.castleKingside(l0), .castleKingside(r0)),
+         let (.castleQueenside(l0), .castleQueenside(r0)),
+         let (.resign(l0), .resign(r0)):
+        return l0 == r0
+
+    default:
+        return false
     }
 }

@@ -70,6 +70,54 @@ class Position_generateMovesTests: XCTestCase {
         }
     }
 
+    func testWhitePawnCaptures() {
+        let board = Board.empty
+            .with(WP, at: e4)
+            .with(BB, at: d5)
+            .with(BP, at: e5)
+            .with(BN, at: f5)
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves: [Move] = [
+            .capture(piece: WP, from: e4, to: d5, capturedPiece: BB),
+            .capture(piece: WP, from: e4, to: f5, capturedPiece: BN)
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for move in expectedMoves {
+            XCTAssertTrue(moves.contains { $0 == move },
+                          "Expected \(move), but it's missing")
+        }
+    }
+
+    func testBlackPawnCaptures() {
+        let board = Board.empty
+            .with(BP, at: d5)
+            .with(WB, at: c4)
+            .with(WP, at: d4)
+            .with(WN, at: e4)
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves: [Move] = [
+            .capture(piece: BP, from: d5, to: c4, capturedPiece: WB),
+            .capture(piece: BP, from: d5, to: e4, capturedPiece: WN)
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for move in expectedMoves {
+            XCTAssertTrue(moves.contains { $0 == move },
+                          "Expected \(move), but it's missing")
+        }
+    }
+    
     func testKnightMovesEmptyBoard() {
         let board = Board.empty
             .with(WN, at: d4)

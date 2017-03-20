@@ -18,7 +18,16 @@ public enum Player {
         case .black: return "B"
         }
     }
+
+    public var opponent: Player {
+        switch self {
+        case .white: return .black
+        case .black: return .white
+        }
+    }
 }
+
+// MARK:= CustomStringConvertible
 
 extension Player: CustomStringConvertible {
     public var description: String {

@@ -2,7 +2,6 @@
 //  BoardTests.swift
 //  kjchess
 //
-//  Created by Kristopher Johnson on 3/12/17.
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
@@ -28,9 +27,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterCapture() {
-        let b1 = Board.empty
-            .with(WQ, at: d1)
-            .with(BQ, at: d8)
+        let b1 = Board.empty.with([(WQ, d1),
+                                   (BQ, d8)])
 
         let b2 = b1.after(.capture(piece: WQ,
                                    from: d1, to: d8,
@@ -44,9 +42,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterWhiteEnPassantCapture() {
-        let b1 = Board.empty
-            .with(WP, at: e5)
-            .with(BP, at: d5)
+        let b1 = Board.empty.with([(WP, e5),
+                                   (BP, d5)])
 
         let b2 = b1.after(.enPassantCapture(player: .white,
                                             from: e5, to: d6,
@@ -61,9 +58,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterBlackEnPassantCapture() {
-        let b1 = Board.empty
-            .with(WP, at: f4)
-            .with(BP, at: g4)
+        let b1 = Board.empty.with([(WP, f4),
+                                   (BP, g4)])
 
         let b2 = b1.after(.enPassantCapture(player: .black,
                                             from: g4, to: f3,
@@ -78,9 +74,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterWhiteKingsideCastling() {
-        let b1 = Board.empty
-            .with(WK, at: e1)
-            .with(WR, at: h1)
+        let b1 = Board.empty.with([(WK, e1),
+                                   (WR, h1)])
 
         let b2 = b1.after(.castleKingside(player: .white))
 
@@ -94,9 +89,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterBlackKingsideCastling() {
-        let b1 = Board.empty
-            .with(BK, at: e8)
-            .with(BR, at: h8)
+        let b1 = Board.empty.with([(BK, e8),
+                                   (BR, h8)])
 
         let b2 = b1.after(.castleKingside(player: .black))
 
@@ -110,9 +104,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterWhiteQueensideCastling() {
-        let b1 = Board.empty
-            .with(WK, at: e1)
-            .with(WR, at: a1)
+        let b1 = Board.empty.with([(WK, e1),
+                                   (WR, a1)])
 
         let b2 = b1.after(.castleQueenside(player: .white))
 
@@ -126,9 +119,8 @@ class BoardTests: XCTestCase {
     }
 
     func testAfterBlackQueensideCastling() {
-        let b1 = Board.empty
-            .with(BK, at: e8)
-            .with(BR, at: a8)
+        let b1 = Board.empty.with([(BK, e8),
+                                   (BR, a8)])
 
         let b2 = b1.after(.castleQueenside(player: .black))
 

@@ -113,6 +113,8 @@ extension Position {
                                                    capturedPiece: occupant))
                         }
                     }
+
+                    // TODO: En-passant captures
                 }
             }
         }

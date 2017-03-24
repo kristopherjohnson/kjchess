@@ -15,7 +15,7 @@ import Foundation
 /// A `Board` is an immutable object.  Moves result in
 /// the creation of new `Board` instances, which may
 /// share rank arrays with other instances.
-public class Board {
+public struct Board {
     public static let ranksCount = 8
     public static let filesCount = 8
 
@@ -24,6 +24,8 @@ public class Board {
 
     public static let minFile = 0
     public static let maxFile = filesCount - 1
+
+    public static let squaresCount = ranksCount * filesCount
 
     /// Return true if the given file index is in the range 0...7.
     public static func isValid(file: Int) -> Bool {
@@ -40,40 +42,35 @@ public class Board {
         return isValid(file: file) && isValid(rank: rank)
     }
 
-    private static let emptyRank: [Piece?]
-        = Array(repeating: nil, count: Board.filesCount)
-
     public static let empty
-        = Board(Array(repeating: emptyRank, count: Board.ranksCount))
+        = Board(Array(repeating: nil, count: Board.squaresCount))
 
     public static let newGame
-        = Board([[WR,  WN,  WB,  WQ,  WK,  WB,  WN,  WR],
-                 [WP,  WP,  WP,  WP,  WP,  WP,  WP,  WP],
-                 emptyRank,
-                 emptyRank,
-                 emptyRank,
-                 emptyRank,
-                 [BP,  BP,  BP,  BP,  BP,  BP,  BP,  BP],
-                 [BR,  BN,  BB,  BQ,  BK,  BB,  BN,  BR]])
+        = Board([WR,  WN,  WB,  WQ,  WK,  WB,  WN,  WR,
+                 WP,  WP,  WP,  WP,  WP,  WP,  WP,  WP,
+                 nil, nil, nil, nil, nil, nil, nil, nil,
+                 nil, nil, nil, nil, nil, nil, nil, nil,
+                 nil, nil, nil, nil, nil, nil, nil, nil,
+                 nil, nil, nil, nil, nil, nil, nil, nil,
+                 BP,  BP,  BP,  BP,  BP,  BP,  BP,  BP,
+                 BR,  BN,  BB,  BQ,  BK,  BB,  BN,  BR])
 
-    public let ranks: [[Piece?]]
+    public let squares: [Piece?]
 
-    public init(_ ranks: [[Piece?]]) {
-        assert(ranks.count == Board.ranksCount,
-               "Number of ranks must be 8")
-        assert(!ranks.contains { $0.count != Board.filesCount },
-               "Each rank must contain exactly 8 elements")
-        self.ranks = ranks
+    public init(_ squares: [Piece?]) {
+        assert(squares.count == Board.squaresCount,
+               "Number of squares must be 64")
+        self.squares = squares
     }
 
     /// Return `Piece` at the specified `Location`.
     public subscript(location: Location) -> Piece? {
-        return ranks[location.rank][location.file]
+        return squares[location.rank * Board.filesCount + location.file]
     }
 
     /// Return `Piece` at the specified location.
     public func at(file: Int, rank: Int) -> Piece? {
-        return ranks[rank][file]
+        return squares[rank * Board.filesCount + file]
     }
 
     /// Return `true` if specified `Location` has no piece on it.
@@ -98,16 +95,13 @@ public class Board {
     ///
     /// This method does not validate whether the move is valid
     /// of the specified pieces exist.
-    ///
-    /// - todo: The creation of the new board should be optimized to not call `.with(_,at:)` for every changed square.
     public func after(_ move: Move) -> Board {
         switch move {
 
         case .move(let piece, let from, let to),
              .capture(let piece, let from, let to, _):
-            return self
-                .with(piece, at: to)
-                .with(nil, at: from)
+            return self.with([(piece, to),
+                              (nil, from)])
 
         case .promote:
             return self
@@ -121,40 +115,36 @@ public class Board {
                     ? to.rank - 1
                     : to.rank + 1
             return self
-                .with(Piece(player, .pawn), at: to)
-                .with(nil, at: from)
-                .with(nil, at: Location(to.file, capturedPieceRank))
+                .with([(Piece(player, .pawn), to),
+                       (nil, from),
+                       (nil, Location(to.file, capturedPieceRank))])
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                return self
-                    .with(WK, at: g1)
-                    .with(WR, at: f1)
-                    .with(nil, at: e1)
-                    .with(nil, at: h1)
+                return self.with([(WK,  g1),
+                                  (WR,  f1),
+                                  (nil, e1),
+                                  (nil, h1)])
             case .black:
-                return self
-                    .with(BK, at: g8)
-                    .with(BR, at: f8)
-                    .with(nil, at: e8)
-                    .with(nil, at: h8)
+                return self.with([(BK,  g8),
+                                  (BR,  f8),
+                                  (nil, e8),
+                                  (nil, h8)])
             }
 
         case .castleQueenside(let player):
             switch player {
             case .white:
-                return self
-                    .with(WK, at: c1)
-                    .with(WR, at: d1)
-                    .with(nil, at: e1)
-                    .with(nil, at: a1)
+                return self.with([(WK,  c1),
+                                  (WR,  d1),
+                                  (nil, e1),
+                                  (nil, a1)])
             case .black:
-                return self
-                    .with(BK, at: c8)
-                    .with(BR, at: d8)
-                    .with(nil, at: e8)
-                    .with(nil, at: a8)
+                return self.with([(BK,  c8),
+                                  (BR,  d8),
+                                  (nil, e8),
+                                  (nil, a8)])
             }
 
         case .resign:
@@ -164,16 +154,21 @@ public class Board {
 
     /// Return copy of board with the given `Piece` at the given `Location`.
     public func with(_ piece: Piece?, at location: Location) -> Board {
-        let file = location.file
-        let rank = location.rank
+        var newSquares = Array(squares)
+        newSquares[location.rank * Board.filesCount + location.file] = piece
 
-        var newRank = Array(ranks[rank])
-        newRank[file] = piece
+        return Board(newSquares)
+    }
 
-        var newRanks = Array(ranks)
-        newRanks[rank] = newRank
+    /// Return copy of board with the given `Pieces` at the given `Locations`.
+    public func with(_ pieceLocations: [(Piece?, Location)]) -> Board {
+        var newSquares = Array(squares)
 
-        return Board(newRanks)
+        for (piece, location) in pieceLocations {
+            newSquares[location.rank * Board.filesCount + location.file] = piece
+        }
+
+        return Board(newSquares)
     }
 
     /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
@@ -181,9 +176,10 @@ public class Board {
         // TODO: Create the result sequence lazily
         var result = [(Piece, Location)]()
         for rank in 0..<Board.ranksCount {
-            let rankArray = ranks[rank]
+            let file0 = rank * Board.filesCount
             for file in 0..<Board.filesCount {
-                if let piece = rankArray[file], piece.player == player {
+                let index = file0 + file
+                if let piece = squares[index], piece.player == player {
                     result.append((piece, Location(file, rank)))
                 }
             }

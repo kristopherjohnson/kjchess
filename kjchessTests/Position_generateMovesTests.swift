@@ -37,9 +37,8 @@ class Position_generateMovesTests: XCTestCase {
     }
 
     func testBlackNewGameMoves() {
-        let board = Board.newGame
-            .with(WP, at: e4)
-            .with(nil, at: e2)
+        let board = Board.newGame.with([(WP, e4),
+                                        (nil, e2)])
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -71,11 +70,10 @@ class Position_generateMovesTests: XCTestCase {
     }
 
     func testWhitePawnCaptures() {
-        let board = Board.empty
-            .with(WP, at: e4)
-            .with(BB, at: d5)
-            .with(BP, at: e5)
-            .with(BN, at: f5)
+        let board = Board.empty.with([(WP, e4),
+                                      (BB, d5),
+                                      (BP, e5),
+                                      (BN, f5)])
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -95,11 +93,10 @@ class Position_generateMovesTests: XCTestCase {
     }
 
     func testBlackPawnCaptures() {
-        let board = Board.empty
-            .with(BP, at: d5)
-            .with(WB, at: c4)
-            .with(WP, at: d4)
-            .with(WN, at: e4)
+        let board = Board.empty.with([(BP, at: d5),
+                                      (WB, at: c4),
+                                      (WP, at: d4),
+                                      (WN, at: e4)])
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -119,8 +116,7 @@ class Position_generateMovesTests: XCTestCase {
     }
     
     func testKnightMovesEmptyBoard() {
-        let board = Board.empty
-            .with(WN, at: d4)
+        let board = Board.empty.with(WN, at: d4)
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -151,16 +147,15 @@ class Position_generateMovesTests: XCTestCase {
 
     func testKnightMovesAllBlocked() {
         // Knight at d4 with pawns at all locations it could jump to.
-        let board = Board.empty
-            .with(WN, at: d4)
-            .with(WP, at: c6)
-            .with(WP, at: e6)
-            .with(WP, at: f5)
-            .with(WP, at: f3)
-            .with(WP, at: e2)
-            .with(WP, at: c2)
-            .with(WP, at: b3)
-            .with(WP, at: b5)
+        let board = Board.empty.with([(WN, d4),
+                                      (WP, c6),
+                                      (WP, e6),
+                                      (WP, f5),
+                                      (WP, f3),
+                                      (WP, e2),
+                                      (WP, c2),
+                                      (WP, b3),
+                                      (WP, b5)])
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -172,16 +167,15 @@ class Position_generateMovesTests: XCTestCase {
 
     func testKnightCaptures() {
         // White knight at d4 with black queens at every location can jump to
-        let board = Board.empty
-            .with(WN, at: d4)
-            .with(BQ, at: c6)
-            .with(BQ, at: e6)
-            .with(BQ, at: f5)
-            .with(BQ, at: f3)
-            .with(BQ, at: e2)
-            .with(BQ, at: c2)
-            .with(BQ, at: b3)
-            .with(BQ, at: b5)
+        let board = Board.empty.with([(WN, d4),
+                                      (BQ, c6),
+                                      (BQ, e6),
+                                      (BQ, f5),
+                                      (BQ, f3),
+                                      (BQ, e2),
+                                      (BQ, c2),
+                                      (BQ, b3),
+                                      (BQ, b5)])
 
         let pos = Position(board: board, toMove: .white, moves: [])
 

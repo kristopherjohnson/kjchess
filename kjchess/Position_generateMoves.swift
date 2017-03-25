@@ -26,10 +26,13 @@ extension Position {
     /// Generate array of legal moves for a `Piece` at the given `Location`.
     public func generateMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         switch piece.kind {
-        case .pawn:   return generatePawnMoves(player: piece.player, location: location)
-        case .knight: return generateKnightMoves(player: piece.player, location: location)
-        case .rook:   return generateRookMoves(player: piece.player, location: location)
-        case .bishop: return generateBishopMoves(player: piece.player, location: location)
+
+        case .pawn:   return generatePawnMoves(piece: piece, location: location)
+        case .knight: return generateKnightMoves(piece: piece, location: location)
+        case .rook:   return generateRookMoves(piece: piece, location: location)
+        case .bishop: return generateBishopMoves(piece: piece, location: location)
+        case .queen:  return generateQueenMoves(piece: piece, location: location)
+
         default:      return AnySequence([])
         }
     }
@@ -95,8 +98,8 @@ extension Position {
         }
     }
 
-    func generatePawnMoves(player: Player, location: Location) -> AnySequence<Move> {
-        let piece = Piece(player, .pawn)
+    func generatePawnMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        let player = piece.player
         let file = location.file
         let rank = location.rank
 
@@ -124,7 +127,9 @@ extension Position {
                     if rank == startRank {
                         let jumpRank = startRank + 2 * moveDirection
                         if board.isEmpty(file: file, rank: jumpRank) {
-                            result.append(.move(piece: piece, from: location, to: Location(file, jumpRank)))
+                            result.append(.move(piece: piece,
+                                                from: location,
+                                                to: Location(file, jumpRank)))
                         }
                     }
                 }
@@ -160,10 +165,10 @@ extension Position {
         (-2, 1), (-2, -1)
     ]
 
-    func generateKnightMoves(player: Player, location: Location) -> AnySequence<Move> {
+    func generateKnightMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let file = location.file
         let rank = location.rank
-        let piece = Piece(player, .knight)
+        let player = piece.player
 
         var result = [Move]()
 
@@ -193,8 +198,8 @@ extension Position {
         (0, 1), ( 0, -1)
     ]
 
-    func generateRookMoves(player: Player, location: Location) -> AnySequence<Move> {
-        return generateSlideMoves(piece: Piece(player, .rook),
+    func generateRookMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return generateSlideMoves(piece: piece,
                                   location: location,
                                   vectors: Position.rookVectors)
     }
@@ -206,9 +211,25 @@ extension Position {
         (1, -1), (-1, -1)
     ]
 
-    func generateBishopMoves(player: Player, location: Location) -> AnySequence<Move> {
-        return generateSlideMoves(piece: Piece(player, .bishop),
+    func generateBishopMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return generateSlideMoves(piece: piece,
                                   location: location,
                                   vectors: Position.bishopVectors)
     }
+
+    // MARK:- Queen
+
+    static let queenVectors = [
+        (1,  0), (-1,  0),
+        (0,  1), ( 0, -1),
+        (1,  1), (-1,  1),
+        (1, -1), (-1, -1)
+    ]
+
+    func generateQueenMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return generateSlideMoves(piece: piece,
+                                  location: location,
+                                  vectors: Position.queenVectors)
+    }
+
 }

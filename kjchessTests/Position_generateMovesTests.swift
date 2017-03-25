@@ -329,4 +329,94 @@ class Position_generateMovesTests: XCTestCase {
                           "Expected \(expectedMove), but it's missing")
         }
     }
+
+    func testQueenEmptyBoard() {
+        let board = Board.empty.with(BQ, at: c3)
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BQc3-a1",
+            "BQc3-b2",
+            "BQc3-d4",
+            "BQc3-e5",
+            "BQc3-f6",
+            "BQc3-g7",
+            "BQc3-h8",
+            "BQc3-a5",
+            "BQc3-b4",
+            "BQc3-d2",
+            "BQc3-e1",
+            "BQc3-a3",
+            "BQc3-b3",
+            "BQc3-d3",
+            "BQc3-e3",
+            "BQc3-f3",
+            "BQc3-g3",
+            "BQc3-h3",
+            "BQc3-c1",
+            "BQc3-c2",
+            "BQc3-c4",
+            "BQc3-c5",
+            "BQc3-c6",
+            "BQc3-c7",
+            "BQc3-c8"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testQueenCaptures() {
+        let board = Board.empty.with([(BQ, d4),
+                                      (WQ, b6),
+                                      (WQ, a7),
+                                      (WQ, g7),
+                                      (WQ, h8),
+                                      (WQ, a1),
+                                      (WQ, b2),
+                                      (WQ, f2),
+                                      (WQ, g1),
+                                      (WQ, f4),
+                                      (WQ, b4),
+                                      (WQ, d2),
+                                      (WQ, d6)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BQd4-c3",
+            "BQd4xQb2",
+            "BQd4-c5",
+            "BQd4xQb6",
+            "BQd4-e5",
+            "BQd4-f6",
+            "BQd4xQg7",
+            "BQd4-e3",
+            "BQd4xQf2",
+            "BQd4-c4",
+            "BQd4xQb4",
+            "BQd4-e4",
+            "BQd4xQf4",
+            "BQd4-d3",
+            "BQd4xQd2",
+            "BQd4-d5",
+            "BQd4xQd6"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
 }

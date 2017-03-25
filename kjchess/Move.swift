@@ -227,17 +227,25 @@ public enum Move {
         }
     }
 
-    /// Determine whether this move has the specified start and end location.
+    /// Determine whether this move has the given start and end location.
     public func matches(from: Location, to: Location) -> Bool {
         return from == self.from
             && to == self.to
     }
 
-    /// Determine whether this move has the specified piece, start, and end location.
+    /// Determine whether this move has the given piece, start, and end location.
     public func matches(piece: Piece, from: Location, to: Location) -> Bool {
         return piece == self.piece
             && from == self.from
             && to == self.to
+    }
+
+    /// Determine whether this move has the given piece, start and end location, and isCapture property value.
+    public func matches(piece: Piece, from: Location, to: Location, isCapture: Bool) -> Bool {
+        return piece == self.piece
+            && from == self.from
+            && to == self.to
+            && isCapture == self.isCapture
     }
 
     /// Determine whether this move has the specified piece kind, start, and end location.
@@ -294,7 +302,8 @@ extension Move: CustomStringConvertible {
     /// Return textual representation of a `Move`.
     ///
     /// The result is similar to long algebraic notation, but
-    /// includes some extra information.
+    /// includes some extra information, like "W" or "B" to
+    /// indicate the player.
     public var description: String {
         switch self {
 

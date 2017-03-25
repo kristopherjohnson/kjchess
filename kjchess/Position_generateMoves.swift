@@ -25,11 +25,10 @@ extension Position {
     /// Generate array of legal moves for a `Piece` at the given `Location`.
     public func generateMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         switch piece.kind {
-        case .pawn: return generatePawnMoves(player: piece.player, location: location)
+        case .pawn:   return generatePawnMoves(player: piece.player, location: location)
         case .knight: return generateKnightMoves(player: piece.player, location: location)
-        default:
-            // TODO
-            return AnySequence([])
+        case .rook:   return generateRookMoves(player: piece.player, location: location)
+        default:      return AnySequence([])
         }
     }
 
@@ -156,4 +155,39 @@ extension Position {
 
         return AnySequence(result)
     }
+
+    static let rookMoves = [
+        (1, 0), (-1,  0),
+        (0, 1), ( 0, -1)
+    ]
+
+    func generateRookMoves(player: Player, location: Location) -> AnySequence<Move> {
+        let piece = Piece(player, .rook)
+
+        var result = [Move]()
+
+        for (h, v) in Position.rookMoves {
+            var file = location.file + h
+            var rank = location.rank + v
+            while let targetLocation = Location.ifValid(file: file, rank: rank) {
+                if let occupant = board[targetLocation] {
+                    if occupant.player != player {
+                        result.append(.capture(piece: piece,
+                                               from: location,
+                                               to: targetLocation,
+                                               capturedPiece: occupant))
+                    }
+                    break
+                }
+                else {
+                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                    file = file + h
+                    rank = rank + v
+                }
+            }
+        }
+
+        return AnySequence(result)
+    }
+    
 }

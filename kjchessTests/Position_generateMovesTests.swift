@@ -419,4 +419,58 @@ class Position_generateMovesTests: XCTestCase {
                           "Expected \(expectedMove), but it's missing")
         }
     }
+
+    func testKingEmptyBoard() {
+        let board = Board.empty.with(WK, at: e3)
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WKe3-e4",
+            "WKe3-f4",
+            "WKe3-f3",
+            "WKe3-f2",
+            "WKe3-e2",
+            "WKe3-d2",
+            "WKe3-d3",
+            "WKe3-d4"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testKingCaptures() {
+        let board = Board.empty.with([(WK, d4),
+                                      (BP, c3),
+                                      (BP, d3),
+                                      (BP, e3)])
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WKd4-d5",
+            "WKd4-e5",
+            "WKd4-e4",
+            "WKd4xPe3",
+            "WKd4xPd3",
+            "WKd4xPc3",
+            "WKd4-c4",
+            "WKd4-c5"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
 }

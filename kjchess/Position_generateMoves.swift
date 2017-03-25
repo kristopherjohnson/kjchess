@@ -8,7 +8,7 @@
 import Foundation
 
 extension Position {
-    
+
     /// Generate array of legal moves for this `Position`.
     ///
     /// The generated moves will all be valid in the sense that
@@ -19,25 +19,23 @@ extension Position {
     public func generateMoves() -> AnySequence<Move> {
         let pieces = board.pieces(player: toMove)
         return AnySequence(pieces.lazy.flatMap({ (piece, location) in
-            return self.generateMoves(piece: piece, location: location)
+            return self.moves(piece: piece, location: location)
         }))
     }
 
-    /// Generate array of legal moves for a `Piece` at the given `Location`.
-    public func generateMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    /// Generate array of moves for a `Piece` at the given `Location`.
+    public func moves(piece: Piece, location: Location) -> AnySequence<Move> {
         switch piece.kind {
-
-        case .pawn:   return generatePawnMoves(piece: piece, location: location)
-        case .knight: return generateKnightMoves(piece: piece, location: location)
-        case .rook:   return generateRookMoves(piece: piece, location: location)
-        case .bishop: return generateBishopMoves(piece: piece, location: location)
-        case .queen:  return generateQueenMoves(piece: piece, location: location)
-
-        default:      return AnySequence([])
+        case .pawn:   return pawnMoves(piece: piece, location: location)
+        case .knight: return knightMoves(piece: piece, location: location)
+        case .rook:   return rookMoves(piece: piece, location: location)
+        case .bishop: return bishopMoves(piece: piece, location: location)
+        case .queen:  return queenMoves(piece: piece, location: location)
+        case .king:   return kingMoves(piece: piece, location: location)
         }
     }
 
-    func generateSlideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> AnySequence<Move> {
+    func slideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> AnySequence<Move> {
         let player = piece.player
         var result = [Move]()
 
@@ -98,7 +96,7 @@ extension Position {
         }
     }
 
-    func generatePawnMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    func pawnMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let player = piece.player
         let file = location.file
         let rank = location.rank
@@ -165,7 +163,7 @@ extension Position {
         (-2, 1), (-2, -1)
     ]
 
-    func generateKnightMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    func knightMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let file = location.file
         let rank = location.rank
         let player = piece.player
@@ -198,10 +196,10 @@ extension Position {
         (0, 1), ( 0, -1)
     ]
 
-    func generateRookMoves(piece: Piece, location: Location) -> AnySequence<Move> {
-        return generateSlideMoves(piece: piece,
-                                  location: location,
-                                  vectors: Position.rookVectors)
+    func rookMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return slideMoves(piece: piece,
+                          location: location,
+                          vectors: Position.rookVectors)
     }
 
     // MARK:- Bishop
@@ -211,25 +209,55 @@ extension Position {
         (1, -1), (-1, -1)
     ]
 
-    func generateBishopMoves(piece: Piece, location: Location) -> AnySequence<Move> {
-        return generateSlideMoves(piece: piece,
-                                  location: location,
-                                  vectors: Position.bishopVectors)
+    func bishopMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return slideMoves(piece: piece,
+                          location: location,
+                          vectors: Position.bishopVectors)
     }
 
     // MARK:- Queen
 
-    static let queenVectors = [
+    static let eightDirections = [
         (1,  0), (-1,  0),
         (0,  1), ( 0, -1),
         (1,  1), (-1,  1),
         (1, -1), (-1, -1)
     ]
 
-    func generateQueenMoves(piece: Piece, location: Location) -> AnySequence<Move> {
-        return generateSlideMoves(piece: piece,
-                                  location: location,
-                                  vectors: Position.queenVectors)
+    func queenMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        return slideMoves(piece: piece,
+                          location: location,
+                          vectors: Position.eightDirections)
     }
 
+    // MARK:- King
+
+    func kingMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+        let file = location.file
+        let rank = location.rank
+        let player = piece.player
+
+        var result = [Move]()
+
+        for (h, v) in Position.eightDirections {
+            if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
+                if let occupant = board[targetLocation] {
+                    if occupant.player != player {
+                        result.append(.capture(piece: piece,
+                                               from: location,
+                                               to: targetLocation,
+                                               captured: occupant.kind))
+                    }
+                }
+                else {
+                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                }
+            }
+        }
+        
+        // TODO: Castling
+        
+        return AnySequence(result)
+        
+    }
 }

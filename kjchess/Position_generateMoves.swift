@@ -8,6 +8,7 @@
 import Foundation
 
 extension Position {
+    
     /// Generate array of legal moves for this `Position`.
     ///
     /// The generated moves will all be valid in the sense that
@@ -28,8 +29,37 @@ extension Position {
         case .pawn:   return generatePawnMoves(player: piece.player, location: location)
         case .knight: return generateKnightMoves(player: piece.player, location: location)
         case .rook:   return generateRookMoves(player: piece.player, location: location)
+        case .bishop: return generateBishopMoves(player: piece.player, location: location)
         default:      return AnySequence([])
         }
+    }
+
+    func generateSlideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> AnySequence<Move> {
+        let player = piece.player
+        var result = [Move]()
+
+        for (h, v) in vectors {
+            var file = location.file + h
+            var rank = location.rank + v
+            while let targetLocation = Location.ifValid(file: file, rank: rank) {
+                if let occupant = board[targetLocation] {
+                    if occupant.player != player {
+                        result.append(.capture(piece: piece,
+                                               from: location,
+                                               to: targetLocation,
+                                               captured: occupant.kind))
+                    }
+                    break
+                }
+                else {
+                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                    file = file + h
+                    rank = rank + v
+                }
+            }
+        }
+
+        return AnySequence(result)
     }
 
     // MARK:- Pawn
@@ -156,38 +186,29 @@ extension Position {
         return AnySequence(result)
     }
 
-    static let rookMoves = [
+    // MARK:- Rook
+
+    static let rookVectors = [
         (1, 0), (-1,  0),
         (0, 1), ( 0, -1)
     ]
 
     func generateRookMoves(player: Player, location: Location) -> AnySequence<Move> {
-        let piece = Piece(player, .rook)
-
-        var result = [Move]()
-
-        for (h, v) in Position.rookMoves {
-            var file = location.file + h
-            var rank = location.rank + v
-            while let targetLocation = Location.ifValid(file: file, rank: rank) {
-                if let occupant = board[targetLocation] {
-                    if occupant.player != player {
-                        result.append(.capture(piece: piece,
-                                               from: location,
-                                               to: targetLocation,
-                                               captured: occupant.kind))
-                    }
-                    break
-                }
-                else {
-                    result.append(.move(piece: piece, from: location, to: targetLocation))
-                    file = file + h
-                    rank = rank + v
-                }
-            }
-        }
-
-        return AnySequence(result)
+        return generateSlideMoves(piece: Piece(player, .rook),
+                                  location: location,
+                                  vectors: Position.rookVectors)
     }
-    
+
+    // MARK:- Bishop
+
+    static let bishopVectors = [
+        (1,  1), (-1,  1),
+        (1, -1), (-1, -1)
+    ]
+
+    func generateBishopMoves(player: Player, location: Location) -> AnySequence<Move> {
+        return generateSlideMoves(piece: Piece(player, .bishop),
+                                  location: location,
+                                  vectors: Position.bishopVectors)
+    }
 }

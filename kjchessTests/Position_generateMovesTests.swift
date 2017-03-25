@@ -226,10 +226,6 @@ class Position_generateMovesTests: XCTestCase {
             XCTAssertTrue(moves.contains { $0.description == expectedMove },
                           "Expected \(expectedMove), but it's missing")
         }
-
-        for move in moves {
-            XCTAssertFalse(move.isCapture, "Should not be a capturing move")
-        }
     }
 
     func testRookCaptures() {
@@ -256,6 +252,72 @@ class Position_generateMovesTests: XCTestCase {
             "WRd4-e4",
             "WRd4-f4",
             "WRd4xQg4"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testBishopMovesEmptyBoard() {
+        let board = Board.empty.with(WB, at: e4)
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WBe4-a8",
+            "WBe4-b7",
+            "WBe4-c6",
+            "WBe4-d5",
+            "WBe4-f3",
+            "WBe4-g2",
+            "WBe4-h1",
+            "WBe4-b1",
+            "WBe4-c2",
+            "WBe4-d3",
+            "WBe4-f5",
+            "WBe4-g6",
+            "WBe4-h7"
+        ]
+
+        let moves = Array(pos.generateMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testBishopCaptures() {
+        let board = Board.empty.with([(BB, d4),
+                                      (WQ, b6),
+                                      (WQ, a7),
+                                      (WQ, g7),
+                                      (WQ, h8),
+                                      (WQ, a1),
+                                      (WQ, b2),
+                                      (WQ, f2),
+                                      (WQ, g1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BBd4-c3",
+            "BBd4xQb2",
+            "BBd4-c5",
+            "BBd4xQb6",
+            "BBd4-e5",
+            "BBd4-f6",
+            "BBd4xQg7",
+            "BBd4-e3",
+            "BBd4xQf2"
         ]
 
         let moves = Array(pos.generateMoves())

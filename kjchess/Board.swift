@@ -109,7 +109,7 @@ public struct Board {
         case .promoteCapture:
             return self
             
-        case .enPassantCapture(let player, let from, let to, _):
+        case .enPassantCapture(let player, let from, let to):
             let capturedPieceRank
                 = (player == .white)
                     ? to.rank - 1

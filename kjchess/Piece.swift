@@ -20,6 +20,7 @@ public enum PieceKind {
     public static let promotionKinds: [PieceKind]
         = [.knight, .bishop, .rook, .queen]
 
+    /// Return alphabetic character to represent piece kind.
     public var symbol: String {
         switch self {
         case .pawn:   return "P"
@@ -28,6 +29,18 @@ public enum PieceKind {
         case .rook:   return "R"
         case .queen:  return "Q"
         case .king:   return "K"
+        }
+    }
+
+    /// Return lowercase alphabetic character to represent piece kind.
+    public var lowercaseSymbol: String {
+        switch self {
+        case .pawn:   return "p"
+        case .knight: return "n"
+        case .bishop: return "b"
+        case .rook:   return "r"
+        case .queen:  return "q"
+        case .king:   return "k"
         }
     }
 }

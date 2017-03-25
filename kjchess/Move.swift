@@ -19,26 +19,25 @@ public enum Move {
         piece: Piece,
         from: Location,
         to: Location,
-        capturedPiece: Piece)
+        captured: PieceKind)
 
     case promote(
         player: Player,
         from: Location,
         to: Location,
-        promotedPiece: Piece)
+        promoted: PieceKind)
 
     case promoteCapture(
         player: Player,
         from: Location,
         to: Location,
-        capturedPiece: Piece,
-        promotedPiece: Piece)
+        captured: PieceKind,
+        promoted: PieceKind)
 
     case enPassantCapture(
         player: Player,
         from: Location,
-        to: Location,
-        capturedPiece: Piece)
+        to: Location)
 
     case castleKingside(
         player: Player)
@@ -59,7 +58,7 @@ public enum Move {
 
         case .promote(let player, _, _, _),
              .promoteCapture(let player, _, _, _, _),
-             .enPassantCapture(let player, _, _, _),
+             .enPassantCapture(let player, _, _),
              .castleKingside(let player),
              .castleQueenside(let player),
              .resign(let player):
@@ -77,7 +76,7 @@ public enum Move {
 
         case .promote(let player, _, _, _),
              .promoteCapture(let player, _, _, _, _),
-             .enPassantCapture(let player, _, _, _):
+             .enPassantCapture(let player, _, _):
             return Piece(player, .pawn)
 
         case.castleKingside(let player),
@@ -105,7 +104,7 @@ public enum Move {
              .capture(_, let from, _, _),
              .promote(_, let from, _, _),
              .promoteCapture(_, let from, _, _, _),
-             .enPassantCapture(_, let from, _, _):
+             .enPassantCapture(_, let from, _):
             return from
 
         case .castleKingside(let player),
@@ -135,7 +134,7 @@ public enum Move {
              .capture(_, _, let to, _),
              .promote(_, _, let to, _),
              .promoteCapture(_, _, let to, _, _),
-             .enPassantCapture(_, _, let to, _):
+             .enPassantCapture(_, _, let to):
             return to
         case .castleKingside(let player):
             switch player {
@@ -185,14 +184,23 @@ public enum Move {
         }
     }
 
-    /// Return the captured piece, if any.
-    public var capturedPiece: Piece? {
+    public var capturedKind: PieceKind? {
         switch self {
-        case .capture(_, _, _, let capturedPiece),
-             .promoteCapture(_, _, _, let capturedPiece, _),
-             .enPassantCapture(_, _, _, let capturedPiece):
-            return capturedPiece
+        case .capture(_, _, _, let captured),
+             .promoteCapture(_, _, _, let captured, _):
+            return captured
+        case .enPassantCapture:
+            return .pawn
         default:
+            return nil
+        }
+    }
+
+    public var capturedPiece: Piece? {
+        if let kind = capturedKind {
+            return Piece(player.opponent, kind)
+        }
+        else {
             return nil
         }
     }
@@ -216,13 +224,23 @@ public enum Move {
         }
     }
 
+    /// Return the piece kind to which the pawn was promoted, if this was a promotion move.
+    public var promotedKind: PieceKind? {
+        switch self {
+        case .promote(_, _, _, let promoted),
+             .promoteCapture(_, _, _, _, let promoted):
+            return promoted
+        default:
+            return nil
+        }
+    }
+
     /// Return the piece to which the pawn was promoted, if this was a promotion move.
     public var promotedPiece: Piece? {
-        switch self {
-        case .promote(_, _, _, let promotedPiece),
-             .promoteCapture(_, _, _, _, let promotedPiece):
-            return promotedPiece
-        default:
+        if let kind = promotedKind {
+            return Piece(player, kind)
+        }
+        else {
             return nil
         }
     }
@@ -275,14 +293,14 @@ public enum Move {
         case let .capture(piece, from, to, _):
             return "\(symbol(piece))\(from.symbol)x\(to.symbol)"
 
-        case let .promote(_, from, to, promotedPiece):
-            return "\(from.symbol)-\(to.symbol)\(promotedPiece.kind.symbol)"
+        case let .promote(_, from, to, promotedKind):
+            return "\(from.symbol)-\(to.symbol)\(promotedKind.symbol)"
 
-        case let .promoteCapture(_, from, to, _, promotedPiece):
-            return "\(from.symbol)x\(to.symbol)\(promotedPiece.kind.symbol)"
+        case let .promoteCapture(_, from, to, _, promotedKind):
+            return "\(from.symbol)x\(to.symbol)\(promotedKind.symbol)"
 
-        case let .enPassantCapture(_, from, to, _):
-            return "\(from.symbol)x\(to.symbol)e.p."
+        case let .enPassantCapture(_, from, to):
+            return "\(from.fileSymbol)x\(to.symbol)e.p."
 
         case .castleKingside:
             return "O-O"
@@ -294,6 +312,48 @@ public enum Move {
             return "resigns"
         }
     }
+
+    /// Return UCI representation of a `Move`.
+    ///
+    /// The UCI representation of a move is the `from`
+    /// location and `to`, without hyphens or other separators.
+    ///
+    /// Examples: "e2e4", "e7e5", "e1g1" (castling), "e7e8q" (promotion).
+    public var coordinateForm: String {
+
+        switch self {
+
+        case let .move(_, from, to):
+            return "\(from.symbol)\(to.symbol)"
+
+        case let .capture(_, from, to, _):
+            return "\(from.symbol)\(to.symbol)"
+
+        case let .promote(_, from, to, promoted):
+            return "\(from.symbol)\(to.symbol)\(promoted.lowercaseSymbol)"
+
+        case let .promoteCapture(_, from, to, _, promoted):
+            return "\(from.symbol)\(to.symbol)\(promoted.lowercaseSymbol)"
+
+        case let .enPassantCapture(_, from, to):
+            return "\(from.symbol)\(to.symbol)"
+
+        case .castleKingside(let player):
+            switch player {
+            case .white: return "e1g1"
+            case .black: return "e8g8"
+            }
+
+        case .castleQueenside(let player):
+            switch player {
+            case .white: return "e1c1"
+            case .black: return "e8c8"
+            }
+
+        case .resign:
+            return "0000"
+        }
+    }
 }
 
 // MARK:- CustomStringConvertible
@@ -303,24 +363,24 @@ extension Move: CustomStringConvertible {
     ///
     /// The result is similar to long algebraic notation, but
     /// includes some extra information, like "W" or "B" to
-    /// indicate the player.
+    /// indicate the player, and the captured piece if any.
     public var description: String {
         switch self {
 
         case let .move(piece, from, to):
             return "\(piece.symbol)\(from.symbol)-\(to.symbol)"
 
-        case let .capture(piece, from, to, capturedPiece):
-            return "\(piece.symbol)\(from.symbol)x\(capturedPiece.kind.symbol)\(to.symbol)"
+        case let .capture(piece, from, to, captured):
+            return "\(piece.symbol)\(from.symbol)x\(captured.symbol)\(to.symbol)"
 
-        case let .promote(player, from, to, promotedPiece):
-            return "\(player.symbol)P\(from.symbol)-\(to.symbol)\(promotedPiece.kind.symbol)"
+        case let .promote(player, from, to, promoted):
+            return "\(player.symbol)P\(from.symbol)-\(to.symbol)\(promoted.symbol)"
 
-        case let .promoteCapture(player, from, to, capturedPiece, promotedPiece):
-            return "\(player.symbol)P\(from.symbol)x\(capturedPiece.kind.symbol)\(to.symbol)\(promotedPiece.kind.symbol)"
+        case let .promoteCapture(player, from, to, captured, promoted):
+            return "\(player.symbol)P\(from.symbol)x\(captured.symbol)\(to.symbol)\(promoted.symbol)"
 
-        case let .enPassantCapture(piece, from, to, capturedPiece):
-            return "\(piece.symbol)\(from.symbol)x\(capturedPiece.kind.symbol)\(to.symbol)e.p."
+        case let .enPassantCapture(_, from, to):
+            return "\(piece.symbol)\(from.symbol)xP\(to.symbol)e.p."
 
         case let .castleKingside(player):
             return "\(player.symbol) O-O"
@@ -365,11 +425,10 @@ public func ==(lhs: Move, rhs: Move) -> Bool {
             && l3 == r3
             && l4 == r4
 
-    case let (.enPassantCapture(l0, l1, l2, l3), .enPassantCapture(r0, r1, r2, r3)):
+    case let (.enPassantCapture(l0, l1, l2), .enPassantCapture(r0, r1, r2)):
         return l0 == r0
             && l1 == r1
             && l2 == r2
-            && l3 == r3
 
     case let (.castleKingside(l0), .castleKingside(r0)),
          let (.castleQueenside(l0), .castleQueenside(r0)),

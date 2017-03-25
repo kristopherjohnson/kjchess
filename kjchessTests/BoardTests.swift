@@ -32,7 +32,7 @@ class BoardTests: XCTestCase {
 
         let b2 = b1.after(.capture(piece: WQ,
                                    from: d1, to: d8,
-                                   capturedPiece: BQ))
+                                   captured: .queen))
 
         XCTAssertEqual(WQ, b1[d1], "b1 should be unaffected")
         XCTAssertEqual(BQ, b1[d8], "b1 should be unaffected")
@@ -46,8 +46,7 @@ class BoardTests: XCTestCase {
                                    (BP, d5)])
 
         let b2 = b1.after(.enPassantCapture(player: .white,
-                                            from: e5, to: d6,
-                                            capturedPiece: BP))
+                                            from: e5, to: d6))
 
         XCTAssertEqual(WP, b1[e5], "b1 should be unaffected")
         XCTAssertEqual(BP, b1[d5], "b1 should be unaffected")
@@ -62,8 +61,7 @@ class BoardTests: XCTestCase {
                                    (BP, g4)])
 
         let b2 = b1.after(.enPassantCapture(player: .black,
-                                            from: g4, to: f3,
-                                            capturedPiece: WP))
+                                            from: g4, to: f3))
 
         XCTAssertEqual(WP, b1[f4], "b1 should be unaffected")
         XCTAssertEqual(BP, b1[g4], "b1 should be unaffected")

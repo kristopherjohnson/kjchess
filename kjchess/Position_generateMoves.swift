@@ -84,7 +84,7 @@ extension Position {
                         result.append(.promote(player: player,
                                                from: location,
                                                to: to,
-                                               promotedPiece: Piece(player, kind)))
+                                               promoted: kind))
                     }
                 }
                 else {
@@ -109,7 +109,7 @@ extension Position {
                             result.append(.capture(piece: piece,
                                                    from: location,
                                                    to: captureLocation,
-                                                   capturedPiece: occupant))
+                                                   captured: occupant.kind))
                         }
                     }
 
@@ -144,7 +144,7 @@ extension Position {
                         result.append(.capture(piece: piece,
                                                from: location,
                                                to: targetLocation,
-                                               capturedPiece: occupant))
+                                               captured: occupant.kind))
                     }
                 }
                 else {
@@ -175,7 +175,7 @@ extension Position {
                         result.append(.capture(piece: piece,
                                                from: location,
                                                to: targetLocation,
-                                               capturedPiece: occupant))
+                                               captured: occupant.kind))
                     }
                     break
                 }

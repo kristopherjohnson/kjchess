@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84B2321E86F0E100E381D3 /* NotationTests.swift */; };
 		4EF6CF6F1E747D76001103A8 /* kjchess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF6CF651E747D76001103A8 /* kjchess.framework */; };
 		4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF731E747D76001103A8 /* kjchessTests.swift */; };
 		4EF6CF761E747D76001103A8 /* kjchess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF6CF681E747D76001103A8 /* kjchess.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -32,6 +33,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
 		4EF6CF651E747D76001103A8 /* kjchess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = kjchess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF6CF681E747D76001103A8 /* kjchess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kjchess.h; sourceTree = "<group>"; };
 		4EF6CF691E747D76001103A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -108,6 +110,7 @@
 				4EF6CF911E75EF50001103A8 /* BoardTests.swift */,
 				4EF6CF751E747D76001103A8 /* Info.plist */,
 				4EF6CF731E747D76001103A8 /* kjchessTests.swift */,
+				4E84B2321E86F0E100E381D3 /* NotationTests.swift */,
 				4EF6CF8D1E75E889001103A8 /* Position_generateMovesTests.swift */,
 			);
 			path = kjchessTests;
@@ -241,6 +244,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EF6CF8E1E75E889001103A8 /* Position_generateMovesTests.swift in Sources */,
+				4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */,
 				4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */,
 				4EF6CF921E75EF50001103A8 /* BoardTests.swift in Sources */,
 			);
@@ -446,6 +450,7 @@
 				4EF6CF7B1E747D76001103A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4EF6CF7C1E747D76001103A8 /* Build configuration list for PBXNativeTarget "kjchessTests" */ = {
 			isa = XCConfigurationList;
@@ -454,6 +459,7 @@
 				4EF6CF7E1E747D76001103A8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

@@ -58,6 +58,24 @@ public struct Piece {
     public var symbol: String {
         return "\(player.symbol)\(kind.symbol)"
     }
+
+    /// Return Unicode character for this piece.
+    public var figurine: String {
+        switch (player, kind) {
+        case (.white, .king):   return "♔"
+        case (.white, .queen):  return "♕"
+        case (.white, .rook):   return "♖"
+        case (.white, .bishop): return "♗"
+        case (.white, .knight): return "♘"
+        case (.white, .pawn):   return "♙"
+        case (.black, .king):   return "♚"
+        case (.black, .queen):  return "♛"
+        case (.black, .rook):   return "♜"
+        case (.black, .bishop): return "♝"
+        case (.black, .knight): return "♞"
+        case (.black, .pawn):   return "♟"
+        }
+    }
 }
 
 extension Piece: CustomStringConvertible {

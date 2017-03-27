@@ -66,6 +66,20 @@ public struct Location {
             return "?"
         }
     }
+
+    public func isSameDiagonal(_ other: Location) -> Bool {
+        let dFile = abs(file - other.file)
+        let dRank = abs(rank - other.rank)
+        return dFile == dRank
+    }
+
+    public func isSameFile(_ other: Location) -> Bool {
+        return file == other.file
+    }
+
+    public func isSameRank(_ other: Location) -> Bool {
+        return rank == other.rank
+    }
 }
 
 // MARK: - Equatable

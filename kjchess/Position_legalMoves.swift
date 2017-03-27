@@ -1,5 +1,5 @@
 //
-//  Position_generateMoves.swift
+//  Position_legalMoves.swift
 //  kjchess
 //
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
@@ -9,14 +9,26 @@ import Foundation
 
 extension Position {
 
-    /// Generate array of legal moves for this `Position`.
+    /// Generate sequence of legal moves for this `Position`.
+    ///
+    public func legalMoves() -> AnySequence<Move> {
+        guard let kingLocation = board.kingLocation(player: toMove) else {
+            return possibleMoves()
+        }
+
+        return AnySequence(possibleMoves().filter {
+            isLegal(move: $0, kingLocation: kingLocation)
+        })
+    }
+
+    /// Generate array of possible moves for this `Position`.
     ///
     /// The generated moves will all be valid in the sense that
     /// the piece can perform the move/capture. However, this
     /// method does not verify that the move will not leave
     /// the player's king in check or that it doesn't result
     /// in a repeated board position.
-    public func generateMoves() -> AnySequence<Move> {
+    func possibleMoves() -> AnySequence<Move> {
         let pieces = board.pieces(player: toMove)
         return AnySequence(pieces.lazy.flatMap({ (piece, location) in
             return self.moves(piece: piece, location: location)
@@ -24,7 +36,7 @@ extension Position {
     }
 
     /// Generate array of moves for a `Piece` at the given `Location`.
-    public func moves(piece: Piece, location: Location) -> AnySequence<Move> {
+    func moves(piece: Piece, location: Location) -> AnySequence<Move> {
         switch piece.kind {
         case .pawn:   return pawnMoves(piece: piece, location: location)
         case .knight: return knightMoves(piece: piece, location: location)
@@ -258,6 +270,38 @@ extension Position {
         // TODO: Castling
         
         return AnySequence(result)
+    }
+
+    // MARK:- Legal moves
+
+    /// Determine whether specified move is legal given the king's position.
+    ///
+    /// - todo: Optimize this. As-is, it generates a new position and checks all possible responses for any move that _might_ put the king into check.
+    func isLegal(move: Move, kingLocation: Location) -> Bool {
+        let from = move.from
         
+        if from == kingLocation && !move.isResignation {
+            let responses = possibleOpponentResponses(move: move)
+            if responses.contains(where: { $0.isCapture && $0.to == move.to }) {
+                return false
+            }
+
+            // TODO: For castling, need to check intervening squares as well.
+        }
+        else if from.isSameDiagonal(kingLocation) ||
+            from.isSameFile(kingLocation) ||
+            from.isSameRank(kingLocation)
+        {
+            let responses = possibleOpponentResponses(move: move)
+            if responses.contains(where: { $0.isCapture && $0.to == kingLocation }) {
+                return false
+            }
+        }
+        
+        return true
+    }
+
+    func possibleOpponentResponses(move: Move) -> AnySequence<Move> {
+        return self.after(move).possibleMoves()
     }
 }

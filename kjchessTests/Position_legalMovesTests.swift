@@ -1,14 +1,14 @@
 //
-//  Position_generateMovesTests.swift
+//  Position_legalMovesTests.swift
 //  kjchess
 //
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
 import XCTest
-@testable import kjchess
+import kjchess
 
-class Position_generateMovesTests: XCTestCase {
+class Position_legalMovesTests: XCTestCase {
 
     func testWhiteNewGameMoves() {
         let pos = Position.newGame()
@@ -26,7 +26,7 @@ class Position_generateMovesTests: XCTestCase {
            "WNg1-f3", "WNg1-h3"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -55,7 +55,7 @@ class Position_generateMovesTests: XCTestCase {
            "BNg8-f6", "BNg8-h6"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -82,7 +82,7 @@ class Position_generateMovesTests: XCTestCase {
             "WPe4xNf5"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -105,7 +105,7 @@ class Position_generateMovesTests: XCTestCase {
             "BPd5xNe4"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -131,7 +131,7 @@ class Position_generateMovesTests: XCTestCase {
            "WNd4-b5"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -156,7 +156,7 @@ class Position_generateMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .white, moves: [])
 
         // Note: Filter out the moves that the pawns could make.
-        let moves = Array(pos.generateMoves()).filter { $0.from == d4 }
+        let moves = Array(pos.legalMoves()).filter { $0.from == d4 }
 
         XCTAssertEqual(0, moves.count, "No moves by the knight are possible")
     }
@@ -186,7 +186,7 @@ class Position_generateMovesTests: XCTestCase {
            "WNd4xQb5"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -218,7 +218,7 @@ class Position_generateMovesTests: XCTestCase {
            "WRd4-h4"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -254,7 +254,7 @@ class Position_generateMovesTests: XCTestCase {
             "WRd4xQg4"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -285,7 +285,7 @@ class Position_generateMovesTests: XCTestCase {
             "WBe4-h7"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -320,7 +320,7 @@ class Position_generateMovesTests: XCTestCase {
             "BBd4xQf2"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -363,7 +363,7 @@ class Position_generateMovesTests: XCTestCase {
             "BQc3-c8"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -410,7 +410,7 @@ class Position_generateMovesTests: XCTestCase {
             "BQd4xQd6"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -436,7 +436,7 @@ class Position_generateMovesTests: XCTestCase {
             "WKe3-d4"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -464,7 +464,133 @@ class Position_generateMovesTests: XCTestCase {
             "WKd4-c5"
         ]
 
-        let moves = Array(pos.generateMoves())
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testLegalMovesPawnPinnedByQueen() {
+        // Note: WP at b2 is pinned by BQ at h8.
+        let board = Board.empty.with([(WK, a1),
+                                      (WP, a2),
+                                      (WP, b2),
+                                      (BQ, h8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WPa2-a3",
+            "WPa2-a4",
+            "WKa1-b1"
+            // WPb2-b3 and WPb2-b4 are not legal
+        ]
+
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testLegalMovesKnightPinnedByBishop() {
+        // Note: BN at g7 is pinned by WB at a1.
+        let board = Board.empty.with([(BK, h8),
+                                      (BN, g7),
+                                      (BP, h7),
+                                      (WB, a1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BPh7-h6",
+            "BPh7-h5",
+            "BKh8-g8"
+            // BN cannot move
+        ]
+
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testLegalMovesBishopPinnedByQueen() {
+        // Note: WB at e1 is pinned by BQ at e8.
+        let board = Board.empty.with([(WK, e1),
+                                      (WB, e2),
+                                      (BQ, e8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WKe1-d1",
+            "WKe1-d2",
+            "WKe1-f1",
+            "WKe1-f2"
+            // bishop cannot move
+        ]
+
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testLegalMovesBishopPinnedByRook() {
+        // Note: BB at g5 is pinned by WR at a5.
+        let board = Board.empty.with([(BK, h5),
+                                      (BB, g5),
+                                      (WR, a5)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BKh5-h6",
+            "BKh5-g6",
+            "BKh5-h4",
+            "BKh5-g4"
+            // bishop cannot move
+        ]
+
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
+
+    func testKingCantMoveIntoCheck() {
+        let board = Board.empty.with([(WK, e5),
+                                      (BR, a4),
+                                      (BQ, h6)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let expectedMoves = [
+            "WKe5-d5",
+            "WKe5-f5"
+        ]
+
+        let moves = Array(pos.legalMoves())
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 

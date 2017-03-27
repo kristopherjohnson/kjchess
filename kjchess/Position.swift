@@ -25,4 +25,15 @@ public class Position {
     public static func newGame() -> Position {
         return Position(board: Board.newGame, toMove: .white, moves: [])
     }
+
+    /// Return new position after applying a move.
+    public func after(_ move: Move) -> Position {
+        assert(move.player == toMove)
+        
+        let newBoard = board.after(move)
+        let newToMove = toMove.opponent
+        var newMoves = Array(moves)
+        newMoves.append(move)
+        return Position(board: newBoard, toMove: newToMove, moves: newMoves)
+    }
 }

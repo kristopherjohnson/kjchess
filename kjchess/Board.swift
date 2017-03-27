@@ -186,4 +186,36 @@ public struct Board {
         }
         return AnySequence(result)
     }
+
+    /// Return locations that contain the specified piece.
+    public func locations(piece: Piece) -> AnySequence<Location> {
+        var result = [Location]()
+        for rank in 0..<Board.ranksCount {
+            let file0 = rank * Board.filesCount
+            for file in 0..<Board.filesCount {
+                let index = file0 + file
+                if let p = squares[index], piece == p {
+                    result.append(Location(file, rank))
+                }
+            }
+        }
+        return AnySequence(result)
+    }
+
+    /// Return location of the given player's king, or nil if there is no king on the board.
+    ///
+    /// If there is more than one king of the given color, returns the first one found.
+    public func kingLocation(player: Player) -> Location? {
+        let piece = Piece(player, .king)
+        for rank in 0..<Board.ranksCount {
+            let file0 = rank * Board.filesCount
+            for file in 0..<Board.filesCount {
+                let index = file0 + file
+                if let p = squares[index], piece == p {
+                    return Location(file, rank)
+                }
+            }
+        }
+        return nil
+    }
 }

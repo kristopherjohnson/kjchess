@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84B2321E86F0E100E381D3 /* NotationTests.swift */; };
+		4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA11E8B2BAE007F94D0 /* main.swift */; };
+		4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
+		4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
 		4EF6CF6F1E747D76001103A8 /* kjchess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF6CF651E747D76001103A8 /* kjchess.framework */; };
 		4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF731E747D76001103A8 /* kjchessTests.swift */; };
 		4EF6CF761E747D76001103A8 /* kjchess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF6CF681E747D76001103A8 /* kjchess.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -32,8 +35,23 @@
 		};
 /* End PBXContainerItemProxy section */
 
+/* Begin PBXCopyFilesBuildPhase section */
+		4EB68E9D1E8B2BAE007F94D0 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
 		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
+		4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "kjchess-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
+		4EB68EA11E8B2BAE007F94D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UCIEngine.swift; sourceTree = "<group>"; };
 		4EF6CF651E747D76001103A8 /* kjchess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = kjchess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF6CF681E747D76001103A8 /* kjchess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kjchess.h; sourceTree = "<group>"; };
 		4EF6CF691E747D76001103A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +70,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		4EB68E9C1E8B2BAE007F94D0 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4EF6CF611E747D76001103A8 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -70,11 +95,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4EB68EA01E8B2BAE007F94D0 /* kjchess-cli */ = {
+			isa = PBXGroup;
+			children = (
+				4EB68EA11E8B2BAE007F94D0 /* main.swift */,
+			);
+			path = "kjchess-cli";
+			sourceTree = "<group>";
+		};
 		4EF6CF5B1E747D76001103A8 = {
 			isa = PBXGroup;
 			children = (
 				4EF6CF671E747D76001103A8 /* kjchess */,
 				4EF6CF721E747D76001103A8 /* kjchessTests */,
+				4EB68EA01E8B2BAE007F94D0 /* kjchess-cli */,
 				4EF6CF661E747D76001103A8 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -84,6 +118,7 @@
 			children = (
 				4EF6CF651E747D76001103A8 /* kjchess.framework */,
 				4EF6CF6E1E747D76001103A8 /* kjchessTests.xctest */,
+				4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -100,6 +135,7 @@
 				4EF6CF851E7572CF001103A8 /* Player.swift */,
 				4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */,
 				4EF6CF7F1E747D8D001103A8 /* Position.swift */,
+				4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */,
 			);
 			path = kjchess;
 			sourceTree = "<group>";
@@ -130,6 +166,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		4EB68E9E1E8B2BAE007F94D0 /* kjchess-cli */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 4EB68EA51E8B2BAE007F94D0 /* Build configuration list for PBXNativeTarget "kjchess-cli" */;
+			buildPhases = (
+				4EB68E9B1E8B2BAE007F94D0 /* Sources */,
+				4EB68E9C1E8B2BAE007F94D0 /* Frameworks */,
+				4EB68E9D1E8B2BAE007F94D0 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "kjchess-cli";
+			productName = "kjchess-cli";
+			productReference = 4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */;
+			productType = "com.apple.product-type.tool";
+		};
 		4EF6CF641E747D76001103A8 /* kjchess */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 4EF6CF791E747D76001103A8 /* Build configuration list for PBXNativeTarget "kjchess" */;
@@ -172,10 +225,15 @@
 		4EF6CF5C1E747D76001103A8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0820;
+				LastSwiftUpdateCheck = 0830;
 				LastUpgradeCheck = 0820;
 				ORGANIZATIONNAME = "Kristopher Johnson";
 				TargetAttributes = {
+					4EB68E9E1E8B2BAE007F94D0 = {
+						CreatedOnToolsVersion = 8.3;
+						DevelopmentTeam = D5E423632K;
+						ProvisioningStyle = Automatic;
+					};
 					4EF6CF641E747D76001103A8 = {
 						CreatedOnToolsVersion = 8.2.1;
 						DevelopmentTeam = D5E423632K;
@@ -203,6 +261,7 @@
 			targets = (
 				4EF6CF641E747D76001103A8 /* kjchess */,
 				4EF6CF6D1E747D76001103A8 /* kjchessTests */,
+				4EB68E9E1E8B2BAE007F94D0 /* kjchess-cli */,
 			);
 		};
 /* End PBXProject section */
@@ -225,6 +284,15 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		4EB68E9B1E8B2BAE007F94D0 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */,
+				4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		4EF6CF601E747D76001103A8 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -234,6 +302,7 @@
 				4EF6CF8A1E757328001103A8 /* Board.swift in Sources */,
 				4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */,
 				4EF6CF901E75E932001103A8 /* Position_legalMoves.swift in Sources */,
+				4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
 				4EF6CF821E74CA9F001103A8 /* Location.swift in Sources */,
 				4EF6CF801E747D8D001103A8 /* Position.swift in Sources */,
 			);
@@ -261,6 +330,26 @@
 /* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
+		4EB68EA31E8B2BAE007F94D0 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEVELOPMENT_TEAM = D5E423632K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Debug;
+		};
+		4EB68EA41E8B2BAE007F94D0 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				DEVELOPMENT_TEAM = D5E423632K;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 3.0;
+			};
+			name = Release;
+		};
 		4EF6CF771E747D76001103A8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -434,6 +523,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		4EB68EA51E8B2BAE007F94D0 /* Build configuration list for PBXNativeTarget "kjchess-cli" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				4EB68EA31E8B2BAE007F94D0 /* Debug */,
+				4EB68EA41E8B2BAE007F94D0 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		4EF6CF5F1E747D76001103A8 /* Build configuration list for PBXProject "kjchess" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

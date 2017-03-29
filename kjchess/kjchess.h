@@ -2,7 +2,6 @@
 //  kjchess.h
 //  kjchess
 //
-//  Created by Kristopher Johnson on 3/11/17.
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 

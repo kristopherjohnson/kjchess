@@ -21,11 +21,11 @@ Currently working on UCI protocol implementation so that kjchess can be used as 
 
 The easiest way to build everything is to run this command from the top-level directory:
 
-   make all
+    make all
 
 The binaries will be in the `build/Release` directory.
 
 To run unit tests, execute this command:
 
-   make test
+    make test
 

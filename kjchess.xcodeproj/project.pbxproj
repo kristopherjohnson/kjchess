@@ -13,6 +13,7 @@
 		4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
 		4EB68EAA1E8DCA3D007F94D0 /* log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA91E8DCA3D007F94D0 /* log.swift */; };
 		4EB68EAB1E8DCA3D007F94D0 /* log.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA91E8DCA3D007F94D0 /* log.swift */; };
+		4EB68EAD1E8DE285007F94D0 /* UCIEngineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */; };
 		4EF6CF6F1E747D76001103A8 /* kjchess.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4EF6CF651E747D76001103A8 /* kjchess.framework */; };
 		4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF731E747D76001103A8 /* kjchessTests.swift */; };
 		4EF6CF761E747D76001103A8 /* kjchess.h in Headers */ = {isa = PBXBuildFile; fileRef = 4EF6CF681E747D76001103A8 /* kjchess.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -55,6 +56,7 @@
 		4EB68EA11E8B2BAE007F94D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UCIEngine.swift; sourceTree = "<group>"; };
 		4EB68EA91E8DCA3D007F94D0 /* log.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = log.swift; sourceTree = "<group>"; };
+		4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UCIEngineTests.swift; sourceTree = "<group>"; };
 		4EF6CF651E747D76001103A8 /* kjchess.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = kjchess.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EF6CF681E747D76001103A8 /* kjchess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = kjchess.h; sourceTree = "<group>"; };
 		4EF6CF691E747D76001103A8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -152,6 +154,7 @@
 				4EF6CF731E747D76001103A8 /* kjchessTests.swift */,
 				4E84B2321E86F0E100E381D3 /* NotationTests.swift */,
 				4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */,
+				4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */,
 			);
 			path = kjchessTests;
 			sourceTree = "<group>";
@@ -322,6 +325,7 @@
 				4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */,
 				4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */,
 				4EF6CF921E75EF50001103A8 /* BoardTests.swift in Sources */,
+				4EB68EAD1E8DE285007F94D0 /* UCIEngineTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

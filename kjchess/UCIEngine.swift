@@ -42,18 +42,31 @@ public class UCIEngine {
     /// If true, emit diagnostic output to the client.
     public var isDebugEnabled: Bool = false
 
+    /// Initializer
+    public init() {
+
+    }
+
     /// Read UCI commands and process them until "quit" or end-of-stream.
     public func runCommandLoop() throws {
         if isLogEnabled { os_log("Enter runCommandLoop()", log: uciLog) }
 
         while let line = getLine() {
-            let cmdTokens = tokens(line)
-            if !processCommand(tokens: cmdTokens) {
+            if !processInput(line) {
                 break
             }
         }
 
         if isLogEnabled { os_log("Exit runCommandLoop()", log: uciLog) }
+    }
+
+    /// Process a line of input.
+    ///
+    /// This is invoked by `runCommandLoop()` for each line of input.
+    /// It may be called directly to "push" input to the engine instead
+    /// of using `runCommandLoop()`.
+    public func processInput(_ line: String) -> Bool {
+        return processCommand(tokens: tokens(line))
     }
 
     /// Split an input line into tokens.

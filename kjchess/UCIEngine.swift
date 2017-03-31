@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import os.log
 
 /// Implementation of UCI (Universal Chess Interface) protocol.
 /// Includes a few non-standard extensions that are useful for debugging.
@@ -14,26 +15,45 @@ public class UCIEngine {
     /// Function called to read a line of input.
     ///
     /// By default, this reads a line from standard input.
-    public var getLine: () -> String?
-        = { readLine(strippingNewline: true) }
+    ///
+    /// It can be set to another function to obtain input by
+    /// other means.
+    public var getLine: () -> String? = {
+        if let line = readLine(strippingNewline: true) {
+            if isLogEnabled { os_log("Read: %{public}@", log: uciLog, line) }
+            return line
+        }
+        else {
+            return nil
+        }
+    }
 
     /// Function called to write a line of output.
     ///
     /// By default, this writes to standard output.
-    public var putLine: (String) -> ()
-        = { print($0) }
+    ///
+    /// It can be set to another function to send output by
+    /// other means.
+    public var putLine: (String) -> () = { line in
+        if isLogEnabled { os_log("Write: %{public}@", log: uciLog, line) }
+        print(line)
+    }
 
-    /// If true, emit diagnostics.
-    public var debug: Bool = false
+    /// If true, emit diagnostic output to the client.
+    public var isDebugEnabled: Bool = false
 
     /// Read UCI commands and process them until "quit" or end-of-stream.
     public func runCommandLoop() throws {
+        if isLogEnabled { os_log("Enter runCommandLoop()", log: uciLog) }
+
         while let line = getLine() {
             let cmdTokens = tokens(line)
             if !processCommand(tokens: cmdTokens) {
-                return
+                break
             }
         }
+
+        if isLogEnabled { os_log("Exit runCommandLoop()", log: uciLog) }
     }
 
     /// Split an input line into tokens.
@@ -53,12 +73,12 @@ public class UCIEngine {
 
         let cmd = tokens[0]
 
+        if isLogEnabled { os_log("Command: %{public}@", log: uciLog, "\(tokens)") }
+
         switch cmd {
 
         case "uci":
-            putLine("id name kjchess")
-            putLine("id author Kristopher Johnson")
-            putLine("uciok")
+            onUCICommand(tokens: tokens)
 
         case "debug":
             onDebugCommand(tokens: tokens)
@@ -91,74 +111,68 @@ public class UCIEngine {
             return false
 
         default:
-            writeInfo("Unexpected command \(cmd)")
+            putInfoLine("unexpected command \(cmd)")
         }
 
         return true
     }
 
+    private func onUCICommand(tokens: [String]) {
+        putLine("id name kjchess")
+        putLine("id author Kristopher Johnson")
+        putLine("uciok")
+    }
+
     private func onDebugCommand(tokens: [String]) {
         if tokens.count > 1 {
             switch tokens[1] {
+
             case "on":
-                debug = true
-                writeInfo("debug on")
+                isDebugEnabled = true
+
             case "off":
-                debug = false
+                isDebugEnabled = false
+
             default:
-                if debug {
-                    writeInfo("Unrecognized argument: \(tokens)")
-                }
+                if isDebugEnabled { putInfoLine("Unrecognized argument: \(tokens)") }
             }
         }
-        else if debug {
-            writeInfo("Missing argument to debug command")
+        else if isDebugEnabled {
+            putInfoLine("Missing argument to debug command")
         }
     }
 
     private func onSetOptionCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onRegisterCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onNewGameCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onPositionCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onGoCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onStopCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
     private func onPonderHitCommand(tokens: [String]) {
-        if debug {
-            writeInfo("Ignoring command \(tokens)")
-        }
+        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
     }
 
-    private func writeInfo(_ s: String) {
+    private func putInfoLine(_ s: String) {
+        if isLogEnabled { os_log("Info: %{public}@", log: uciLog, s) }
+
         putLine("info string \(s)")
     }
 }

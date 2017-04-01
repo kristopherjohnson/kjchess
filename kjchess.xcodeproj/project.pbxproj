@@ -26,6 +26,19 @@
 		4EF6CF8E1E75E889001103A8 /* Position_legalMovesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */; };
 		4EF6CF901E75E932001103A8 /* Position_legalMoves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */; };
 		4EF6CF921E75EF50001103A8 /* BoardTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF911E75EF50001103A8 /* BoardTests.swift */; };
+		4EFF4FCF1E8F202E00D30942 /* Board.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF891E757328001103A8 /* Board.swift */; };
+		4EFF4FD01E8F203500D30942 /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF811E74CA9F001103A8 /* Location.swift */; };
+		4EFF4FD11E8F203B00D30942 /* Move.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF8B1E757350001103A8 /* Move.swift */; };
+		4EFF4FD21E8F203E00D30942 /* Piece.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF871E7572F9001103A8 /* Piece.swift */; };
+		4EFF4FD31E8F204100D30942 /* Player.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF851E7572CF001103A8 /* Player.swift */; };
+		4EFF4FD41E8F204500D30942 /* Position_legalMoves.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */; };
+		4EFF4FD51E8F204A00D30942 /* Position.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EF6CF7F1E747D8D001103A8 /* Position.swift */; };
+		4EFF4FD71E8F748300D30942 /* parseCoordinateMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FD61E8F748300D30942 /* parseCoordinateMove.swift */; };
+		4EFF4FD81E8F748300D30942 /* parseCoordinateMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FD61E8F748300D30942 /* parseCoordinateMove.swift */; };
+		4EFF4FDA1E8F781300D30942 /* parseCoordinateMoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */; };
+		4EFF4FDC1E902EBE00D30942 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */; };
+		4EFF4FDE1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */; };
+		4EFF4FDF1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -72,6 +85,10 @@
 		4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position_legalMovesTests.swift; sourceTree = "<group>"; };
 		4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position_legalMoves.swift; sourceTree = "<group>"; };
 		4EF6CF911E75EF50001103A8 /* BoardTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BoardTests.swift; sourceTree = "<group>"; };
+		4EFF4FD61E8F748300D30942 /* parseCoordinateMove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parseCoordinateMove.swift; sourceTree = "<group>"; };
+		4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parseCoordinateMoveTests.swift; sourceTree = "<group>"; };
+		4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
+		4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String_CharacterView_at.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,10 +154,12 @@
 				4EF6CF811E74CA9F001103A8 /* Location.swift */,
 				4EB68EA91E8DCA3D007F94D0 /* log.swift */,
 				4EF6CF8B1E757350001103A8 /* Move.swift */,
+				4EFF4FD61E8F748300D30942 /* parseCoordinateMove.swift */,
 				4EF6CF871E7572F9001103A8 /* Piece.swift */,
 				4EF6CF851E7572CF001103A8 /* Player.swift */,
 				4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */,
 				4EF6CF7F1E747D8D001103A8 /* Position.swift */,
+				4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */,
 				4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */,
 			);
 			path = kjchess;
@@ -152,7 +171,9 @@
 				4EF6CF911E75EF50001103A8 /* BoardTests.swift */,
 				4EF6CF751E747D76001103A8 /* Info.plist */,
 				4EF6CF731E747D76001103A8 /* kjchessTests.swift */,
+				4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */,
 				4E84B2321E86F0E100E381D3 /* NotationTests.swift */,
+				4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */,
 				4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */,
 				4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */,
 			);
@@ -295,8 +316,17 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4EFF4FD81E8F748300D30942 /* parseCoordinateMove.swift in Sources */,
+				4EFF4FDF1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
 				4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */,
+				4EFF4FD21E8F203E00D30942 /* Piece.swift in Sources */,
 				4EB68EAB1E8DCA3D007F94D0 /* log.swift in Sources */,
+				4EFF4FD01E8F203500D30942 /* Location.swift in Sources */,
+				4EFF4FD41E8F204500D30942 /* Position_legalMoves.swift in Sources */,
+				4EFF4FD31E8F204100D30942 /* Player.swift in Sources */,
+				4EFF4FCF1E8F202E00D30942 /* Board.swift in Sources */,
+				4EFF4FD11E8F203B00D30942 /* Move.swift in Sources */,
+				4EFF4FD51E8F204A00D30942 /* Position.swift in Sources */,
 				4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -307,10 +337,12 @@
 			files = (
 				4EF6CF8C1E757350001103A8 /* Move.swift in Sources */,
 				4EF6CF861E7572CF001103A8 /* Player.swift in Sources */,
+				4EFF4FDE1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
 				4EF6CF8A1E757328001103A8 /* Board.swift in Sources */,
 				4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */,
 				4EB68EAA1E8DCA3D007F94D0 /* log.swift in Sources */,
 				4EF6CF901E75E932001103A8 /* Position_legalMoves.swift in Sources */,
+				4EFF4FD71E8F748300D30942 /* parseCoordinateMove.swift in Sources */,
 				4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
 				4EF6CF821E74CA9F001103A8 /* Location.swift in Sources */,
 				4EF6CF801E747D8D001103A8 /* Position.swift in Sources */,
@@ -323,7 +355,9 @@
 			files = (
 				4EF6CF8E1E75E889001103A8 /* Position_legalMovesTests.swift in Sources */,
 				4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */,
+				4EFF4FDA1E8F781300D30942 /* parseCoordinateMoveTests.swift in Sources */,
 				4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */,
+				4EFF4FDC1E902EBE00D30942 /* LocationTests.swift in Sources */,
 				4EF6CF921E75EF50001103A8 /* BoardTests.swift in Sources */,
 				4EB68EAD1E8DE285007F94D0 /* UCIEngineTests.swift in Sources */,
 			);
@@ -540,6 +574,7 @@
 				4EB68EA41E8B2BAE007F94D0 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		4EF6CF5F1E747D76001103A8 /* Build configuration list for PBXProject "kjchess" */ = {
 			isa = XCConfigurationList;

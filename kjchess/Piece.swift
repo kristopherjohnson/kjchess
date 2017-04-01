@@ -43,6 +43,22 @@ public enum PieceKind {
         case .king:   return "k"
         }
     }
+
+    /// Given a character, return associated `PieceKind`.
+    ///
+    /// - returns: `nil` if character is not a valid piece kind.
+    static func fromCharacter(_ character: Character) -> PieceKind? {
+        switch character {
+        case "P", "p", "♙", "♟": return .pawn
+        case "N", "n", "♘", "♞": return .knight
+        case "B", "b", "♗", "♝": return .bishop
+        case "R", "r", "♖", "♜": return .rook
+        case "Q", "q", "♕", "♛": return .queen
+        case "K", "k", "♔", "♚": return .king
+        default:  return nil
+        }
+    }
+
 }
 
 extension PieceKind: CustomStringConvertible {
@@ -106,6 +122,16 @@ extension Piece: CustomDebugStringConvertible {
 extension Piece: Equatable {}
 public func ==(lhs: Piece, rhs: Piece) -> Bool {
     return lhs.player == rhs.player && lhs.kind == rhs.kind
+}
+public func ==(lhs: Piece?, rhs: Piece?) -> Bool {
+    switch (lhs, rhs) {
+    case (.some(let l), .some(let r)):
+        return l == r
+    case (.none, .none):
+        return true
+    default:
+        return false
+    }
 }
 
 extension Piece: Hashable {

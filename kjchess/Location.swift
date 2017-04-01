@@ -22,10 +22,51 @@ public struct Location {
     let file: Int
     let rank: Int
 
+    /// Initializer
+    ///
+    /// - parameter file: an integer in the range `0...7`.
+    /// - parameter rank: an integer in the range `0...7`.
     public init(_ file: Int, _ rank: Int) {
         assert(Board.isValid(file: file, rank: rank), "file and rank must be valid")
         self.file = file
         self.rank = rank
+    }
+
+    /// Initializer
+    ///
+    /// - parameter fileCharacter: a character in the range "a"..."h".
+    /// - parameter rankCharacter: a character in the range "1"..."8"
+    ///
+    /// - returns: `nil` if parameters are not valid.
+    public init?(_ fileCharacter: Character, _ rankCharacter: Character) {
+        if let file = Location.fileIndex(character: fileCharacter),
+            let rank = Location.rankIndex(character: rankCharacter)
+        {
+            self.file = file
+            self.rank = rank
+        }
+        else {
+            return nil
+        }
+    }
+
+    /// Initializer
+    ///
+    /// - parameter algebraicNotationString: A two-character string like "e1" or "h8".
+    ///
+    /// - returns: `nil` if the parameter is not a valid algebraic-notation string.
+    public init?(_ algebraicNotationString: String) {
+        let chars = algebraicNotationString.characters
+        if chars.count != 2 { return nil }
+        if let file = Location.fileIndex(character: chars.at(offset: 0)),
+            let rank = Location.rankIndex(character: chars.at(offset: 1))
+        {
+            self.file = file
+            self.rank = rank
+        }
+        else {
+            return nil
+        }
     }
 
     /// Create a new `Location` if the given file and rank are valid.
@@ -64,6 +105,40 @@ public struct Location {
         else {
             assert(false, "rank must be in the range 0...7")
             return "?"
+        }
+    }
+
+    /// Given a character "a"..."h", return the file index.
+    ///
+    /// - returns: Index in the range 0...7, or `nil` if character is not a valid file.
+    public static func fileIndex(character: Character) -> Int? {
+        switch character {
+        case "a", "A": return 0
+        case "b", "B": return 1
+        case "c", "C": return 2
+        case "d", "D": return 3
+        case "e", "E": return 4
+        case "f", "F": return 5
+        case "g", "G": return 6
+        case "h", "H": return 7
+        default:       return nil
+        }
+    }
+
+    /// Given a character "1"..."8", return the rank index.
+    ///
+    /// - returns: Index in the range 0...7, or `nil` if character is not a valid rank.
+    public static func rankIndex(character: Character) -> Int? {
+        switch character {
+        case "1": return 0
+        case "2": return 1
+        case "3": return 2
+        case "4": return 3
+        case "5": return 4
+        case "6": return 5
+        case "7": return 6
+        case "8": return 7
+        default:  return nil
         }
     }
 

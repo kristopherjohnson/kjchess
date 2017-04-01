@@ -45,44 +45,44 @@ class UCIEngineTests: XCTestCase {
     var engine: UCIEngine?
 
     // Synchronizes input sent to the engine
-    var inputQueue: DispatchQueue?
+    var toEngineQueue: DispatchQueue?
 
-    var outputLineStream: LineStream?
+    var fromEngineStream: LineStream?
 
     override func setUp() {
         super.setUp()
 
-        inputQueue = DispatchQueue(label: "UCIEngineTestsInput")
+        toEngineQueue = DispatchQueue(label: "UCIEngineTestsInput")
 
-        outputLineStream = LineStream()
+        fromEngineStream = LineStream()
 
         engine = UCIEngine()
-        engine!.putLine = { self.outputLineStream?.putLine($0) }
+        engine!.putLine = { self.fromEngineStream?.putLine($0) }
     }
     
     override func tearDown() {
         engine = nil
-        inputQueue = nil
-        outputLineStream = nil
+        toEngineQueue = nil
+        fromEngineStream = nil
 
         super.tearDown()
     }
 
-    func sendToEngine(_ lines: String...) {
+    func send(_ lines: String...) {
         for line in lines {
-            inputQueue?.async {
+            toEngineQueue?.async {
                 let _ = self.engine?.processInput(line)
             }
         }
     }
 
-    func readFromEngine() -> String? {
-        return outputLineStream?.readLine()
+    func readLine() -> String? {
+        return fromEngineStream?.readLine()
     }
 
-    func expectFromEngine(_ lines: String...) {
+    func expect(_ lines: String...) {
         for line in lines {
-            if let r = readFromEngine() {
+            if let r = readLine() {
                 XCTAssertEqual(r, line)
             }
             else {
@@ -91,12 +91,67 @@ class UCIEngineTests: XCTestCase {
         }
     }
 
-    func testInitialization() {
-        sendToEngine("uci")
-        expectFromEngine(
+    // MARK:- Tests
+
+    func testUciInitialization() {
+        send(
+            "uci"
+        )
+
+        expect(
             "id name kjchess",
             "id author Kristopher Johnson",
             "uciok"
         )
+    }
+
+    func testIsReady() {
+        send(
+            "isready"
+        )
+
+        expect(
+            "readyok"
+        )
+    }
+
+    func testNewGame() {
+        send(
+            "ucinewgame"
+        )
+
+        XCTAssertEqual(Position.newGame(), engine!.position)
+    }
+
+    func testPositionAfter_e2e4() {
+        // Note: A real GUI wouldn't send "isready" after
+        // a a "position" command, but we need to make sure
+        // we wait until the engine processes the command
+        // asynchronously before checking the result.
+
+        send(
+            "position startpos moves e2e4",
+            "isready"
+        )
+
+        expect(
+            "readyok"
+        )
+        
+        let expectedPosition = Position.newGame().after(
+            .move(piece: WP, from: e2, to: e4))
+        XCTAssertEqual(expectedPosition, engine!.position)
+    }
+
+    func testPlayBlackFirstMove() {
+        /*
+        send(
+            "go wtime 300000 btime 300000 movestogo 40"
+        )
+        
+        expect(
+            "bestmove e7e5"
+        )
+        */
     }
 }

@@ -11,7 +11,7 @@ import Foundation
 ///
 /// Contains the current board layout, the player to move,
 /// and complete history of moves.
-public class Position {
+public struct Position {
     public let board: Board
     public let toMove: Player
     public let moves: [Move]
@@ -37,3 +37,13 @@ public class Position {
         return Position(board: newBoard, toMove: newToMove, moves: newMoves)
     }
 }
+
+// MARK:- Equatable
+
+extension Position: Equatable {}
+public func ==(lhs: Position, rhs: Position) -> Bool {
+    return lhs.board == rhs.board
+        && lhs.toMove == rhs.toMove
+        && lhs.moves == rhs.moves
+}
+

@@ -12,6 +12,8 @@ import os.log
 /// Includes a few non-standard extensions that are useful for debugging.
 public class UCIEngine {
 
+    public private(set) var position = Position.newGame()
+
     /// Function called to read a line of input.
     ///
     /// By default, this reads a line from standard input.
@@ -164,11 +166,70 @@ public class UCIEngine {
     }
 
     private func onNewGameCommand(tokens: [String]) {
-        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
+        position = Position.newGame()
     }
 
+    /// Parse a "position" command.
+    ///
+    /// Syntax: `position [fen <fenstring> | startpos ]  moves <move1> .... <movei>`
     private func onPositionCommand(tokens: [String]) {
-        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
+        if tokens.count < 2 {
+            if isLogEnabled { os_log("Missing tokens after \"position\"", log: uciLog, type: .error) }
+            return
+        }
+
+        if tokens[1] == "startpos" {
+            // position startpos  moves <move1> ... <moveN>
+            if tokens.count < 3 || tokens[2] != "moves" {
+                if isLogEnabled {
+                    os_log("Missing tokens after \"startpos\"", log: uciLog, type: .error)
+                }
+                return
+            }
+
+            position = Position.newGame()
+
+            for i in 3..<tokens.count {
+                if let (from, to, promotedKind) = parseCoordinateMove(tokens[i]) {
+                    let moves = position.legalMoves().filter { $0.from == from && $0.to == to }
+                    if moves.isEmpty {
+                        putInfoLine("\(tokens[i]) is not a legal move from this position")
+                        return
+                    }
+                    else if moves.count == 1 {
+                        if isDebugEnabled { putInfoLine("Apply move \(moves[0].description)") }
+                        position = position.after(moves[0])
+                    }
+                    else if let promotedKind = promotedKind {
+                        let moves = moves.filter { $0.promotedKind == promotedKind }
+                        if moves.isEmpty {
+                            putInfoLine("\(tokens[i]) is not a valid promotion move")
+                            return
+                        }
+                        else if moves.count == 1 {
+                            if isDebugEnabled { putInfoLine("Apply move \(moves[0].description)") }
+                            position = position.after(moves[0])
+                        }
+                        else {
+                            putInfoLine("Internal error: \(tokens[i]) is ambiguous")
+                            return
+                        }
+                    }
+                    else {
+                        putInfoLine("Internal error: \(tokens[i]) is ambiguous")
+                        return
+                    }
+                }
+                else if isLogEnabled {
+                    os_log("Unable to parse move %{public}@", log: uciLog, type: .error, tokens[i])
+                }
+            }
+        }
+        else {
+            if isLogEnabled {
+                os_log("Only \"position startpos\" is supported", log: uciLog, type: .error)
+            }
+        }
     }
 
     private func onGoCommand(tokens: [String]) {

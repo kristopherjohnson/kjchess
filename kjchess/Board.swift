@@ -219,3 +219,20 @@ public struct Board {
         return nil
     }
 }
+
+// MARK:- Equatable
+
+extension Board: Equatable {}
+public func ==(lhs: Board, rhs: Board) -> Bool {
+    if lhs.squares.count != rhs.squares.count {
+        return false
+    }
+
+    for i in 0..<lhs.squares.count {
+        if !(lhs.squares[i] == rhs.squares[i]) {
+            return false
+        }
+    }
+
+    return true
+}

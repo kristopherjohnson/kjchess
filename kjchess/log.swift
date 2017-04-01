@@ -17,3 +17,6 @@ let mainLog = OSLog(subsystem: logSubsystem, category: "main")
 
 /// Log for the UCIEngine.
 let uciLog = OSLog(subsystem: logSubsystem, category: "uci")
+
+/// Log for parse errors.
+let parseLog = OSLog(subsystem: logSubsystem, category: "parse")

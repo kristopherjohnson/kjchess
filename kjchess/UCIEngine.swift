@@ -190,44 +190,28 @@ public class UCIEngine {
             position = Position.newGame()
 
             for i in 3..<tokens.count {
-                if let (from, to, promotedKind) = parseCoordinateMove(tokens[i]) {
-                    let moves = position.legalMoves().filter { $0.from == from && $0.to == to }
-                    if moves.isEmpty {
-                        putInfoLine("\(tokens[i]) is not a legal move from this position")
-                        return
-                    }
-                    else if moves.count == 1 {
-                        if isDebugEnabled { putInfoLine("Apply move \(moves[0].description)") }
-                        position = position.after(moves[0])
-                    }
-                    else if let promotedKind = promotedKind {
-                        let moves = moves.filter { $0.promotedKind == promotedKind }
-                        if moves.isEmpty {
-                            putInfoLine("\(tokens[i]) is not a valid promotion move")
-                            return
-                        }
-                        else if moves.count == 1 {
-                            if isDebugEnabled { putInfoLine("Apply move \(moves[0].description)") }
-                            position = position.after(moves[0])
-                        }
-                        else {
-                            putInfoLine("Internal error: \(tokens[i]) is ambiguous")
-                            return
-                        }
-                    }
-                    else {
-                        putInfoLine("Internal error: \(tokens[i]) is ambiguous")
-                        return
+                do {
+                    let newPosition = try position.after(coordinateMove: tokens[i])
+                    position = newPosition
+                    if isDebugEnabled {
+                        putLine("Applied move \(tokens[i])")
                     }
                 }
-                else if isLogEnabled {
-                    os_log("Unable to parse move %{public}@", log: uciLog, type: .error, tokens[i])
+                catch (let error) {
+                    if isLogEnabled {
+                        os_log("\"position\" error: move %{public}@: %{public}@",
+                               log: uciLog,
+                               type: .error,
+                               tokens[i],
+                               error.localizedDescription)
+                    }
                 }
             }
         }
         else {
             if isLogEnabled {
-                os_log("Only \"position startpos\" is supported", log: uciLog, type: .error)
+                os_log("Only \"position startpos\" is supported",
+                       log: uciLog, type: .error)
             }
         }
     }

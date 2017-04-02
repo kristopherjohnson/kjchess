@@ -39,6 +39,11 @@
 		4EFF4FDC1E902EBE00D30942 /* LocationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */; };
 		4EFF4FDE1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */; };
 		4EFF4FDF1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */; };
+		4EFF4FE11E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FE01E913EDA00D30942 /* Position_after_coordinateMove.swift */; };
+		4EFF4FE21E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FE01E913EDA00D30942 /* Position_after_coordinateMove.swift */; };
+		4EFF4FE41E913F7C00D30942 /* ChessError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FE31E913F7C00D30942 /* ChessError.swift */; };
+		4EFF4FE51E913F7C00D30942 /* ChessError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FE31E913F7C00D30942 /* ChessError.swift */; };
+		4EFF4FE71E91415B00D30942 /* Position_after_coordinateMoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EFF4FE61E91415B00D30942 /* Position_after_coordinateMoveTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +94,9 @@
 		4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = parseCoordinateMoveTests.swift; sourceTree = "<group>"; };
 		4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationTests.swift; sourceTree = "<group>"; };
 		4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = String_CharacterView_at.swift; sourceTree = "<group>"; };
+		4EFF4FE01E913EDA00D30942 /* Position_after_coordinateMove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position_after_coordinateMove.swift; sourceTree = "<group>"; };
+		4EFF4FE31E913F7C00D30942 /* ChessError.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChessError.swift; sourceTree = "<group>"; };
+		4EFF4FE61E91415B00D30942 /* Position_after_coordinateMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Position_after_coordinateMoveTests.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -149,6 +157,7 @@
 			isa = PBXGroup;
 			children = (
 				4EF6CF891E757328001103A8 /* Board.swift */,
+				4EFF4FE31E913F7C00D30942 /* ChessError.swift */,
 				4EF6CF691E747D76001103A8 /* Info.plist */,
 				4EF6CF681E747D76001103A8 /* kjchess.h */,
 				4EF6CF811E74CA9F001103A8 /* Location.swift */,
@@ -157,6 +166,7 @@
 				4EFF4FD61E8F748300D30942 /* parseCoordinateMove.swift */,
 				4EF6CF871E7572F9001103A8 /* Piece.swift */,
 				4EF6CF851E7572CF001103A8 /* Player.swift */,
+				4EFF4FE01E913EDA00D30942 /* Position_after_coordinateMove.swift */,
 				4EF6CF8F1E75E932001103A8 /* Position_legalMoves.swift */,
 				4EF6CF7F1E747D8D001103A8 /* Position.swift */,
 				4EFF4FDD1E904EAC00D30942 /* String_CharacterView_at.swift */,
@@ -174,6 +184,7 @@
 				4EFF4FDB1E902EBE00D30942 /* LocationTests.swift */,
 				4E84B2321E86F0E100E381D3 /* NotationTests.swift */,
 				4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */,
+				4EFF4FE61E91415B00D30942 /* Position_after_coordinateMoveTests.swift */,
 				4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */,
 				4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */,
 			);
@@ -317,6 +328,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EFF4FD81E8F748300D30942 /* parseCoordinateMove.swift in Sources */,
+				4EFF4FE51E913F7C00D30942 /* ChessError.swift in Sources */,
 				4EFF4FDF1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
 				4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */,
 				4EFF4FD21E8F203E00D30942 /* Piece.swift in Sources */,
@@ -328,6 +340,7 @@
 				4EFF4FD11E8F203B00D30942 /* Move.swift in Sources */,
 				4EFF4FD51E8F204A00D30942 /* Position.swift in Sources */,
 				4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
+				4EFF4FE21E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -336,11 +349,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				4EF6CF8C1E757350001103A8 /* Move.swift in Sources */,
+				4EFF4FE41E913F7C00D30942 /* ChessError.swift in Sources */,
 				4EF6CF861E7572CF001103A8 /* Player.swift in Sources */,
 				4EFF4FDE1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
 				4EF6CF8A1E757328001103A8 /* Board.swift in Sources */,
 				4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */,
 				4EB68EAA1E8DCA3D007F94D0 /* log.swift in Sources */,
+				4EFF4FE11E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */,
 				4EF6CF901E75E932001103A8 /* Position_legalMoves.swift in Sources */,
 				4EFF4FD71E8F748300D30942 /* parseCoordinateMove.swift in Sources */,
 				4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
@@ -355,6 +370,7 @@
 			files = (
 				4EF6CF8E1E75E889001103A8 /* Position_legalMovesTests.swift in Sources */,
 				4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */,
+				4EFF4FE71E91415B00D30942 /* Position_after_coordinateMoveTests.swift in Sources */,
 				4EFF4FDA1E8F781300D30942 /* parseCoordinateMoveTests.swift in Sources */,
 				4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */,
 				4EFF4FDC1E902EBE00D30942 /* LocationTests.swift in Sources */,

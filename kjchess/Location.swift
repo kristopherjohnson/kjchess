@@ -185,6 +185,14 @@ extension Location: CustomStringConvertible {
     }
 }
 
+// MARK:- CustomDebugStringConvertible
+
+extension Location: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return description
+    }
+}
+
 // MARK:- Algebraic-notation symbols
 
 public let a1 = Location(0, 0)

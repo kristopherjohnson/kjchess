@@ -103,11 +103,10 @@ public struct Board {
             return self.with([(piece, to),
                               (nil, from)])
 
-        case .promote:
-            return self
-
-        case .promoteCapture:
-            return self
+        case .promote(let player, let from, let to, let promoted),
+             .promoteCapture(let player, let from, let to, _, let promoted):
+            return self.with([(Piece(player, promoted), to),
+                               (nil, from)])
             
         case .enPassantCapture(let player, let from, let to):
             let capturedPieceRank

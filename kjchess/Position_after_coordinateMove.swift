@@ -51,6 +51,6 @@ extension Position {
             }
         }
 
-        throw ChessError.noMatchingCoordinateMoves(from: from, to: to)
+        throw ChessError.noMatchingCoordinateMoves(from: from, to: to, promotedKind: promotedKind)
     }
 }

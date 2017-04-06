@@ -143,15 +143,25 @@ class UCIEngineTests: XCTestCase {
         XCTAssertEqual(expectedPosition, engine!.position)
     }
 
-    func testPlayBlackFirstMove() {
-        /*
+    func testPlayBlackFirstMoves() {
         send(
+            "position startpos moves e2e4",
             "go wtime 300000 btime 300000 movestogo 40"
         )
         
         expect(
             "bestmove e7e5"
         )
-        */
+    }
+
+    func testPlayBlackSecondMove() {
+        send(
+            "position startpos moves e2e4 e7e5 g1f3",
+            "go wtime 297440 btime 299890 movestogo 39"
+        )
+
+        expect(
+            "bestmove b8c6"
+        )
     }
 }

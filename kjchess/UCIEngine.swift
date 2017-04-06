@@ -217,7 +217,16 @@ public class UCIEngine {
     }
 
     private func onGoCommand(tokens: [String]) {
-        if isDebugEnabled { putInfoLine("Ignoring command \(tokens)") }
+        // TODO: look at the additional tokens.  For now, we just immediately return a bestmove.
+
+        // TODO: Send apppropriate "info" messages before "bestmove".
+        
+        if let move = bestMove(position: position) {
+            putLine("bestmove \(move.coordinateForm)")
+        }
+        else {
+            putLine("bestmove 0000")
+        }
     }
 
     private func onStopCommand(tokens: [String]) {

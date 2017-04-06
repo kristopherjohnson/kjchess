@@ -16,17 +16,18 @@ extension Position {
     ///
     /// - throws: `ChessError` if the move string doesn't have valid syntax or does not identify a legal move from this position.
     public func after(coordinateMove: String) throws -> Position {
-        let move = try findMove(coordinateMove: coordinateMove)
+        let move = try find(coordinateMove: coordinateMove)
         return after(move)
     }
 
-    /// Get the `Move` for the given coordinate move string.
+    /// Get the full `Move` for the given coordinate move string.
+    ///
     /// - parameter coordinateMove: A string like "e2e4" or "e7e8q"
     ///
     /// - returns: The `Move`.
     ///
     /// - throws: `ChessError` if the move string doesn't have valid syntax or does not identify a legal move from this position.
-    public func findMove(coordinateMove: String) throws -> Move {
+    public func find(coordinateMove: String) throws -> Move {
         guard let (from, to, promotedKind) = parseCoordinateMove(coordinateMove) else {
             throw ChessError.invalidCoordinateMove(move: coordinateMove)
         }

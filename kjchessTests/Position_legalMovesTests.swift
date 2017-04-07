@@ -599,4 +599,30 @@ class Position_legalMovesTests: XCTestCase {
                           "Expected \(expectedMove), but it's missing")
         }
     }
+
+    func testMoveMustGetKingOutOfCheck() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BN, g8),
+                                      (BP, a7),
+                                      (BP, b7),
+                                      (WR, d1),
+                                      (WQ, e1),
+                                      (WR, f1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let expectedMoves = [
+            "BNg8-e7"
+            // All other moves leave king in check
+        ]
+
+        let moves = Array(pos.legalMoves())
+
+        XCTAssertEqual(moves.count, expectedMoves.count)
+
+        for expectedMove in expectedMoves {
+            XCTAssertTrue(moves.contains { $0.description == expectedMove },
+                          "Expected \(expectedMove), but it's missing")
+        }
+    }
 }

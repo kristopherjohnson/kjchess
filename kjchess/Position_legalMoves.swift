@@ -279,28 +279,26 @@ extension Position {
     /// - todo: Optimize this. As-is, it generates a new position and checks all possible responses for any move that _might_ put the king into check.
     func isLegal(move: Move, kingLocation: Location) -> Bool {
         let from = move.from
-        
+
+        let responses = possibleOpponentResponses(move: move)
+
+        // If King moving, ensure it doesn't move into check.
         if from == kingLocation && !move.isResignation {
-            let responses = possibleOpponentResponses(move: move)
             if responses.contains(where: { $0.isCapture && $0.to == move.to }) {
                 return false
             }
 
             // TODO: For castling, need to check intervening squares as well.
         }
-        else if from.isSameDiagonal(kingLocation) ||
-            from.isSameFile(kingLocation) ||
-            from.isSameRank(kingLocation)
-        {
-            let responses = possibleOpponentResponses(move: move)
-            if responses.contains(where: { $0.isCapture && $0.to == kingLocation }) {
-                return false
-            }
+        // Otherwise, ensure King is not left in check
+        else if responses.contains(where: { $0.isCapture && $0.to == kingLocation }) {
+            return false
         }
         
         return true
     }
 
+    /// Get the moves that the opponent can make after the specified move is made.
     func possibleOpponentResponses(move: Move) -> AnySequence<Move> {
         return self.after(move).possibleMoves()
     }

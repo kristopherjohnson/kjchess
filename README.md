@@ -11,7 +11,6 @@ I've wanted to write a chess program since I was a teenager.  I'm finally doing 
 kjchess is not usable yet.  The following features are implemented:
 
 - Can determine legal moves for a given position, except for these limitations:
-    - Doesn't recognize when in check.
     - Doesn't recognize castling.
     - Doesn't recognize _en passant_ captures.
 - Implements enough of the UCI protocol that a game can be played with XBoard and the PolyGlot adapter.

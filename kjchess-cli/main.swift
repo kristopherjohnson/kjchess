@@ -5,7 +5,7 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Darwin
+import Foundation
 import os.log
 
 // Disable output buffering
@@ -14,7 +14,12 @@ setbuf(__stdoutp, nil)
 // TODO: Logging should be set by a command-line option
 isLogEnabled = true
 
-if isLogEnabled { os_log("kjchess-cli starting", log: mainLog) }
+if isLogEnabled {
+    os_log("kjchess-cli launch: working directory: %{public}@; arguments: %{public}@",
+           log: mainLog,
+           CommandLine.arguments.joined(separator: ", "),
+           FileManager.default.currentDirectoryPath)
+}
 
 do {
     let engine = UCIEngine()

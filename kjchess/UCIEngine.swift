@@ -222,6 +222,7 @@ public class UCIEngine {
         // TODO: Send apppropriate "info" messages before "bestmove".
         
         if let move = bestMove(position: position) {
+            putLine("info pv \(move.coordinateForm)")
             putLine("bestmove \(move.coordinateForm)")
         }
         else {

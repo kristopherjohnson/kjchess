@@ -150,6 +150,7 @@ class UCIEngineTests: XCTestCase {
         )
         
         expect(
+            "info pv e7e5",
             "bestmove e7e5"
         )
     }
@@ -161,6 +162,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
+            "info pv b8c6",
             "bestmove b8c6"
         )
     }

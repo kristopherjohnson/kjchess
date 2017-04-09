@@ -30,7 +30,7 @@ extension Position {
     /// method does not verify that the move will not leave
     /// the player's king in check or that it doesn't result
     /// in a repeated board position.
-    func possibleMoves() -> AnySequence<Move> {
+    private func possibleMoves() -> AnySequence<Move> {
         let pieces = board.pieces(player: toMove)
         return AnySequence(pieces.lazy.flatMap({ (piece, location) in
             return self.moves(piece: piece, location: location)
@@ -38,7 +38,7 @@ extension Position {
     }
 
     /// Generate array of locations under attack by the player who is not moving.
-    func locationsUnderAttack(by player: Player) -> AnySequence<Location> {
+    private func locationsUnderAttack(by player: Player) -> AnySequence<Location> {
         let pieces = board.pieces(player: player)
         let moves = pieces.lazy.flatMap({ (piece, location) in
             return self.moves(piece: piece, location: location)
@@ -63,7 +63,7 @@ extension Position {
     }
 
     /// Generate array of moves for a `Piece` at the given `Location`.
-    func moves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func moves(piece: Piece, location: Location) -> AnySequence<Move> {
         switch piece.kind {
         case .pawn:   return pawnMoves(piece: piece, location: location)
         case .knight: return knightMoves(piece: piece, location: location)
@@ -74,7 +74,7 @@ extension Position {
         }
     }
 
-    func slideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> AnySequence<Move> {
+    private func slideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> AnySequence<Move> {
         let player = piece.player
         var result = [Move]()
 
@@ -104,38 +104,38 @@ extension Position {
 
     // MARK:- Pawn
 
-    static let whitePawnCaptureMoves = [(-1,  1), (1,  1)]
-    static let blackPawnCaptureMoves = [(-1, -1), (1, -1)]
+    private static let whitePawnCaptureMoves = [(-1,  1), (1,  1)]
+    private static let blackPawnCaptureMoves = [(-1, -1), (1, -1)]
 
-    static func pawnCaptureMoves(player: Player) -> [(Int, Int)] {
+    private static func pawnCaptureMoves(player: Player) -> [(Int, Int)] {
         switch player {
         case .white: return whitePawnCaptureMoves
         case .black: return blackPawnCaptureMoves
         }
     }
 
-    static func pawnMoveDirection(player: Player) -> Int {
+    private static func pawnMoveDirection(player: Player) -> Int {
         switch player {
         case .white: return 1
         case .black: return -1
         }
     }
 
-    static func pawnPromotionRank(player: Player) -> Int {
+    private static func pawnPromotionRank(player: Player) -> Int {
         switch player {
         case .white: return Board.maxRank
         case .black: return Board.minRank
         }
     }
 
-    static func pawnStartRank(player: Player) -> Int {
+    private static func pawnStartRank(player: Player) -> Int {
         switch player {
         case .white: return Board.minRank + 1
         case .black: return Board.maxRank - 1
         }
     }
 
-    func pawnMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func pawnMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let player = piece.player
         let file = location.file
         let rank = location.rank
@@ -195,14 +195,14 @@ extension Position {
 
     // MARK:- Knight
 
-    static let knightJumps = [
+    private static let knightJumps = [
         ( 1, 2), ( 1, -2),
         (-1, 2), (-1, -2),
         ( 2, 1), ( 2, -1),
         (-2, 1), (-2, -1)
     ]
 
-    func knightMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func knightMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let file = location.file
         let rank = location.rank
         let player = piece.player
@@ -230,12 +230,12 @@ extension Position {
 
     // MARK:- Rook
 
-    static let rookVectors = [
+    private static let rookVectors = [
         (1, 0), (-1,  0),
         (0, 1), ( 0, -1)
     ]
 
-    func rookMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func rookMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         return slideMoves(piece: piece,
                           location: location,
                           vectors: Position.rookVectors)
@@ -243,12 +243,12 @@ extension Position {
 
     // MARK:- Bishop
 
-    static let bishopVectors = [
+    private static let bishopVectors = [
         (1,  1), (-1,  1),
         (1, -1), (-1, -1)
     ]
 
-    func bishopMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func bishopMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         return slideMoves(piece: piece,
                           location: location,
                           vectors: Position.bishopVectors)
@@ -256,14 +256,14 @@ extension Position {
 
     // MARK:- Queen
 
-    static let eightDirections = [
+    private static let eightDirections = [
         (1,  0), (-1,  0),
         (0,  1), ( 0, -1),
         (1,  1), (-1,  1),
         (1, -1), (-1, -1)
     ]
 
-    func queenMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func queenMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         return slideMoves(piece: piece,
                           location: location,
                           vectors: Position.eightDirections)
@@ -271,7 +271,7 @@ extension Position {
 
     // MARK:- King
 
-    func kingMoves(piece: Piece, location: Location) -> AnySequence<Move> {
+    private func kingMoves(piece: Piece, location: Location) -> AnySequence<Move> {
         let file = location.file
         let rank = location.rank
         let player = piece.player
@@ -344,7 +344,7 @@ extension Position {
     /// Determine whether specified move is legal given the king's position.
     ///
     /// - todo: Optimize this. As-is, it generates a new position and checks all possible responses for any move that _might_ put the king into check.
-    func isLegal(move: Move, kingLocation: Location, attackedLocations: Set<Location>) -> Bool {
+    private func isLegal(move: Move, kingLocation: Location, attackedLocations: Set<Location>) -> Bool {
         let from = move.from
 
         let responses = possibleOpponentResponses(move: move)
@@ -395,7 +395,7 @@ extension Position {
     }
 
     /// Get the moves that the opponent can make after the specified move is made.
-    func possibleOpponentResponses(move: Move) -> AnySequence<Move> {
+    private func possibleOpponentResponses(move: Move) -> AnySequence<Move> {
         return self.after(move).possibleMoves()
     }
 }

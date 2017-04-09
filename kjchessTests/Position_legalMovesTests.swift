@@ -65,7 +65,8 @@ class Position_legalMovesTests: XCTestCase {
         }
 
         for move in moves {
-            XCTAssertFalse(move.isCapture, "Should not be a capturing move")
+            XCTAssertFalse(move.isCapture,
+                           "Should not be a capturing move")
         }
     }
 
@@ -158,7 +159,8 @@ class Position_legalMovesTests: XCTestCase {
         // Note: Filter out the moves that the pawns could make.
         let moves = Array(pos.legalMoves()).filter { $0.from == d4 }
 
-        XCTAssertEqual(0, moves.count, "No moves by the knight are possible")
+        XCTAssertEqual(0, moves.count,
+                       "No moves by the knight are possible")
     }
 
     func testKnightCaptures() {
@@ -624,5 +626,265 @@ class Position_legalMovesTests: XCTestCase {
             XCTAssertTrue(moves.contains { $0.description == expectedMove },
                           "Expected \(expectedMove), but it's missing")
         }
+    }
+
+    func testWhiteCastleKingside() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, h1)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+        XCTAssertTrue(pos.whiteCanCastleKingside)
+        XCTAssertTrue(pos.whiteCanCastleQueenside)
+
+        let moves = Array(pos.legalMoves())
+
+        let expectedMove = Move.castleKingside(player: .white)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "expect O-O as a legal move")
+
+        let pos2 = pos.after(expectedMove)
+        XCTAssertFalse(pos2.whiteCanCastleKingside)
+        XCTAssertFalse(pos2.whiteCanCastleQueenside)
+    }
+
+    func testBlackCastleKingside() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, h8)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+        XCTAssertTrue(pos.blackCanCastleKingside)
+        XCTAssertTrue(pos.blackCanCastleQueenside)
+
+        let moves = Array(pos.legalMoves())
+
+        let expectedMove = Move.castleKingside(player: .black)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "expect O-O as a legal move")
+
+        let pos2 = pos.after(expectedMove)
+        XCTAssertFalse(pos2.blackCanCastleKingside)
+        XCTAssertFalse(pos2.blackCanCastleQueenside)
+    }
+
+    func testWhiteCastleQueenside() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, a1)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+        XCTAssertTrue(pos.whiteCanCastleKingside)
+        XCTAssertTrue(pos.whiteCanCastleQueenside)
+
+        let moves = Array(pos.legalMoves())
+
+        let expectedMove = Move.castleQueenside(player: .white)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "expect O-O-O as a legal move")
+
+        let pos2 = pos.after(expectedMove)
+        XCTAssertFalse(pos2.whiteCanCastleKingside)
+        XCTAssertFalse(pos2.whiteCanCastleQueenside)
+    }
+
+    func testBlackCastleQueenside() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, a8)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+        XCTAssertTrue(pos.blackCanCastleKingside)
+        XCTAssertTrue(pos.blackCanCastleQueenside)
+
+        let moves = Array(pos.legalMoves())
+
+        let expectedMove = Move.castleQueenside(player: .black)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "expect O-O-O as a legal move")
+
+        let pos2 = pos.after(expectedMove)
+        XCTAssertFalse(pos2.blackCanCastleKingside)
+        XCTAssertFalse(pos2.blackCanCastleQueenside)
+    }
+
+    func testRejectWhiteCastleKingside() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, h1)])
+
+        let pos = Position(board: board, toMove: .white, moves: [],
+                           whiteCanCastleKingside: false)
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal move")
+    }
+
+    func testRejectBlackCastleKingside() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, h8)])
+
+        let pos = Position(board: board, toMove: .black, moves: [],
+                           blackCanCastleKingside: false)
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .black)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal moves")
+    }
+
+    func testRejectWhiteCastleQueenside() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, a1)])
+
+        let pos = Position(board: board, toMove: .white, moves: [],
+                           whiteCanCastleQueenside: false)
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move")
+    }
+
+    func testRejectBlackCastleQueenside() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, a8)])
+
+        let pos = Position(board: board, toMove: .black, moves: [],
+                           blackCanCastleQueenside: false)
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .black)
+        
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move")
+    }
+
+    func testRejectWhiteCastleKingsideWhenInCheck() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, h1),
+                                      (BR, e8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal move in check")
+    }
+
+    func testRejectWhiteCastleKingsideIfF1IsUnderAttack() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, h1),
+                                      (BR, f8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal move if f1 is under attack")
+    }
+
+    func testRejectWhiteCastleQueensideWhenInCheck() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, a1),
+                                      (BR, e8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move in check")
+    }
+
+    func testRejectWhiteCastleQueensideIfD1IsUnderAttack() {
+        let board = Board.empty.with([(WK, e1),
+                                      (WR, a1),
+                                      (BR, d8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .white)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move if d1 is under attack")
+    }
+
+    func testRejectBlackCastleKingsideWhenInCheck() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, h8),
+                                      (WR, e1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .black)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal move in check")
+    }
+
+    func testRejectBlackCastleKingsideIfF8IsUnderAttack() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, h8),
+                                      (WR, f1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleKingside(player: .black)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O is not a legal move if f8 is under attack")
+    }
+
+    func testRejectBlackCastleQueensideWhenInCheck() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, a8),
+                                      (WR, e1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .black)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move in check")
+    }
+
+    func testRejectWhiteCastleQueensideIfD8IsUnderAttack() {
+        let board = Board.empty.with([(BK, e8),
+                                      (BR, a8),
+                                      (WR, d1)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        let rejectedMove = Move.castleQueenside(player: .black)
+
+        XCTAssertFalse(moves.contains { $0 == rejectedMove },
+                       "O-O-O is not a legal move if d8 is under attack")
     }
 }

@@ -16,8 +16,10 @@ extension Position {
             return possibleMoves()
         }
 
+        let attackedLocations = Set(locationsUnderAttack(by: toMove.opponent))
+
         return AnySequence(possibleMoves().filter {
-            isLegal(move: $0, kingLocation: kingLocation)
+            isLegal(move: $0, kingLocation: kingLocation, attackedLocations: attackedLocations)
         })
     }
 
@@ -33,6 +35,31 @@ extension Position {
         return AnySequence(pieces.lazy.flatMap({ (piece, location) in
             return self.moves(piece: piece, location: location)
         }))
+    }
+
+    /// Generate array of locations under attack by the player who is not moving.
+    func locationsUnderAttack(by player: Player) -> AnySequence<Location> {
+        let pieces = board.pieces(player: player)
+        let moves = pieces.lazy.flatMap({ (piece, location) in
+            return self.moves(piece: piece, location: location)
+        })
+
+        // Determine whether specified move is attacking its destination.
+        //
+        // Returns `true` for all moves except pawn non-capture moves.
+        func isAttackingDestination(_ move: Move) -> Bool {
+            switch move {
+            case .move(let piece, _, _):
+                if piece.kind == .pawn {
+                    return false
+                }
+            default: break
+            }
+
+            return true
+        }
+
+        return AnySequence(moves.filter { isAttackingDestination($0) }.map { $0.to })
     }
 
     /// Generate array of moves for a `Piece` at the given `Location`.
@@ -267,7 +294,47 @@ extension Position {
             }
         }
         
-        // TODO: Castling
+        switch player {
+        case .white:
+            if whiteCanCastleKingside &&
+                board[e1] == WK &&
+                board[f1] == nil &&
+                board[g1] == nil &&
+                board[h1] == WR
+            {
+                result.append(.castleKingside(player: player))
+            }
+
+            if whiteCanCastleQueenside &&
+                board[e1] == WK &&
+                board[d1] == nil &&
+                board[c1] == nil &&
+                board[b1] == nil &&
+                board[a1] == WR
+            {
+                result.append(.castleQueenside(player: player))
+            }
+
+        case .black:
+            if blackCanCastleKingside &&
+                board[e8] == BK &&
+                board[f8] == nil &&
+                board[g8] == nil &&
+                board[h8] == BR
+            {
+                result.append(.castleKingside(player: player))
+            }
+
+            if blackCanCastleQueenside &&
+                board[e8] == BK &&
+                board[d8] == nil &&
+                board[c8] == nil &&
+                board[b8] == nil &&
+                board[a8] == BR
+            {
+                result.append(.castleQueenside(player: player))
+            }
+        }
         
         return AnySequence(result)
     }
@@ -277,7 +344,7 @@ extension Position {
     /// Determine whether specified move is legal given the king's position.
     ///
     /// - todo: Optimize this. As-is, it generates a new position and checks all possible responses for any move that _might_ put the king into check.
-    func isLegal(move: Move, kingLocation: Location) -> Bool {
+    func isLegal(move: Move, kingLocation: Location, attackedLocations: Set<Location>) -> Bool {
         let from = move.from
 
         let responses = possibleOpponentResponses(move: move)
@@ -288,8 +355,37 @@ extension Position {
                 return false
             }
 
-            // TODO: For castling, need to check intervening squares as well.
+            // If castling, can't be in check or move through attacked squares
+            switch move {
+            case .castleKingside(.white):
+                if attackedLocations.contains(kingLocation) ||
+                    attackedLocations.contains(f1)
+                {
+                    return false
+                }
+            case .castleQueenside(.white):
+                if attackedLocations.contains(kingLocation) ||
+                    attackedLocations.contains(d1)
+                {
+                    return false
+                }
+            case .castleKingside(.black):
+                if attackedLocations.contains(kingLocation) ||
+                    attackedLocations.contains(f8)
+                {
+                    return false
+                }
+            case .castleQueenside(.black):
+                if attackedLocations.contains(kingLocation) ||
+                    attackedLocations.contains(d8)
+                {
+                    return false
+                }
+            default:
+                break
+            }
         }
+
         // Otherwise, ensure King is not left in check
         else if responses.contains(where: { $0.isCapture && $0.to == kingLocation }) {
             return false

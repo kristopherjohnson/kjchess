@@ -25,5 +25,5 @@ clean:
 play: kjchess-cli
 	"$(XBOARD)" -fcp "'$(POLYGLOT)' -noini -log true -ec '$(CURDIR)/build/Release/kjchess-cli' -en kjchess -ed '$(CURDIR)/build/Release'"
 
-.PHONY: all kjchess-cli kjchess kjchessTests tests clean
+.PHONY: all kjchess-cli kjchess kjchessTests test clean
 

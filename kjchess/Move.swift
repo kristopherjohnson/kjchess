@@ -303,9 +303,11 @@ public enum Move {
             return "\(from.fileSymbol)x\(to.symbol)e.p."
 
         case .castleKingside:
+            // Note: Capital O's (to be compatible with PGN), not zeroes.
             return "O-O"
 
         case .castleQueenside:
+            // Note: Capital O's (to be compatible with PGN), not zeroes.
             return "O-O-O"
             
         case .resign:
@@ -437,5 +439,13 @@ public func ==(lhs: Move, rhs: Move) -> Bool {
 
     default:
         return false
+    }
+}
+
+// MARK: Hashable
+
+extension Move: Hashable {
+    public var hashValue: Int {
+        return (from.hashValue << 8) | to.hashValue
     }
 }

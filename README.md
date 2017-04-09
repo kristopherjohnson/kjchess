@@ -3,15 +3,14 @@ kjchess
 
 kjchess is a simple chess-playing engine, implemented in Swift.
 
-I've wanted to write a chess program since I was a teenager.  I'm finally doing it.  I don't expect this to play a strong game, and it won't be using any advanced chess implementation techniques.  I just want to have a chess program I wrote all by myself.
+I've wanted to write a chess program since I was a teenager.  I'm finally doing it.  I don't expect this to play a strong game, and it won't be using any advanced chess implementation techniques.  It's a toy, but it's all mine.
 
 
 ## Status
 
 kjchess is not usable yet.  The following features are implemented:
 
-- Can determine legal moves for a given position, except for these limitations:
-    - Doesn't recognize castling.
+- Can determine legal moves for a given position, except for this limitation:
     - Doesn't recognize _en passant_ captures.
 - Implements enough of the UCI protocol that a game can be played with XBoard and the PolyGlot adapter.
 

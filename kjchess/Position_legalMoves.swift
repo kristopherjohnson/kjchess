@@ -184,8 +184,12 @@ extension Position {
                                                    captured: occupant.kind))
                         }
                     }
-
-                    // TODO: En-passant captures
+                    else if let enPassantCaptureLocation = enPassantCaptureLocation,
+                        captureLocation == enPassantCaptureLocation {
+                        result.append(.enPassantCapture(player: player,
+                                                        from: location,
+                                                        to: enPassantCaptureLocation))
+                    }
                 }
             }
         }

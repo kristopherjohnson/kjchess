@@ -25,10 +25,15 @@ public struct Position {
     public let blackCanCastleKingside: Bool
     public let blackCanCastleQueenside: Bool
 
+    // En-passant target square, set whenever previous move was a two-square pawn move.
+    // This is set even if there is no pawn in position to make the en-passant capture.
+    public let enPassantCaptureLocation: Location?
+
     /// Initializer.
     public init(board: Board,
                 toMove: Player,
                 moves: [Move],
+                enPassantCaptureLocation: Location? = nil,
                 whiteCanCastleKingside: Bool = true,
                 whiteCanCastleQueenside: Bool = true,
                 blackCanCastleKingside: Bool = true,
@@ -37,6 +42,7 @@ public struct Position {
         self.board = board
         self.toMove = toMove
         self.moves = moves
+        self.enPassantCaptureLocation = enPassantCaptureLocation
         self.whiteCanCastleKingside = whiteCanCastleKingside
         self.whiteCanCastleQueenside = whiteCanCastleQueenside
         self.blackCanCastleKingside = blackCanCastleKingside
@@ -57,14 +63,17 @@ public struct Position {
         var newMoves = Array(moves)
         newMoves.append(move)
 
+        let newEnPassantCaptureLocation = enPassantCaptureLocation(after: move)
+
         let (newWhiteCanCastleKingside,
              newWhiteCanCastleQueenside,
              newBlackCanCastleKingside,
              newBlackCanCastleQueenside) = castlingState(after: move)
-        
+
         return Position(board: newBoard,
                         toMove: newToMove,
                         moves: newMoves,
+                        enPassantCaptureLocation: newEnPassantCaptureLocation,
                         whiteCanCastleKingside: newWhiteCanCastleKingside,
                         whiteCanCastleQueenside: newWhiteCanCastleQueenside,
                         blackCanCastleKingside: newBlackCanCastleKingside,
@@ -111,6 +120,32 @@ public struct Position {
                 newWhiteCanCastleQueenside,
                 newBlackCanCastleKingside,
                 newBlackCanCastleQueenside)
+    }
+
+    /// If move is a two-square pawn move, return the square behind the move destination.
+    /// 
+    /// - returns: `Location` behind the moved pawn, or `nil` if not a two-square pawn move.
+    private func enPassantCaptureLocation(after move: Move) -> Location? {
+        switch move.piece {
+        case BP:
+            let from = move.from
+            let to = move.to
+            if from.rank == 6 && to.rank == 4 {
+                return Location(to.file, to.rank + 1)
+            }
+
+        case WP:
+            let from = move.from
+            let to = move.to
+            if from.rank == 1 && to.rank == 3 {
+                return Location(to.file, to.rank - 1)
+            }
+
+        default:
+            break
+        }
+
+        return nil
     }
 }
 

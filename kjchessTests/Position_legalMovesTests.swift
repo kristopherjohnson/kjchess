@@ -887,4 +887,40 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertFalse(moves.contains { $0 == rejectedMove },
                        "O-O-O is not a legal move if d8 is under attack")
     }
+
+    func testWhiteEnPassantCapture() {
+        let board = Board.empty.with([(WP, e5),
+                                      (BP, d7)])
+
+        let pos = Position(board: board, toMove: .black, moves: [])
+
+        let pos1 = pos.after(.move(piece: BP, from: d7, to: d5))
+
+        XCTAssertEqual(pos1.enPassantCaptureLocation, d6)
+
+        let moves = Array(pos1.legalMoves())
+
+        let expectedMove = Move.enPassantCapture(player: .white, from: e5, to: d6)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "En-passant capture at d6 expected")
+    }
+
+    func testBlackEnPassantCapture() {
+        let board = Board.empty.with([(WP, e2),
+                                      (BP, f4)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let pos1 = pos.after(.move(piece: WP, from: e2, to: e4))
+
+        XCTAssertEqual(pos1.enPassantCaptureLocation, e3)
+
+        let moves = Array(pos1.legalMoves())
+
+        let expectedMove = Move.enPassantCapture(player: .black, from: f4, to: e3)
+
+        XCTAssertTrue(moves.contains { $0 == expectedMove },
+                      "En-passant capture at e3 expected")
+    }
 }

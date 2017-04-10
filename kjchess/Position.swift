@@ -12,6 +12,9 @@ import Foundation
 /// Contains the current board layout, the player to move,
 /// and complete history of moves.
 public struct Position {
+    // Important: When data members are added, be sure to update func ==()
+    // at the bottom of this file.
+
     public let board: Board
     public let toMove: Player
 
@@ -25,9 +28,20 @@ public struct Position {
     public let blackCanCastleKingside: Bool
     public let blackCanCastleQueenside: Bool
 
-    // En-passant target square, set whenever previous move was a two-square pawn move.
-    // This is set even if there is no pawn in position to make the en-passant capture.
+    /// En-passant target square
+    ///
+    /// Set whenever previous move was a two-square pawn move.
+    ///
+    /// This is set even if there is no pawn in position to make the en-passant capture.
     public let enPassantCaptureLocation: Location?
+
+    /// Number of halfmoves since the last capture or pawn advance.
+    public let halfmoveClock: Int
+
+    /// The number of the full move.
+    ///
+    /// Incremented after Black's move.
+    public let moveNumber: Int
 
     /// Initializer.
     public init(board: Board,
@@ -37,7 +51,9 @@ public struct Position {
                 whiteCanCastleKingside: Bool = true,
                 whiteCanCastleQueenside: Bool = true,
                 blackCanCastleKingside: Bool = true,
-                blackCanCastleQueenside: Bool = true)
+                blackCanCastleQueenside: Bool = true,
+                halfmoveClock: Int = 0,
+                moveNumber: Int = 1)
     {
         self.board = board
         self.toMove = toMove
@@ -47,6 +63,8 @@ public struct Position {
         self.whiteCanCastleQueenside = whiteCanCastleQueenside
         self.blackCanCastleKingside = blackCanCastleKingside
         self.blackCanCastleQueenside = blackCanCastleQueenside
+        self.halfmoveClock = halfmoveClock
+        self.moveNumber = moveNumber
     }
 
     /// Return position for the start of a new game.
@@ -70,6 +88,10 @@ public struct Position {
              newBlackCanCastleKingside,
              newBlackCanCastleQueenside) = castlingState(after: move)
 
+        let newHalfmoveClock = halfmoveClock(after: move)
+
+        let newMoveNumber = moveNumber(after: move)
+
         return Position(board: newBoard,
                         toMove: newToMove,
                         moves: newMoves,
@@ -77,7 +99,9 @@ public struct Position {
                         whiteCanCastleKingside: newWhiteCanCastleKingside,
                         whiteCanCastleQueenside: newWhiteCanCastleQueenside,
                         blackCanCastleKingside: newBlackCanCastleKingside,
-                        blackCanCastleQueenside: newBlackCanCastleQueenside)
+                        blackCanCastleQueenside: newBlackCanCastleQueenside,
+                        halfmoveClock: newHalfmoveClock,
+                        moveNumber: newMoveNumber)
     }
 
     /// Determine new values for the CanCastle properties after a move.
@@ -147,6 +171,21 @@ public struct Position {
 
         return nil
     }
+
+    /// Determine value of halfmove clock after given move.
+    ///
+    /// Resets to zero if move is a capture or pawn advance.
+    /// Otherwise increments by 1.
+    private func halfmoveClock(after move: Move) -> Int {
+        return (move.isCapture || move.piece.kind == .pawn) ? 0 : self.halfmoveClock + 1
+    }
+
+    /// Determine value of full move number after given move.
+    ///
+    /// Increments after Black's move.
+    private func moveNumber(after move: Move) -> Int {
+        return (move.player == .black) ? self.moveNumber + 1 : self.moveNumber
+    }
 }
 
 // MARK:- Equatable
@@ -156,9 +195,30 @@ public func ==(lhs: Position, rhs: Position) -> Bool {
     return lhs.board == rhs.board
         && lhs.toMove == rhs.toMove
         && lhs.moves == rhs.moves
+        && lhs.enPassantCaptureLocation == rhs.enPassantCaptureLocation
         && lhs.whiteCanCastleKingside == rhs.whiteCanCastleKingside
         && lhs.whiteCanCastleQueenside == rhs.whiteCanCastleQueenside
         && lhs.blackCanCastleKingside == rhs.blackCanCastleKingside
         && lhs.blackCanCastleQueenside == rhs.blackCanCastleQueenside
+        && lhs.halfmoveClock == rhs.halfmoveClock
+        && lhs.moveNumber == rhs.moveNumber
 }
 
+extension Position {
+    /// Determine whether two Positions are equivalent, ignoring the `moves` values.
+    ///
+    /// This is useful for comparing a position with a FEN representation,
+    /// which does not include the moves that led to the position, or
+    /// identifying transpositions.
+    public func isEqualDisregardingMoves(_ rhs: Position) -> Bool {
+        return self.board == rhs.board
+            && self.toMove == rhs.toMove
+            && self.enPassantCaptureLocation == rhs.enPassantCaptureLocation
+            && self.whiteCanCastleKingside == rhs.whiteCanCastleKingside
+            && self.whiteCanCastleQueenside == rhs.whiteCanCastleQueenside
+            && self.blackCanCastleKingside == rhs.blackCanCastleKingside
+            && self.blackCanCastleQueenside == rhs.blackCanCastleQueenside
+            && self.halfmoveClock == rhs.halfmoveClock
+            && self.moveNumber == rhs.moveNumber
+    }
+}

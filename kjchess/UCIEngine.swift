@@ -68,14 +68,7 @@ public class UCIEngine {
     /// It may be called directly to "push" input to the engine instead
     /// of using `runCommandLoop()`.
     public func processInput(_ line: String) -> Bool {
-        return processCommand(tokens: tokens(line))
-    }
-
-    /// Split an input line into tokens.
-    ///
-    /// Arbitrary whitespace between tokens is allowed.
-    public func tokens(_ line: String) -> [String] {
-        return line.components(separatedBy: .whitespaces).filter { !$0.isEmpty }
+        return processCommand(tokens: line.whitespaceSeparatedTokens())
     }
 
     /// Process the given command.
@@ -207,6 +200,30 @@ public class UCIEngine {
                     }
                 }
             }
+        }
+        else if tokens[1] == "fen" {
+            if tokens.count < 8 {
+                if isLogEnabled {
+                    os_log("\"position fen\" error: not enough elements", log: uciLog)
+                    return
+                }
+            }
+            let fenrecord = tokens[2...7].joined(separator: " ")
+
+            do {
+                position = try Position(fen: fenrecord)
+            }
+            catch (let error) {
+                if isLogEnabled {
+                    os_log("\"position fen\" error: \"%{public}@\": %{public}@",
+                           log: uciLog,
+                           type: .error,
+                           fenrecord,
+                           error.localizedDescription)
+                }
+            }
+
+            // TODO: If "move" follows FEN string, process it
         }
         else {
             if isLogEnabled {

@@ -166,4 +166,23 @@ class UCIEngineTests: XCTestCase {
             "bestmove b8c6"
         )
     }
+
+    func testFENPosition() {
+        send(
+            "position fen rnbqkbnr/pp1p1ppp/4p3/2p5/2B1P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 1 3",
+            "isready"
+        )
+
+        expect(
+            "readyok"
+        )
+
+        let expectedPosition = Position.newGame()
+            .after(Move.move(piece: WP, from: e2, to: e4))
+            .after(Move.move(piece: BP, from: c7, to: c5))
+            .after(Move.move(piece: WN, from: g1, to: f3))
+            .after(Move.move(piece: BP, from: e7, to: e6))
+            .after(Move.move(piece: WB, from: f1, to: c4))
+        XCTAssertTrue(engine!.position.isEqualDisregardingMoves(expectedPosition))
+    }
 }

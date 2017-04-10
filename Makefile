@@ -19,11 +19,12 @@ test:
 
 clean:
 	xcodebuild -alltargets clean
+	if [ -f polyglot.log ]; then $(RM) polyglot.log; fi
 
 # Launch XBoard, using PolyGlot UCI adapter with kjchess UCI engine.
 # Human plays white; kjchess plays black.
 play: kjchess-cli
-	"$(XBOARD)" -fcp "'$(POLYGLOT)' -noini -log true -ec '$(CURDIR)/build/Release/kjchess-cli' -en kjchess -ed '$(CURDIR)/build/Release'"
+	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -log true -ec '$(CURDIR)/build/Release/kjchess-cli' -ed '$(CURDIR)/build/Release'"
 
 .PHONY: all kjchess-cli kjchess kjchessTests test clean
 

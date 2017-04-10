@@ -35,7 +35,7 @@ To run unit tests, execute this command:
 
 `kjchess-cli` is the executable program.  It does not provide its own GUI or command-line playing interface:  It must be run as a chess engine with GUI that implements the UCI (Universal Chess Interface) protocol.
 
-If you have [XBoard](https://www.gnu.org/software/xboard/) and [PolyGlot](https://chessprogramming.wikispaces.com/PolyGlot) installed, you can start a game with human as white and kjchess as black by executing this command:
+If you have [XBoard](https://www.gnu.org/software/xboard/) and [PolyGlot](https://chessprogramming.wikispaces.com/PolyGlot) installed, you can start a game by executing this command:
 
     make play
 

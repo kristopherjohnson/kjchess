@@ -143,12 +143,12 @@ extension Position {
         var result = [Move]()
 
         if Board.minRank < rank && rank < Board.maxRank {
+            let promotionRank = Position.pawnPromotionRank(player: player)
             let moveDirection = Position.pawnMoveDirection(player: player)
             let nextRank = rank + moveDirection
             if board.isEmpty(file: file, rank: nextRank) {
                 let to = Location(file, nextRank)
 
-                let promotionRank = Position.pawnPromotionRank(player: player)
                 if to.rank == promotionRank {
                     for kind in PieceKind.promotionKinds {
                         result.append(.promote(player: player,
@@ -178,10 +178,21 @@ extension Position {
                 if let captureLocation = Location.ifValid(file: file + h, rank: rank + v) {
                     if let occupant = board[captureLocation] {
                         if occupant.player == opponent {
-                            result.append(.capture(piece: piece,
-                                                   from: location,
-                                                   to: captureLocation,
-                                                   captured: occupant.kind))
+                            if captureLocation.rank == promotionRank {
+                                for kind in PieceKind.promotionKinds {
+                                    result.append(.promoteCapture(player: player,
+                                                                  from: location,
+                                                                  to: captureLocation,
+                                                                  captured: occupant.kind,
+                                                                  promoted: kind))
+                                }
+                            }
+                            else {
+                                result.append(.capture(piece: piece,
+                                                       from: location,
+                                                       to: captureLocation,
+                                                       captured: occupant.kind))
+                            }
                         }
                     }
                     else if let enPassantCaptureLocation = enPassantCaptureLocation,

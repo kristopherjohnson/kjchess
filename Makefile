@@ -24,7 +24,7 @@ clean:
 # Launch XBoard, using PolyGlot UCI adapter with kjchess UCI engine.
 # Human plays white; kjchess plays black.
 play: kjchess-cli
-	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -log true -ec '$(CURDIR)/build/Release/kjchess-cli' -ed '$(CURDIR)/build/Release'"
+	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -ec '$(CURDIR)/build/Release/kjchess-cli' -ed '$(CURDIR)/build/Release'"
 
 .PHONY: all kjchess-cli kjchess kjchessTests test clean
 

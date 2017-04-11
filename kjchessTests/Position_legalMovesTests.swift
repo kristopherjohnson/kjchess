@@ -923,4 +923,23 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertTrue(moves.contains { $0 == expectedMove },
                       "En-passant capture at e3 expected")
     }
+
+    func testPromoteCaptures() {
+        let board = Board.empty.with([(WP, g7),
+                                      (BR, h8)])
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+
+        let moves = Array(pos.legalMoves())
+
+        for kind in PieceKind.promotionKinds {
+            let expectedMove = Move.promoteCapture(player: .white,
+                                                   from: g7, to: h8,
+                                                   captured: .rook,
+                                                   promoted: kind)
+
+            XCTAssertTrue(moves.contains { $0 == expectedMove },
+                          "Capture and promote to \(kind) expected")
+        }
+    }
 }

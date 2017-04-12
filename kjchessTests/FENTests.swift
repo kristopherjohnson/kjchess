@@ -31,6 +31,8 @@ class FENTests: XCTestCase {
             let pos = try Position(fen: fen)
 
             XCTAssertEqual(pos, Position.newGame())
+
+            XCTAssertEqual(fen, pos.fen)
         }
         catch (let error) {
             XCTFail(error.localizedDescription)
@@ -47,6 +49,8 @@ class FENTests: XCTestCase {
                 .after(Move.move(piece: WP, from: e2, to: e4))
 
             XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+
+            XCTAssertEqual(fen, pos.fen)
         }
         catch (let error) {
             XCTFail(error.localizedDescription)
@@ -64,6 +68,8 @@ class FENTests: XCTestCase {
                 .after(Move.move(piece: BP, from: c7, to: c5))
 
             XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+
+            XCTAssertEqual(fen, pos.fen)
         }
         catch (let error) {
             XCTFail(error.localizedDescription)
@@ -82,6 +88,8 @@ class FENTests: XCTestCase {
                 .after(Move.move(piece: WN, from: g1, to: f3))
 
             XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+
+            XCTAssertEqual(fen, pos.fen)
         }
         catch (let error) {
             XCTFail(error.localizedDescription)

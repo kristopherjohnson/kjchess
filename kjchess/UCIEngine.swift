@@ -231,6 +231,10 @@ public class UCIEngine {
                        log: uciLog, type: .error)
             }
         }
+
+        if isLogEnabled {
+            os_log("Position: %{public}@", log: uciLog, position.description)
+        }
     }
 
     private func onGoCommand(tokens: [String]) {

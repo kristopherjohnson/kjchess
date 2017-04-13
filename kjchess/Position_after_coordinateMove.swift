@@ -20,6 +20,21 @@ extension Position {
         return after(move)
     }
 
+    /// Return position after applying specified moves in coordinate notation.
+    ///
+    /// - parameter coordinateMoves: A sequence of strings like "e2e4" or "e7e8q"
+    ///
+    /// - returns: Resulting `Position`.
+    ///
+    /// - throws: `ChessError` if any of the move strings doesn't have valid syntax or does not identify a legal move.
+    public func after(coordinateMoves: String...) throws -> Position {
+        var result = self
+        for move in coordinateMoves {
+            result = try result.after(coordinateMove: move)
+        }
+        return result
+    }
+
     /// Get the full `Move` for the given coordinate move string.
     ///
     /// - parameter coordinateMove: A string like "e2e4" or "e7e8q"

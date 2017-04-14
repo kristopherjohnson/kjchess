@@ -13,22 +13,22 @@ import Foundation
 public func bestMove(position: Position) -> Move? {
 
     // TODO: Let the engine search to determine the best move.  For now, we
-    // just play a simple Ruy Lopez opening, or pick a random move.
+    // just play a simple opening, or pick a random move.
     do {
-        let brd = position.board
+        let b = position.board
         switch position.toMove {
         case .white:
-            if brd[e2] == WP && brd[e3] == nil && brd[e4] == nil {
+            if b[e2] == WP && b[e3] == nil && b[e4] == nil {
                 return try position.find(coordinateMove: "e2e4")
             }
-            else if brd[g1] == WN && brd[f3] == nil {
+            else if b[g1] == WN && b[f3] == nil {
                 return try position.find(coordinateMove: "g1f3")
             }
         case .black:
-            if brd[e7] == BP && brd[e6] == nil && brd[e5] == nil {
+            if b[e7] == BP && b[e6] == nil && b[e5] == nil {
                 return try position.find(coordinateMove: "e7e5")
             }
-            else if brd[b8] == BN && brd[c6] == nil {
+            else if b[b8] == BN && b[c6] == nil {
                 return try position.find(coordinateMove: "b8c6")
             }
         }
@@ -37,6 +37,23 @@ public func bestMove(position: Position) -> Move? {
         assertionFailure("Unable to find move: \(error.localizedDescription)")
     }
 
-    let moves = Array(position.legalMoves())
-    return moves.randomPick()
+    let legalMoves = position.legalMoves()
+
+    let evaluations = legalMoves.map { ($0, Evaluation(position.after($0))) }
+    if evaluations.isEmpty {
+        return nil
+    }
+
+    let score = bestScore(player: position.toMove, evaluations: evaluations)
+    let bestEvaluations = evaluations.filter { $0.1.score == score }
+    return bestEvaluations.randomPick().map { $0.0 }
+}
+
+private func bestScore(player: Player, evaluations: [(Move, Evaluation)]) -> Double {
+    switch player {
+    case .white:
+        return evaluations.map { $0.1.score }.max() ?? 0.0
+    case .black:
+        return evaluations.map { $0.1.score }.min() ?? 0.0
+    }
 }

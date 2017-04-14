@@ -37,8 +37,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackNewGameMoves() {
-        let board = Board.newGame.with([(WP,  e4),
-                                        (nil, e2)])
+        let board = Board.newGame.with((WP,  e4),
+                                       (nil, e2))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -71,10 +71,10 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testWhitePawnCaptures() {
-        let board = Board.empty.with([(WP, e4),
-                                      (BB, d5),
-                                      (BP, e5),
-                                      (BN, f5)])
+        let board = Board.empty.with((WP, e4),
+                                     (BB, d5),
+                                     (BP, e5),
+                                     (BN, f5))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -94,10 +94,10 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackPawnCaptures() {
-        let board = Board.empty.with([(BP, d5),
-                                      (WB, c4),
-                                      (WP, d4),
-                                      (WN, e4)])
+        let board = Board.empty.with((BP, d5),
+                                     (WB, c4),
+                                     (WP, d4),
+                                     (WN, e4))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -117,7 +117,7 @@ class Position_legalMovesTests: XCTestCase {
     }
     
     func testKnightMovesEmptyBoard() {
-        let board = Board.empty.with(WN, at: d4)
+        let board = Board.empty.with(WN, d4)
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -144,15 +144,15 @@ class Position_legalMovesTests: XCTestCase {
 
     func testKnightMovesAllBlocked() {
         // Knight at d4 with pawns at all locations it could jump to.
-        let board = Board.empty.with([(WN, d4),
-                                      (WP, c6),
-                                      (WP, e6),
-                                      (WP, f5),
-                                      (WP, f3),
-                                      (WP, e2),
-                                      (WP, c2),
-                                      (WP, b3),
-                                      (WP, b5)])
+        let board = Board.empty.with((WN, d4),
+                                     (WP, c6),
+                                     (WP, e6),
+                                     (WP, f5),
+                                     (WP, f3),
+                                     (WP, e2),
+                                     (WP, c2),
+                                     (WP, b3),
+                                     (WP, b5))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -165,15 +165,15 @@ class Position_legalMovesTests: XCTestCase {
 
     func testKnightCaptures() {
         // White knight at d4 with black queens at every location can jump to
-        let board = Board.empty.with([(WN, d4),
-                                      (BQ, c6),
-                                      (BQ, e6),
-                                      (BQ, f5),
-                                      (BQ, f3),
-                                      (BQ, e2),
-                                      (BQ, c2),
-                                      (BQ, b3),
-                                      (BQ, b5)])
+        let board = Board.empty.with((WN, d4),
+                                     (BQ, c6),
+                                     (BQ, e6),
+                                     (BQ, f5),
+                                     (BQ, f3),
+                                     (BQ, e2),
+                                     (BQ, c2),
+                                     (BQ, b3),
+                                     (BQ, b5))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -199,7 +199,7 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRookMovesEmptyBoard() {
-        let board = Board.empty.with(WR, at: d4)
+        let board = Board.empty.with(WR, d4)
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -231,15 +231,15 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRookCaptures() {
-        let board = Board.empty.with([(WR, d4),
-                                      (BQ, d1),
-                                      (BQ, d2),
-                                      (BQ, d7),
-                                      (BQ, d8),
-                                      (BQ, a4),
-                                      (BQ, b4),
-                                      (BQ, g4),
-                                      (BQ, h4)])
+        let board = Board.empty.with((WR, d4),
+                                     (BQ, d1),
+                                     (BQ, d2),
+                                     (BQ, d7),
+                                     (BQ, d8),
+                                     (BQ, a4),
+                                     (BQ, b4),
+                                     (BQ, g4),
+                                     (BQ, h4))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -267,7 +267,7 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBishopMovesEmptyBoard() {
-        let board = Board.empty.with(WB, at: e4)
+        let board = Board.empty.with(WB, e4)
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -298,15 +298,15 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBishopCaptures() {
-        let board = Board.empty.with([(BB, d4),
-                                      (WQ, b6),
-                                      (WQ, a7),
-                                      (WQ, g7),
-                                      (WQ, h8),
-                                      (WQ, a1),
-                                      (WQ, b2),
-                                      (WQ, f2),
-                                      (WQ, g1)])
+        let board = Board.empty.with((BB, d4),
+                                     (WQ, b6),
+                                     (WQ, a7),
+                                     (WQ, g7),
+                                     (WQ, h8),
+                                     (WQ, a1),
+                                     (WQ, b2),
+                                     (WQ, f2),
+                                     (WQ, g1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -333,7 +333,7 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testQueenEmptyBoard() {
-        let board = Board.empty.with(BQ, at: c3)
+        let board = Board.empty.with(BQ, c3)
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -376,19 +376,19 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testQueenCaptures() {
-        let board = Board.empty.with([(BQ, d4),
-                                      (WQ, b6),
-                                      (WQ, a7),
-                                      (WQ, g7),
-                                      (WQ, h8),
-                                      (WQ, a1),
-                                      (WQ, b2),
-                                      (WQ, f2),
-                                      (WQ, g1),
-                                      (WQ, f4),
-                                      (WQ, b4),
-                                      (WQ, d2),
-                                      (WQ, d6)])
+        let board = Board.empty.with((BQ, d4),
+                                     (WQ, b6),
+                                     (WQ, a7),
+                                     (WQ, g7),
+                                     (WQ, h8),
+                                     (WQ, a1),
+                                     (WQ, b2),
+                                     (WQ, f2),
+                                     (WQ, g1),
+                                     (WQ, f4),
+                                     (WQ, b4),
+                                     (WQ, d2),
+                                     (WQ, d6))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -423,7 +423,7 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testKingEmptyBoard() {
-        let board = Board.empty.with(WK, at: e3)
+        let board = Board.empty.with(WK, e3)
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -449,10 +449,10 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testKingCaptures() {
-        let board = Board.empty.with([(WK, d4),
-                                      (BP, c3),
-                                      (BP, d3),
-                                      (BP, e3)])
+        let board = Board.empty.with((WK, d4),
+                                     (BP, c3),
+                                     (BP, d3),
+                                     (BP, e3))
         let pos = Position(board: board, toMove: .white, moves: [])
 
         let expectedMoves = [
@@ -478,10 +478,10 @@ class Position_legalMovesTests: XCTestCase {
 
     func testLegalMovesPawnPinnedByQueen() {
         // Note: WP at b2 is pinned by BQ at h8.
-        let board = Board.empty.with([(WK, a1),
-                                      (WP, a2),
-                                      (WP, b2),
-                                      (BQ, h8)])
+        let board = Board.empty.with((WK, a1),
+                                     (WP, a2),
+                                     (WP, b2),
+                                     (BQ, h8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -504,10 +504,10 @@ class Position_legalMovesTests: XCTestCase {
 
     func testLegalMovesKnightPinnedByBishop() {
         // Note: BN at g7 is pinned by WB at a1.
-        let board = Board.empty.with([(BK, h8),
-                                      (BN, g7),
-                                      (BP, h7),
-                                      (WB, a1)])
+        let board = Board.empty.with((BK, h8),
+                                     (BN, g7),
+                                     (BP, h7),
+                                     (WB, a1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -530,9 +530,9 @@ class Position_legalMovesTests: XCTestCase {
 
     func testLegalMovesBishopPinnedByQueen() {
         // Note: WB at e1 is pinned by BQ at e8.
-        let board = Board.empty.with([(WK, e1),
-                                      (WB, e2),
-                                      (BQ, e8)])
+        let board = Board.empty.with((WK, e1),
+                                     (WB, e2),
+                                     (BQ, e8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -556,9 +556,9 @@ class Position_legalMovesTests: XCTestCase {
 
     func testLegalMovesBishopPinnedByRook() {
         // Note: BB at g5 is pinned by WR at a5.
-        let board = Board.empty.with([(BK, h5),
-                                      (BB, g5),
-                                      (WR, a5)])
+        let board = Board.empty.with((BK, h5),
+                                     (BB, g5),
+                                     (WR, a5))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -581,9 +581,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testKingCantMoveIntoCheck() {
-        let board = Board.empty.with([(WK, e5),
-                                      (BR, a4),
-                                      (BQ, h6)])
+        let board = Board.empty.with((WK, e5),
+                                     (BR, a4),
+                                     (BQ, h6))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -603,13 +603,13 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testMoveMustGetKingOutOfCheck() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BN, g8),
-                                      (BP, a7),
-                                      (BP, b7),
-                                      (WR, d1),
-                                      (WQ, e1),
-                                      (WR, f1)])
+        let board = Board.empty.with((BK, e8),
+                                     (BN, g8),
+                                     (BP, a7),
+                                     (BP, b7),
+                                     (WR, d1),
+                                     (WQ, e1),
+                                     (WR, f1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -629,8 +629,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testWhiteCastleKingside() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, h1)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, h1))
 
         let pos = Position(board: board, toMove: .white, moves: [])
         XCTAssertTrue(pos.whiteCanCastleKingside)
@@ -649,8 +649,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackCastleKingside() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, h8)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, h8))
 
         let pos = Position(board: board, toMove: .black, moves: [])
         XCTAssertTrue(pos.blackCanCastleKingside)
@@ -669,8 +669,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testWhiteCastleQueenside() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, a1)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, a1))
 
         let pos = Position(board: board, toMove: .white, moves: [])
         XCTAssertTrue(pos.whiteCanCastleKingside)
@@ -689,8 +689,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackCastleQueenside() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, a8)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, a8))
 
         let pos = Position(board: board, toMove: .black, moves: [])
         XCTAssertTrue(pos.blackCanCastleKingside)
@@ -709,8 +709,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleKingside() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, h1)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, h1))
 
         let pos = Position(board: board, toMove: .white, moves: [],
                            whiteCanCastleKingside: false)
@@ -724,8 +724,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectBlackCastleKingside() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, h8)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, h8))
 
         let pos = Position(board: board, toMove: .black, moves: [],
                            blackCanCastleKingside: false)
@@ -739,8 +739,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleQueenside() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, a1)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, a1))
 
         let pos = Position(board: board, toMove: .white, moves: [],
                            whiteCanCastleQueenside: false)
@@ -754,8 +754,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectBlackCastleQueenside() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, a8)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, a8))
 
         let pos = Position(board: board, toMove: .black, moves: [],
                            blackCanCastleQueenside: false)
@@ -769,9 +769,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleKingsideWhenInCheck() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, h1),
-                                      (BR, e8)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, h1),
+                                     (BR, e8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -784,9 +784,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleKingsideIfF1IsUnderAttack() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, h1),
-                                      (BR, f8)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, h1),
+                                     (BR, f8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -799,9 +799,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleQueensideWhenInCheck() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, a1),
-                                      (BR, e8)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, a1),
+                                     (BR, e8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -814,9 +814,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleQueensideIfD1IsUnderAttack() {
-        let board = Board.empty.with([(WK, e1),
-                                      (WR, a1),
-                                      (BR, d8)])
+        let board = Board.empty.with((WK, e1),
+                                     (WR, a1),
+                                     (BR, d8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -829,9 +829,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectBlackCastleKingsideWhenInCheck() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, h8),
-                                      (WR, e1)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, h8),
+                                     (WR, e1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -844,9 +844,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectBlackCastleKingsideIfF8IsUnderAttack() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, h8),
-                                      (WR, f1)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, h8),
+                                     (WR, f1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -859,9 +859,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectBlackCastleQueensideWhenInCheck() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, a8),
-                                      (WR, e1)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, a8),
+                                     (WR, e1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -874,9 +874,9 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testRejectWhiteCastleQueensideIfD8IsUnderAttack() {
-        let board = Board.empty.with([(BK, e8),
-                                      (BR, a8),
-                                      (WR, d1)])
+        let board = Board.empty.with((BK, e8),
+                                     (BR, a8),
+                                     (WR, d1))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -889,8 +889,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testWhiteEnPassantCapture() {
-        let board = Board.empty.with([(WP, e5),
-                                      (BP, d7)])
+        let board = Board.empty.with((WP, e5),
+                                     (BP, d7))
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
@@ -907,8 +907,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackEnPassantCapture() {
-        let board = Board.empty.with([(WP, e2),
-                                      (BP, f4)])
+        let board = Board.empty.with((WP, e2),
+                                     (BP, f4))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
@@ -925,8 +925,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testPromoteCaptures() {
-        let board = Board.empty.with([(WP, g7),
-                                      (BR, h8)])
+        let board = Board.empty.with((WP, g7),
+                                     (BR, h8))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 

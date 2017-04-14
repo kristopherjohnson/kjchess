@@ -18,6 +18,8 @@ public class Evaluation {
     public let moves: [Move]
     public let materialScore: Double
 
+    public let score: Double
+
     public init(_ position: Position) {
         self.position = position
 
@@ -32,6 +34,7 @@ public class Evaluation {
         }
 
         materialScore = materialValue(whitePieces) - materialValue(blackPieces)
+        score = materialScore
     }
 }
 

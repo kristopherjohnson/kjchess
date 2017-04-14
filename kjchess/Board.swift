@@ -100,13 +100,13 @@ public struct Board {
 
         case .move(let piece, let from, let to),
              .capture(let piece, let from, let to, _):
-            return self.with([(piece, to),
-                              (nil, from)])
+            return self.with((piece, to),
+                             (nil, from))
 
         case .promote(let player, let from, let to, let promoted),
              .promoteCapture(let player, let from, let to, _, let promoted):
-            return self.with([(Piece(player, promoted), to),
-                               (nil, from)])
+            return self.with((Piece(player, promoted), to),
+                             (nil, from))
             
         case .enPassantCapture(let player, let from, let to):
             let capturedPieceRank
@@ -114,36 +114,36 @@ public struct Board {
                     ? to.rank - 1
                     : to.rank + 1
             return self
-                .with([(Piece(player, .pawn), to),
-                       (nil, from),
-                       (nil, Location(to.file, capturedPieceRank))])
+                .with((Piece(player, .pawn), to),
+                      (nil, from),
+                      (nil, Location(to.file, capturedPieceRank)))
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                return self.with([(WK,  g1),
-                                  (WR,  f1),
-                                  (nil, e1),
-                                  (nil, h1)])
+                return self.with((WK,  g1),
+                                 (WR,  f1),
+                                 (nil, e1),
+                                 (nil, h1))
             case .black:
-                return self.with([(BK,  g8),
-                                  (BR,  f8),
-                                  (nil, e8),
-                                  (nil, h8)])
+                return self.with((BK,  g8),
+                                 (BR,  f8),
+                                 (nil, e8),
+                                 (nil, h8))
             }
 
         case .castleQueenside(let player):
             switch player {
             case .white:
-                return self.with([(WK,  c1),
-                                  (WR,  d1),
-                                  (nil, e1),
-                                  (nil, a1)])
+                return self.with((WK,  c1),
+                                 (WR,  d1),
+                                 (nil, e1),
+                                 (nil, a1))
             case .black:
-                return self.with([(BK,  c8),
-                                  (BR,  d8),
-                                  (nil, e8),
-                                  (nil, a8)])
+                return self.with((BK,  c8),
+                                 (BR,  d8),
+                                 (nil, e8),
+                                 (nil, a8))
             }
 
         case .resign:
@@ -152,7 +152,7 @@ public struct Board {
     }
 
     /// Return copy of board with the given `Piece` at the given `Location`.
-    public func with(_ piece: Piece?, at location: Location) -> Board {
+    public func with(_ piece: Piece?, _ location: Location) -> Board {
         var newSquares = Array(squares)
         newSquares[location.rank * Board.filesCount + location.file] = piece
 
@@ -160,7 +160,7 @@ public struct Board {
     }
 
     /// Return copy of board with the given `Pieces` at the given `Locations`.
-    public func with(_ pieceLocations: [(Piece?, Location)]) -> Board {
+    public func with(_ pieceLocations: (Piece?, Location)...) -> Board {
         var newSquares = Array(squares)
 
         for (piece, location) in pieceLocations {

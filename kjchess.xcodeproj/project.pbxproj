@@ -14,6 +14,7 @@
 		4E76133F1EA031CD00F277BE /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76133E1EA031CD00F277BE /* EvaluationTests.swift */; };
 		4E7613411EA0325A00F277BE /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* Evaluation.swift */; };
 		4E7613421EA0325A00F277BE /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* Evaluation.swift */; };
+		4E7613441EA1807300F277BE /* bestMoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613431EA1807300F277BE /* bestMoveTests.swift */; };
 		4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84B2321E86F0E100E381D3 /* NotationTests.swift */; };
 		4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA11E8B2BAE007F94D0 /* main.swift */; };
 		4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
@@ -87,6 +88,7 @@
 		4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array_randomPick.swift; sourceTree = "<group>"; };
 		4E76133E1EA031CD00F277BE /* EvaluationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluationTests.swift; sourceTree = "<group>"; };
 		4E7613401EA0325A00F277BE /* Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluation.swift; sourceTree = "<group>"; };
+		4E7613431EA1807300F277BE /* bestMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bestMoveTests.swift; sourceTree = "<group>"; };
 		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
 		4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "kjchess-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB68EA11E8B2BAE007F94D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
@@ -206,6 +208,7 @@
 		4EF6CF721E747D76001103A8 /* kjchessTests */ = {
 			isa = PBXGroup;
 			children = (
+				4E7613431EA1807300F277BE /* bestMoveTests.swift */,
 				4EF6CF911E75EF50001103A8 /* BoardTests.swift */,
 				4E76133E1EA031CD00F277BE /* EvaluationTests.swift */,
 				4EDF0BE61E9ADD6300EA1588 /* FENTests.swift */,
@@ -410,6 +413,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4E7613441EA1807300F277BE /* bestMoveTests.swift in Sources */,
 				4EF6CF8E1E75E889001103A8 /* Position_legalMovesTests.swift in Sources */,
 				4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */,
 				4EFF4FE71E91415B00D30942 /* Position_after_coordinateMoveTests.swift in Sources */,

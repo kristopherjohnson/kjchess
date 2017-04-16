@@ -8,14 +8,17 @@ I've wanted to write a chess program since I was a teenager.  I'm finally doing 
 
 ## Status
 
-kjchess is not usable yet.  The following features are implemented:
+kjchess is not very good yet.  The following features are implemented:
 
 - Can determine legal moves for a given position.
+- Uses minimax with alpha-beta pruning to determine best move.
 - Implements enough of the UCI protocol that a game can be played with these UIs:
-    - XBoard and the PolyGlot adapter.
-    - Scid vs. PC
+    - [XBoard](https://www.gnu.org/software/xboard/) and the [PolyGlot](https://chessprogramming.wikispaces.com/PolyGlot) adapter.
+    - [Scid vs. Mac](http://scidvspc.sourceforge.net/#toc3)
 
-kjchess is written in Swift, and requires features of macOS 10.12 Sierra.  It may be portable to other platforms by replacing the use of `os_log()` and other macOS-specific APIs.
+The biggest weaknesses right now is that the move search is slow (a search depth of 4 leads to 30-60 seconds per move on my 2013 MacBook Pro), and the evaluation function only uses material values of pieces, without any positional factors.
+
+kjchess is written in Swift, and requires features of macOS 10.12 Sierra.
 
 
 ## Building

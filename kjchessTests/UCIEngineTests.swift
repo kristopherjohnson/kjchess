@@ -185,4 +185,21 @@ class UCIEngineTests: XCTestCase {
             .after(Move.move(piece: WB, from: f1, to: c4))
         XCTAssertTrue(engine!.position.isEqualDisregardingMoves(expectedPosition))
     }
+
+    func testHandleCheckmate() {
+        /// This position is checkmate. Ensure engine does not crash in that case.
+        /// (There was a bug that caused failure because the engine was
+        /// trying to convert a score of Double.infinity to centipawns.)
+        send(
+            "position startpos moves e2e4 e7e5 g1f3 b8c6 f1c4 d8f6 c2c3 c6a5 b2b3 a5c4 b3c4 f6b6 e1g1 c7c6 f3e5 g8h6 d2d4 h6g8 d1b3 b6c7 c4c5 f7f5 b3f7",
+            "go wtime 300000 btime 300000 movestogo 29",
+            "isready"
+        )
+
+        expect(
+            "info depth 3 score cp 100000 pv e8d8",
+            "bestmove e8d8",
+            "readyok"
+        )
+    }
 }

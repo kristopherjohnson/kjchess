@@ -243,13 +243,14 @@ public class UCIEngine {
         // TODO: Send apppropriate "info" messages before "bestmove".
 
         // TODO: Make searchDepth configurable.
-        // A searchDepth of 3 provides an answer in a few seconds
-        // on an early 2013 MacBook Pro.  A searchDepth of
-        // 4 takes 20-60 seconds.
+        // A searchDepth of 4 provides an answer in several seconds
+        // on an early 2013 MacBook Pro.
 
-        let searchDepth = 3
+        let searchDepth = 4
         if let (move, score) = bestMove(position: position, searchDepth: searchDepth) {
-            let scoreCentipawns = Int((score * 100).rounded())
+            // score could be +/-Infinity, so clamp it before converting to centipawns.
+            let clampedScore = min(1000.0, max(-1000.0, score))
+            let scoreCentipawns = Int((clampedScore * 100).rounded())
             putLine("info depth \(searchDepth) score cp \(scoreCentipawns) pv \(move.coordinateForm)")
             putLine("bestmove \(move.coordinateForm)")
         }

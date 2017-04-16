@@ -36,7 +36,8 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
         assertionFailure("Unable to find move: \(error.localizedDescription)")
     }
 
-    let moves = position.legalMoves()
+    var moves = position.legalMoves()
+    moves.sort(by: capturesFirst)
 
     var bestMoves = [Move]()
     var bestScore: Double
@@ -106,7 +107,8 @@ private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Doub
         return evaluation.score
     }
 
-    let moves = position.legalMoves()
+    var moves = position.legalMoves()
+    moves.sort(by: capturesFirst)
 
     var bestScore: Double
     var a = alpha
@@ -143,4 +145,11 @@ private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Doub
     }
 
     return bestScore
+}
+
+/// Predicate used to sort Move arrays so that captures come before non-capture moves.
+///
+/// Such an ordering should lead to better alpha-beta pruning.
+private func capturesFirst(lhs: Move, rhs: Move) -> Bool {
+    return lhs.isCapture && !rhs.isCapture
 }

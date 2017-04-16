@@ -16,18 +16,22 @@ class bestMoveTests: XCTestCase {
     /// and that we didn't just luckily choose the expected move randomly.
     let repeats = 4
 
-    func testCaptureOverMove() {
+    func testPreferCaptureOverMove() {
         let board = Board.empty.with((WQ, e4),
                                      (BQ, b7))
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
         for _ in 0..<repeats {
-            let move = bestMove(position: pos)
+            if let (move, _) = bestMove(position: pos) {
 
-            XCTAssertEqual(move,
-                           .capture(piece: WQ, from: e4, to: b7, captured: .queen),
-                           "Should always try to capture the queen")
+                XCTAssertEqual(move,
+                               .capture(piece: WQ, from: e4, to: b7, captured: .queen),
+                               "Should always try to capture the queen")
+            }
+            else {
+                XCTFail("Unable to find a move")
+            }
         }
     }
 
@@ -39,11 +43,33 @@ class bestMoveTests: XCTestCase {
         let pos = Position(board: board, toMove: .white, moves: [])
 
         for _ in 0..<repeats {
-            let move = bestMove(position: pos)
+            if let (move, _) = bestMove(position: pos) {
+                XCTAssertEqual(move,
+                               .capture(piece: WP, from: e4, to: d5, captured: .queen),
+                               "Should always capture the queen instead of the bishop")
+            }
+            else {
+                XCTFail("Unable to find a move")
+            }
+        }
+    }
 
-            XCTAssertEqual(move,
-                           .capture(piece: WP, from: e4, to: d5, captured: .queen),
-                           "Should always capture the queen instead of the bishop")
+    func testAvoidBadExchange() {
+        let board = Board.empty.with((WQ, e4),
+                                     (BR, e6),
+                                     (BP, d7),
+                                     (BP, a4))
+
+        let pos = Position(board: board, toMove: .white, moves: [])
+        for _ in 0..<repeats {
+            if let (move, _) = bestMove(position: pos, searchDepth: 2) {
+                XCTAssertEqual(move,
+                               .capture(piece: WQ, from: e4, to: a4, captured: .pawn),
+                               "Should capture the pawn instead of the rook")
+            }
+            else {
+                XCTFail("Unable to find a move")
+            }
         }
     }
 }

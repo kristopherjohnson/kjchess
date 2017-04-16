@@ -12,28 +12,40 @@ import Foundation
 /// Evaluations can change as a search proceeds.
 public class Evaluation {
 
+    /// The `Position` for which this evaluation was made.
     public let position: Position
-    public let whitePieces: [(Piece, Location)]
-    public let blackPieces: [(Piece, Location)]
+
+    /// Moves that can be made from this position.
     public let moves: [Move]
+
+    /// Score based upon material.
+    ///
+    /// Positive value means white is ahead.
     public let materialScore: Double
 
+    /// Score based upon material and positional factors.
+    ///
+    /// Positive value means white is ahead.
     public let score: Double
 
+    /// Initializer.
     public init(_ position: Position) {
         self.position = position
 
         let board = position.board
-        whitePieces = Array(board.pieces(player: .white))
-        blackPieces = Array(board.pieces(player: .black))
 
         moves = Array(position.legalMoves())
 
-        func materialValue(_ pieces: [(Piece, Location)]) -> Double {
+        func materialValue<S: Sequence>(_ pieces: S) -> Double
+            where S.Iterator.Element == (Piece, Location)
+        {
             return pieces.reduce(0.0) { $0 + $1.0.materialValue }
         }
 
+        let whitePieces = board.pieces(player: .white)
+        let blackPieces = board.pieces(player: .black)
         materialScore = materialValue(whitePieces) - materialValue(blackPieces)
+
         score = materialScore
     }
 }

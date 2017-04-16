@@ -104,6 +104,28 @@ public struct Position {
                         moveNumber: newMoveNumber)
     }
 
+    /// Get the move that led to this position.
+    ///
+    /// - returns: `Move` or `nil` if move information is not available.
+    public var lastMove: Move? {
+        return moves.last
+    }
+
+    /// Get the last move's description.
+    ///
+    /// - returns: Move description, or "?" if last move is unavailable.
+    public var lastMoveDescription: String {
+        return lastMove?.description ?? "?"
+    }
+
+    /// Get the list of moves as a space-delimited string.
+    public var movesDescription: String {
+        if moves.isEmpty {
+            return "?"
+        }
+        return moves.map { $0.description }.joined(separator: " ")
+    }
+
     /// Determine new values for the CanCastle properties after a move.
     private func castlingState(after move: Move) -> (Bool, Bool, Bool, Bool) {
         var newWhiteCanCastleKingside = whiteCanCastleKingside

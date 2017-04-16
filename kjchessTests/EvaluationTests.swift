@@ -18,9 +18,6 @@ class EvaluationTests: XCTestCase {
 
         XCTAssertEqual(Array(pos.legalMoves()), eval.moves)
 
-        XCTAssertEqual(16, eval.whitePieces.count)
-        XCTAssertEqual(16, eval.blackPieces.count)
-
         XCTAssertEqual(0.0, eval.materialScore)
     }
 

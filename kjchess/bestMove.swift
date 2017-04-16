@@ -9,27 +9,26 @@ import Foundation
 
 /// Return the best move for the specified position.
 ///
-/// - returns: A `Move`, or `nil` if there are no legal moves.
-public func bestMove(position: Position) -> Move? {
+/// - returns: A `Move` and the score, or `nil` if there are no legal moves.
+public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)? {
 
-    // TODO: Let the engine search to determine the best move.  For now, we
-    // just play a simple opening, or pick a random move.
+    // TODO: Provide a better book-move generator than this.
     do {
         let b = position.board
         switch position.toMove {
         case .white:
             if b[e2] == WP && b[e3] == nil && b[e4] == nil {
-                return try position.find(coordinateMove: "e2e4")
+                return (try position.find(coordinateMove: "e2e4"), 0.0)
             }
             else if b[g1] == WN && b[f3] == nil {
-                return try position.find(coordinateMove: "g1f3")
+                return (try position.find(coordinateMove: "g1f3"), 0.0)
             }
         case .black:
             if b[e7] == BP && b[e6] == nil && b[e5] == nil {
-                return try position.find(coordinateMove: "e7e5")
+                return (try position.find(coordinateMove: "e7e5"), 0.0)
             }
             else if b[b8] == BN && b[c6] == nil {
-                return try position.find(coordinateMove: "b8c6")
+                return (try position.find(coordinateMove: "b8c6"), 0.0)
             }
         }
     }
@@ -37,23 +36,77 @@ public func bestMove(position: Position) -> Move? {
         assertionFailure("Unable to find move: \(error.localizedDescription)")
     }
 
-    let legalMoves = position.legalMoves()
+    let moves = position.legalMoves()
 
-    let evaluations = legalMoves.map { ($0, Evaluation(position.after($0))) }
-    if evaluations.isEmpty {
+    var bestMoves = [Move]()
+    var bestScore: Double
+
+    switch position.toMove {
+    case .white:
+        bestScore = -Double.infinity
+        for move in moves {
+            let moveScore = minimax(position: position.after(move),
+                                    depth: searchDepth - 1)
+            if moveScore > bestScore {
+                bestScore = moveScore
+                bestMoves = [move]
+            }
+            else if moveScore == bestScore {
+                bestMoves.append(move)
+            }
+        }
+    case .black:
+        bestScore = Double.infinity
+        for move in moves {
+            let moveScore = minimax(position: position.after(move),
+                                    depth: searchDepth - 1)
+            if moveScore < bestScore {
+                bestScore = moveScore
+                bestMoves = [move]
+            }
+            else if moveScore == bestScore {
+                bestMoves.append(move)
+            }
+        }
+    }
+
+    if let move = bestMoves.randomPick() {
+        return (move, bestScore)
+    }
+    else {
         return nil
     }
-
-    let score = bestScore(player: position.toMove, evaluations: evaluations)
-    let bestEvaluations = evaluations.filter { $0.1.score == score }
-    return bestEvaluations.randomPick().map { $0.0 }
 }
 
-private func bestScore(player: Player, evaluations: [(Move, Evaluation)]) -> Double {
-    switch player {
-    case .white:
-        return evaluations.map { $0.1.score }.max() ?? 0.0
-    case .black:
-        return evaluations.map { $0.1.score }.min() ?? 0.0
+private func minimax(position: Position, depth: Int) -> Double {
+
+    if depth < 1 {
+        let evaluation = Evaluation(position)
+        return evaluation.score
     }
+
+    let moves = position.legalMoves()
+
+    var bestScore: Double
+
+    switch position.toMove {
+    case .white:
+        bestScore = -Double.infinity
+        for move in moves {
+            let newPosition = position.after(move)
+            let moveScore = minimax(position: newPosition,
+                                    depth: depth - 1)
+            bestScore = max(bestScore, moveScore)
+        }
+    case .black:
+        bestScore = Double.infinity
+        for move in moves {
+            let newPosition = position.after(move)
+            let moveScore = minimax(position: newPosition,
+                                    depth: depth - 1)
+            bestScore = min(bestScore, moveScore)
+        }
+    }
+
+    return bestScore
 }

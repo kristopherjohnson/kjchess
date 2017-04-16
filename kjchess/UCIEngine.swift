@@ -238,12 +238,19 @@ public class UCIEngine {
     }
 
     private func onGoCommand(tokens: [String]) {
-        // TODO: look at the additional tokens.  For now, we just immediately return a bestmove.
+        // TODO: look at the additional tokens.  For now, we immediately return a bestmove.
 
         // TODO: Send apppropriate "info" messages before "bestmove".
-        
-        if let move = bestMove(position: position) {
-            putLine("info pv \(move.coordinateForm)")
+
+        // TODO: Make searchDepth configurable.
+        // A searchDepth of 2 provides an answer in a few seconds
+        // on an early 2013 MacBook Pro.  A searchDepth of
+        // 3 takes a lot longer.
+
+        let searchDepth = 2
+        if let (move, score) = bestMove(position: position, searchDepth: searchDepth) {
+            let scoreCentipawns = Int((score * 100).rounded())
+            putLine("info depth \(searchDepth) score cp \(scoreCentipawns) pv \(move.coordinateForm)")
             putLine("bestmove \(move.coordinateForm)")
         }
         else {

@@ -77,6 +77,7 @@ extension Position {
     private func slideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> [Move] {
         let player = piece.player
         var result = [Move]()
+        result.reserveCapacity(14)
 
         for (h, v) in vectors {
             var file = location.file + h
@@ -141,6 +142,7 @@ extension Position {
         let rank = location.rank
 
         var result = [Move]()
+        result.reserveCapacity(8)
 
         if Board.minRank < rank && rank < Board.maxRank {
             let promotionRank = Position.pawnPromotionRank(player: player)
@@ -223,6 +225,7 @@ extension Position {
         let player = piece.player
 
         var result = [Move]()
+        result.reserveCapacity(8)
 
         for (h, v) in Position.knightJumps {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
@@ -292,6 +295,7 @@ extension Position {
         let player = piece.player
 
         var result = [Move]()
+        result.reserveCapacity(8)
 
         for (h, v) in Position.eightDirections {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {

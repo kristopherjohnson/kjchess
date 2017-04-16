@@ -245,7 +245,7 @@ public class UCIEngine {
         // TODO: Make searchDepth configurable.
         // A searchDepth of 3 provides an answer in a few seconds
         // on an early 2013 MacBook Pro.  A searchDepth of
-        // 4 takes a lot longer.
+        // 4 takes 20-60 seconds.
 
         let searchDepth = 3
         if let (move, score) = bestMove(position: position, searchDepth: searchDepth) {

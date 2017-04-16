@@ -50,8 +50,10 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let moveScore = minimax(position: position.after(move),
-                                        depth: searchDepth - 1)
+                let moveScore = alphabeta(position: position.after(move),
+                                          depth: searchDepth - 1,
+                                          alpha: -Double.infinity,
+                                          beta: Double.infinity)
                 queue.sync {
                     if moveScore > bestScore {
                         bestScore = moveScore
@@ -69,8 +71,10 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let moveScore = minimax(position: position.after(move),
-                                        depth: searchDepth - 1)
+                let moveScore = alphabeta(position: position.after(move),
+                                          depth: searchDepth - 1,
+                                          alpha: -Double.infinity,
+                                          beta: Double.infinity)
                 queue.sync {
                     if moveScore < bestScore {
                         bestScore = moveScore
@@ -95,7 +99,7 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
     }
 }
 
-private func minimax(position: Position, depth: Int) -> Double {
+private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Double) -> Double {
 
     if depth < 1 {
         let evaluation = Evaluation(position)
@@ -105,23 +109,36 @@ private func minimax(position: Position, depth: Int) -> Double {
     let moves = position.legalMoves()
 
     var bestScore: Double
+    var a = alpha
+    var b = beta
+    let d = depth - 1
 
     switch position.toMove {
     case .white:
         bestScore = -Double.infinity
         for move in moves {
-            let newPosition = position.after(move)
-            let moveScore = minimax(position: newPosition,
-                                    depth: depth - 1)
+            let moveScore = alphabeta(position: position.after(move),
+                                      depth: d,
+                                      alpha: a,
+                                      beta: b)
             bestScore = max(bestScore, moveScore)
+            a = max(a, bestScore)
+            if b <= a {
+                break // beta cut-off
+            }
         }
     case .black:
         bestScore = Double.infinity
         for move in moves {
-            let newPosition = position.after(move)
-            let moveScore = minimax(position: newPosition,
-                                    depth: depth - 1)
+            let moveScore = alphabeta(position: position.after(move),
+                                      depth: d,
+                                      alpha: a,
+                                      beta: b)
             bestScore = min(bestScore, moveScore)
+            b = min(b, bestScore)
+            if b <= a {
+                break // alpha cut-off
+            }
         }
     }
 

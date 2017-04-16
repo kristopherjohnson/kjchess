@@ -150,7 +150,7 @@ class UCIEngineTests: XCTestCase {
         )
         
         expect(
-            "info depth 2 score cp 0 pv e7e5",
+            "info depth 3 score cp 0 pv e7e5",
             "bestmove e7e5"
         )
     }
@@ -162,7 +162,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth 2 score cp 0 pv b8c6",
+            "info depth 3 score cp 0 pv b8c6",
             "bestmove b8c6"
         )
     }

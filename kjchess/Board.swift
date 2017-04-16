@@ -171,7 +171,7 @@ public struct Board {
     }
 
     /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
-    public func pieces(player: Player) -> AnySequence<(Piece, Location)> {
+    public func pieces(player: Player) -> [(Piece, Location)] {
         // TODO: Create the result sequence lazily
         var result = [(Piece, Location)]()
         for rank in 0..<Board.ranksCount {
@@ -183,11 +183,11 @@ public struct Board {
                 }
             }
         }
-        return AnySequence(result)
+        return result
     }
 
     /// Return locations that contain the specified piece.
-    public func locations(piece: Piece) -> AnySequence<Location> {
+    public func locations(piece: Piece) -> [Location] {
         var result = [Location]()
         for rank in 0..<Board.ranksCount {
             let file0 = rank * Board.filesCount
@@ -198,7 +198,7 @@ public struct Board {
                 }
             }
         }
-        return AnySequence(result)
+        return result
     }
 
     /// Return location of the given player's king, or nil if there is no king on the board.

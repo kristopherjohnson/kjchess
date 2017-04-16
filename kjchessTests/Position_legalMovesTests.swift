@@ -26,7 +26,7 @@ class Position_legalMovesTests: XCTestCase {
            "WNg1-f3", "WNg1-h3"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -55,7 +55,7 @@ class Position_legalMovesTests: XCTestCase {
            "BNg8-f6", "BNg8-h6"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -83,7 +83,7 @@ class Position_legalMovesTests: XCTestCase {
             "WPe4xNf5"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -106,7 +106,7 @@ class Position_legalMovesTests: XCTestCase {
             "BPd5xNe4"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -132,7 +132,7 @@ class Position_legalMovesTests: XCTestCase {
            "WNd4-b5"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -157,7 +157,7 @@ class Position_legalMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .white, moves: [])
 
         // Note: Filter out the moves that the pawns could make.
-        let moves = Array(pos.legalMoves()).filter { $0.from == d4 }
+        let moves = pos.legalMoves().filter { $0.from == d4 }
 
         XCTAssertEqual(0, moves.count,
                        "No moves by the knight are possible")
@@ -188,7 +188,7 @@ class Position_legalMovesTests: XCTestCase {
            "WNd4xQb5"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -220,7 +220,7 @@ class Position_legalMovesTests: XCTestCase {
            "WRd4-h4"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -256,7 +256,7 @@ class Position_legalMovesTests: XCTestCase {
             "WRd4xQg4"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -287,7 +287,7 @@ class Position_legalMovesTests: XCTestCase {
             "WBe4-h7"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -322,7 +322,7 @@ class Position_legalMovesTests: XCTestCase {
             "BBd4xQf2"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -365,7 +365,7 @@ class Position_legalMovesTests: XCTestCase {
             "BQc3-c8"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -412,7 +412,7 @@ class Position_legalMovesTests: XCTestCase {
             "BQd4xQd6"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -438,7 +438,7 @@ class Position_legalMovesTests: XCTestCase {
             "WKe3-d4"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -466,7 +466,7 @@ class Position_legalMovesTests: XCTestCase {
             "WKd4-c5"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -492,7 +492,7 @@ class Position_legalMovesTests: XCTestCase {
             // WPb2-b3 and WPb2-b4 are not legal
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -518,7 +518,7 @@ class Position_legalMovesTests: XCTestCase {
             // BN cannot move
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -544,7 +544,7 @@ class Position_legalMovesTests: XCTestCase {
             // bishop cannot move
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -570,7 +570,7 @@ class Position_legalMovesTests: XCTestCase {
             // bishop cannot move
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -592,7 +592,7 @@ class Position_legalMovesTests: XCTestCase {
             "WKe5-f5"
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -618,7 +618,7 @@ class Position_legalMovesTests: XCTestCase {
             // All other moves leave king in check
         ]
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         XCTAssertEqual(moves.count, expectedMoves.count)
 
@@ -636,7 +636,7 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertTrue(pos.whiteCanCastleKingside)
         XCTAssertTrue(pos.whiteCanCastleQueenside)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let expectedMove = Move.castleKingside(player: .white)
 
@@ -656,7 +656,7 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertTrue(pos.blackCanCastleKingside)
         XCTAssertTrue(pos.blackCanCastleQueenside)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let expectedMove = Move.castleKingside(player: .black)
 
@@ -676,7 +676,7 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertTrue(pos.whiteCanCastleKingside)
         XCTAssertTrue(pos.whiteCanCastleQueenside)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let expectedMove = Move.castleQueenside(player: .white)
 
@@ -696,7 +696,7 @@ class Position_legalMovesTests: XCTestCase {
         XCTAssertTrue(pos.blackCanCastleKingside)
         XCTAssertTrue(pos.blackCanCastleQueenside)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let expectedMove = Move.castleQueenside(player: .black)
 
@@ -715,7 +715,7 @@ class Position_legalMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .white, moves: [],
                            whiteCanCastleKingside: false)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .white)
 
@@ -730,7 +730,7 @@ class Position_legalMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .black, moves: [],
                            blackCanCastleKingside: false)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .black)
 
@@ -745,7 +745,7 @@ class Position_legalMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .white, moves: [],
                            whiteCanCastleQueenside: false)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .white)
 
@@ -760,7 +760,7 @@ class Position_legalMovesTests: XCTestCase {
         let pos = Position(board: board, toMove: .black, moves: [],
                            blackCanCastleQueenside: false)
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .black)
         
@@ -775,7 +775,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .white)
 
@@ -790,7 +790,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .white)
 
@@ -805,7 +805,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .white)
 
@@ -820,7 +820,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .white)
 
@@ -835,7 +835,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .black)
 
@@ -850,7 +850,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleKingside(player: .black)
 
@@ -865,7 +865,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .black)
 
@@ -880,7 +880,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .black, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         let rejectedMove = Move.castleQueenside(player: .black)
 
@@ -898,7 +898,7 @@ class Position_legalMovesTests: XCTestCase {
 
         XCTAssertEqual(pos1.enPassantCaptureLocation, d6)
 
-        let moves = Array(pos1.legalMoves())
+        let moves = pos1.legalMoves()
 
         let expectedMove = Move.enPassantCapture(player: .white, from: e5, to: d6)
 
@@ -916,7 +916,7 @@ class Position_legalMovesTests: XCTestCase {
 
         XCTAssertEqual(pos1.enPassantCaptureLocation, e3)
 
-        let moves = Array(pos1.legalMoves())
+        let moves = pos1.legalMoves()
 
         let expectedMove = Move.enPassantCapture(player: .black, from: f4, to: e3)
 
@@ -930,7 +930,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white, moves: [])
 
-        let moves = Array(pos.legalMoves())
+        let moves = pos.legalMoves()
 
         for kind in PieceKind.promotionKinds {
             let expectedMove = Move.promoteCapture(player: .white,

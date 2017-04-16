@@ -34,7 +34,7 @@ public class Evaluation {
 
         let board = position.board
 
-        moves = Array(position.legalMoves())
+        moves = position.legalMoves()
 
         func materialValue<S: Sequence>(_ pieces: S) -> Double
             where S.Iterator.Element == (Piece, Location)

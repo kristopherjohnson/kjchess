@@ -134,7 +134,7 @@ class BoardTests: XCTestCase {
     func testPieces() {
         let board = Board.newGame
 
-        let whitePieces = Array(board.pieces(player: .white))
+        let whitePieces = board.pieces(player: .white)
         XCTAssertEqual(16, whitePieces.count)
         XCTAssertTrue(whitePieces.contains { $0 == (WR, a1) })
         XCTAssertTrue(whitePieces.contains { $0 == (WN, b1) })
@@ -154,7 +154,7 @@ class BoardTests: XCTestCase {
         XCTAssertTrue(whitePieces.contains { $0 == (WP, g2) })
         XCTAssertTrue(whitePieces.contains { $0 == (WP, h2) })
 
-        let blackPieces = Array(board.pieces(player: .black))
+        let blackPieces = board.pieces(player: .black)
         XCTAssertEqual(16, blackPieces.count)
         XCTAssertTrue(blackPieces.contains { $0 == (BR, a8) })
         XCTAssertTrue(blackPieces.contains { $0 == (BN, b8) })

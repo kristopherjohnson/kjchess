@@ -41,34 +41,51 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
     var bestMoves = [Move]()
     var bestScore: Double
 
+    let queue = DispatchQueue(label: "bestMove")
+    let group = DispatchGroup()
+
     switch position.toMove {
     case .white:
         bestScore = -Double.infinity
         for move in moves {
-            let moveScore = minimax(position: position.after(move),
-                                    depth: searchDepth - 1)
-            if moveScore > bestScore {
-                bestScore = moveScore
-                bestMoves = [move]
-            }
-            else if moveScore == bestScore {
-                bestMoves.append(move)
+            group.enter()
+            DispatchQueue.global().async {
+                let moveScore = minimax(position: position.after(move),
+                                        depth: searchDepth - 1)
+                queue.sync {
+                    if moveScore > bestScore {
+                        bestScore = moveScore
+                        bestMoves = [move]
+                    }
+                    else if moveScore == bestScore {
+                        bestMoves.append(move)
+                    }
+                    group.leave()
+                }
             }
         }
     case .black:
         bestScore = Double.infinity
         for move in moves {
-            let moveScore = minimax(position: position.after(move),
-                                    depth: searchDepth - 1)
-            if moveScore < bestScore {
-                bestScore = moveScore
-                bestMoves = [move]
-            }
-            else if moveScore == bestScore {
-                bestMoves.append(move)
+            group.enter()
+            DispatchQueue.global().async {
+                let moveScore = minimax(position: position.after(move),
+                                        depth: searchDepth - 1)
+                queue.sync {
+                    if moveScore < bestScore {
+                        bestScore = moveScore
+                        bestMoves = [move]
+                    }
+                    else if moveScore == bestScore {
+                        bestMoves.append(move)
+                    }
+                    group.leave()
+                }
             }
         }
     }
+
+    group.wait()
 
     if let move = bestMoves.randomPick() {
         return (move, bestScore)

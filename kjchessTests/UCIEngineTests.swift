@@ -20,9 +20,8 @@ class LineStream {
         }
     }
 
-    /// - todo: Needs a timeout to prevent blocking forever.
     public func readLine() -> String? {
-        let timeout = DispatchTime.now() + 5  // No test should take this long
+        let timeout = DispatchTime.now() + 10  // No test should take this long
         if semaphore.wait(timeout: timeout) == DispatchTimeoutResult.timedOut {
             XCTFail("readLine() timed out")
         }
@@ -80,13 +79,22 @@ class UCIEngineTests: XCTestCase {
         return fromEngineStream?.readLine()
     }
 
-    func expect(_ lines: String...) {
-        for line in lines {
-            if let r = readLine() {
-                XCTAssertEqual(r, line)
+    func expect(_ linePatterns: String...) {
+        for linePattern in linePatterns {
+            if let inputLine = readLine() {
+                do {
+                    let re = try NSRegularExpression(pattern: linePattern, options: [.anchorsMatchLines])
+                    let matches = re.numberOfMatches(in: inputLine, options: [], range: NSMakeRange(0, inputLine.utf16.count))
+                    if matches == 0 {
+                        XCTFail("Unable to match pattern \"\(linePattern)\" with input line \"\(inputLine)\"")
+                    }
+                }
+                catch (let error) {
+                    XCTFail("Unable to create regular expression from \"\(linePattern)\": \(error.localizedDescription)")
+                }
             }
             else {
-                XCTFail("EOF when expecting \"\(line)\"")
+                XCTFail("EOF when expecting \"\(linePattern)\"")
             }
         }
     }
@@ -150,7 +158,7 @@ class UCIEngineTests: XCTestCase {
         )
         
         expect(
-            "info depth 3 score cp 0 pv e7e5",
+            "info depth \\d+ score cp 0 time \\d+ pv e7e5",
             "bestmove e7e5"
         )
     }
@@ -162,7 +170,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth 3 score cp 0 pv b8c6",
+            "info depth \\d+ score cp 0 time \\d+ pv b8c6",
             "bestmove b8c6"
         )
     }
@@ -197,7 +205,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth 3 score cp 100000 pv e8d8",
+            "info depth \\d+ score cp 100000 time \\d+ pv e8d8",
             "bestmove e8d8",
             "readyok"
         )

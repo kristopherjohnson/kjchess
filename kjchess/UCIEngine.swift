@@ -7,6 +7,7 @@
 
 import Foundation
 import os.log
+import QuartzCore
 
 /// Implementation of UCI (Universal Chess Interface) protocol.
 /// Includes a few non-standard extensions that are useful for debugging.
@@ -240,18 +241,21 @@ public class UCIEngine {
     private func onGoCommand(tokens: [String]) {
         // TODO: look at the additional tokens.  For now, we immediately return a bestmove.
 
-        // TODO: Send apppropriate "info" messages before "bestmove".
-
         // TODO: Make searchDepth configurable.
         // A searchDepth of 4 provides an answer in several seconds
         // on an early 2013 MacBook Pro.
 
         let searchDepth = 4
+        let startTime = CACurrentMediaTime()
         if let (move, score) = bestMove(position: position, searchDepth: searchDepth) {
+            let endTime = CACurrentMediaTime()
+            let searchTimeMs = Int(((endTime - startTime) * 1000.0).rounded())
+
             // score could be +/-Infinity, so clamp it before converting to centipawns.
             let clampedScore = min(1000.0, max(-1000.0, score))
             let scoreCentipawns = Int((clampedScore * 100).rounded())
-            putLine("info depth \(searchDepth) score cp \(scoreCentipawns) pv \(move.coordinateForm)")
+
+            putLine("info depth \(searchDepth) score cp \(scoreCentipawns) time \(searchTimeMs) pv \(move.coordinateForm)")
             putLine("bestmove \(move.coordinateForm)")
         }
         else {

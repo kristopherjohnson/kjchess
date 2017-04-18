@@ -12,7 +12,7 @@ kjchess is not very good yet.  The following features are implemented:
 
 - Can determine legal moves for a given position.
 - Uses minimax with alpha-beta pruning to determine best move.
-- Implements enough of the UCI protocol that a game can be played with these UIs:
+- Implements enough of the UCI protocol that a game can be played with these chess UIs:
     - [XBoard](https://www.gnu.org/software/xboard/) and the [PolyGlot](https://chessprogramming.wikispaces.com/PolyGlot) adapter.
     - [Scid vs. Mac](http://scidvspc.sourceforge.net/#toc3)
     - [ChessX](http://chessx.sourceforge.net)
@@ -37,7 +37,7 @@ To run unit tests, execute this command:
 
 ## Running
 
-`kjchess-cli` is the executable program.  It does not provide its own GUI or command-line playing interface:  It must be run as a chess engine with GUI that implements the UCI (Universal Chess Interface) protocol.
+`kjchess-cli` is the executable program.  It does not provide its own GUI or command-line playing interface:  It must be run as a chess engine with a GUI chess application that implements the UCI (Universal Chess Interface) protocol.
 
 If you have [XBoard](https://www.gnu.org/software/xboard/) and [PolyGlot](https://chessprogramming.wikispaces.com/PolyGlot) installed, you can start a game by executing this command:
 

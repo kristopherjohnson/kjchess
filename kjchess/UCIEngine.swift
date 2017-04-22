@@ -253,7 +253,7 @@ public class UCIEngine {
             let searchTimeMs = Int(((endTime - startTime) * 1000.0).rounded())
 
             // score could be +/-Infinity, so clamp it before converting to centipawns.
-            let clampedScore = min(1000.0, max(-1000.0, score))
+            let clampedScore = min(30000.0, max(-30000.0, score))
             let scoreCentipawns = Int((clampedScore * 100).rounded())
 
             var pvString: String

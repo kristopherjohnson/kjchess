@@ -37,7 +37,7 @@ class EvaluationTests: XCTestCase {
 
         let eval = Evaluation(pos)
 
-        XCTAssertEqual(-3.0, eval.materialScore,
-                       "Black is ahead by a minor piece")
+        XCTAssertEqualWithAccuracy(-3.2, eval.materialScore, accuracy: 0.1,
+                                   "Black is ahead by a minor piece")
     }
 }

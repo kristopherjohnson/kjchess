@@ -159,7 +159,7 @@ class UCIEngineTests: XCTestCase {
         )
         
         expect(
-            "info depth \\d+ score cp \\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
+            "info depth \\d+ score cp -?\\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
             "bestmove [a-h][1-8][a-h][1-8]"
         )
     }
@@ -171,7 +171,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth \\d+ score cp \\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
+            "info depth \\d+ score cp -?\\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
             "bestmove [a-h][1-8][a-h][1-8]"
         )
     }

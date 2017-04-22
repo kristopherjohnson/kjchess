@@ -18,7 +18,7 @@ class EvaluationTests: XCTestCase {
 
         XCTAssertEqual(Array(pos.legalMoves()), eval.moves)
 
-        XCTAssertEqual(0.0, eval.materialScore)
+        XCTAssertEqualWithAccuracy(0.0, eval.score, accuracy: 0.01)
     }
 
     func testEvaluateAfterBlackPawnLoss() {
@@ -27,8 +27,8 @@ class EvaluationTests: XCTestCase {
 
         let eval = Evaluation(pos)
 
-        XCTAssertEqual(1.0, eval.materialScore,
-                       "White is ahead by a pawn")
+        XCTAssertEqualWithAccuracy(1.0, eval.score, accuracy: 0.5,
+                                   "White is ahead by a pawn")
     }
 
     func testEvaluateAfterWhiteKnightLoss() {
@@ -37,7 +37,7 @@ class EvaluationTests: XCTestCase {
 
         let eval = Evaluation(pos)
 
-        XCTAssertEqualWithAccuracy(-3.2, eval.materialScore, accuracy: 0.1,
+        XCTAssertEqualWithAccuracy(-3.2, eval.score, accuracy: 0.5,
                                    "Black is ahead by a minor piece")
     }
 }

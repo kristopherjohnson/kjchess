@@ -8,7 +8,7 @@ I've wanted to write a chess program since I was a teenager.  I'm finally doing 
 
 ## Status
 
-kjchess is not very good yet.  The following features are implemented:
+kjchess is usable, but not great.  The following features are implemented:
 
 - Can determine legal moves for a given position.
 - Uses minimax with alpha-beta pruning to determine best move.
@@ -17,7 +17,7 @@ kjchess is not very good yet.  The following features are implemented:
     - [Scid vs. Mac](http://scidvspc.sourceforge.net/#toc3)
     - [ChessX](http://chessx.sourceforge.net)
 
-The biggest weaknesses right now is that the move search is slow (a search depth of 4 leads to 5-20 seconds per move on my 2013 MacBook Pro), and the evaluation function only uses material values of pieces, without any positional factors.  The engine also doesn't save any information between moves, so it starts each move search from scratch.
+The biggest weaknesses right now is that the move search is slow (a search depth of 4 leads to 5-20 seconds per move on my 2013 MacBook Pro).  The engine also doesn't save any information between moves, or ponder during the opponent's move.
 
 kjchess is written in Swift, and requires features of macOS 10.12 Sierra.
 

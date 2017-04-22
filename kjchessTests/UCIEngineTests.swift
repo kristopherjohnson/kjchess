@@ -57,6 +57,7 @@ class UCIEngineTests: XCTestCase {
 
         engine = UCIEngine()
         engine!.putLine = { self.fromEngineStream?.putLine($0) }
+        engine!.searchDepth = 1
     }
     
     override func tearDown() {
@@ -158,8 +159,8 @@ class UCIEngineTests: XCTestCase {
         )
         
         expect(
-            "info depth \\d+ score cp 0 time \\d+ pv e7e5",
-            "bestmove e7e5"
+            "info depth \\d+ score cp \\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
+            "bestmove [a-h][1-8][a-h][1-8]"
         )
     }
 
@@ -170,8 +171,8 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth \\d+ score cp 0 time \\d+ pv b8c6",
-            "bestmove b8c6"
+            "info depth \\d+ score cp \\d+ time \\d+ pv [a-h][1-8][a-h][1-8]",
+            "bestmove [a-h][1-8][a-h][1-8]"
         )
     }
 
@@ -205,7 +206,7 @@ class UCIEngineTests: XCTestCase {
         )
 
         expect(
-            "info depth \\d+ score cp 100000 time \\d+ pv e8d8",
+            "info depth \\d+ score cp \\d+ time \\d+ pv e8d8",
             "bestmove e8d8",
             "readyok"
         )

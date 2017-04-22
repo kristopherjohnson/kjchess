@@ -9,37 +9,13 @@ import Foundation
 
 /// Return the best move for the specified position.
 ///
-/// - returns: A `Move` and the score, or `nil` if there are no legal moves.
-public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)? {
-
-    // TODO: Provide a better book-move generator than this.
-    do {
-        let b = position.board
-        switch position.toMove {
-        case .white:
-            if b[e2] == WP && b[e3] == nil && b[e4] == nil {
-                return (try position.find(coordinateMove: "e2e4"), 0.0)
-            }
-            else if b[g1] == WN && b[f3] == nil {
-                return (try position.find(coordinateMove: "g1f3"), 0.0)
-            }
-        case .black:
-            if b[e7] == BP && b[e6] == nil && b[e5] == nil {
-                return (try position.find(coordinateMove: "e7e5"), 0.0)
-            }
-            else if b[b8] == BN && b[c6] == nil {
-                return (try position.find(coordinateMove: "b8c6"), 0.0)
-            }
-        }
-    }
-    catch (let error) {
-        assertionFailure("Unable to find move: \(error.localizedDescription)")
-    }
+/// - returns: A `Move`, the score, and the principal variation, or `nil` if there are no legal moves.
+public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double, [Move])? {
 
     var moves = position.legalMoves()
     moves.sort(by: capturesFirst)
 
-    var bestMoves = [Move]()
+    var bestMoves = [(Move, [Move])]()
     var bestScore: Double
 
     let queue = DispatchQueue(label: "bestMove")
@@ -51,17 +27,17 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let moveScore = alphabeta(position: position.after(move),
-                                          depth: searchDepth - 1,
-                                          alpha: -Double.infinity,
-                                          beta: Double.infinity)
+                let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                                                        depth: searchDepth - 1,
+                                                        alpha: -Double.infinity,
+                                                        beta: Double.infinity)
                 queue.sync {
                     if moveScore > bestScore {
                         bestScore = moveScore
-                        bestMoves = [move]
+                        bestMoves = [(move, movePV.prepending(move))]
                     }
                     else if moveScore == bestScore {
-                        bestMoves.append(move)
+                        bestMoves.append((move, movePV.prepending(move)))
                     }
                     group.leave()
                 }
@@ -72,17 +48,17 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let moveScore = alphabeta(position: position.after(move),
-                                          depth: searchDepth - 1,
-                                          alpha: -Double.infinity,
-                                          beta: Double.infinity)
+                let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                                                        depth: searchDepth - 1,
+                                                        alpha: -Double.infinity,
+                                                        beta: Double.infinity)
                 queue.sync {
                     if moveScore < bestScore {
                         bestScore = moveScore
-                        bestMoves = [move]
+                        bestMoves = [(move, movePV.prepending(move))]
                     }
                     else if moveScore == bestScore {
-                        bestMoves.append(move)
+                        bestMoves.append((move, movePV.prepending(move)))
                     }
                     group.leave()
                 }
@@ -92,25 +68,28 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double)
 
     group.wait()
 
-    if let move = bestMoves.randomPick() {
-        return (move, bestScore)
+    if let (move, movePV) = bestMoves.randomPick() {
+        return (move, bestScore, movePV)
     }
     else {
         return nil
     }
 }
 
-private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Double) -> Double {
+private func minimaxSearch(position: Position, depth: Int, alpha: Double, beta: Double)
+    -> (Double, [Move]) {
 
     if depth < 1 {
         let evaluation = Evaluation(position)
-        return evaluation.score
+        return (evaluation.score, [])
     }
 
     var moves = position.legalMoves()
     moves.sort(by: capturesFirst)
 
     var bestScore: Double
+    var pv: [Move] = []
+
     var a = alpha
     var b = beta
     let d = depth - 1
@@ -119,11 +98,14 @@ private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Doub
     case .white:
         bestScore = -Double.infinity
         for move in moves {
-            let moveScore = alphabeta(position: position.after(move),
-                                      depth: d,
-                                      alpha: a,
-                                      beta: b)
-            bestScore = max(bestScore, moveScore)
+            let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                                                   depth: d,
+                                                   alpha: a,
+                                                   beta: b)
+            if moveScore > bestScore {
+                bestScore = moveScore
+                pv = movePV.prepending(move)
+            }
             a = max(a, bestScore)
             if b <= a {
                 break // beta cut-off
@@ -132,11 +114,14 @@ private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Doub
     case .black:
         bestScore = Double.infinity
         for move in moves {
-            let moveScore = alphabeta(position: position.after(move),
-                                      depth: d,
-                                      alpha: a,
-                                      beta: b)
-            bestScore = min(bestScore, moveScore)
+            let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                                                    depth: d,
+                                                    alpha: a,
+                                                    beta: b)
+            if moveScore < bestScore {
+                bestScore = moveScore
+                pv = movePV.prepending(move)
+            }
             b = min(b, bestScore)
             if b <= a {
                 break // alpha cut-off
@@ -144,7 +129,7 @@ private func alphabeta(position: Position, depth: Int, alpha: Double, beta: Doub
         }
     }
 
-    return bestScore
+    return (bestScore, pv)
 }
 
 /// Predicate used to sort Move arrays so that captures come before non-capture moves.

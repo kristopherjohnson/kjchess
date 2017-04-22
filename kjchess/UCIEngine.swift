@@ -15,6 +15,12 @@ public class UCIEngine {
 
     public private(set) var position = Position.newGame()
 
+    /// Search depth used when determining best move.
+    ///
+    /// A search depth of 4 provides moves in a few seconds on
+    /// an Early 2013 MacBook Pro.
+    public var searchDepth = 4
+    
     /// Function called to read a line of input.
     ///
     /// By default, this reads a line from standard input.
@@ -241,13 +247,8 @@ public class UCIEngine {
     private func onGoCommand(tokens: [String]) {
         // TODO: look at the additional tokens.  For now, we immediately return a bestmove.
 
-        // TODO: Make searchDepth configurable.
-        // A searchDepth of 4 provides an answer in several seconds
-        // on an early 2013 MacBook Pro.
-
-        let searchDepth = 4
         let startTime = CACurrentMediaTime()
-        if let (move, score) = bestMove(position: position, searchDepth: searchDepth) {
+        if let (move, score, pv) = bestMove(position: position, searchDepth: searchDepth) {
             let endTime = CACurrentMediaTime()
             let searchTimeMs = Int(((endTime - startTime) * 1000.0).rounded())
 
@@ -255,7 +256,15 @@ public class UCIEngine {
             let clampedScore = min(1000.0, max(-1000.0, score))
             let scoreCentipawns = Int((clampedScore * 100).rounded())
 
-            putLine("info depth \(searchDepth) score cp \(scoreCentipawns) time \(searchTimeMs) pv \(move.coordinateForm)")
+            var pvString: String
+            if pv.count > 0 {
+                pvString = pv.map{ $0.coordinateForm }.joined(separator: " ")
+            }
+            else {
+                pvString = move.coordinateForm
+            }
+
+            putLine("info depth \(searchDepth) score cp \(scoreCentipawns) time \(searchTimeMs) pv \(pvString)")
             putLine("bestmove \(move.coordinateForm)")
         }
         else {

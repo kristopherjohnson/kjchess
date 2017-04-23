@@ -362,7 +362,7 @@ extension Position {
 
     /// Determine whether specified move is legal given the king's position.
     ///
-    /// - todo: Optimize this. As-is, it generates a new position and checks all possible responses for any move that _might_ put the king into check.
+    /// - todo: Optimize this. As-is, it generates a new position from the move and checks all possible responses for any move that _might_ put the king into check.
     private func isLegal(move: Move, kingLocation: Location, attackedLocations: Set<Location>) -> Bool {
         let from = move.from
 

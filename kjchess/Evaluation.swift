@@ -51,11 +51,9 @@ extension Board {
     /// See <https://chessprogramming.wikispaces.com/Simplified+evaluation+function>
     /// for more details.
     public func pieceSquareValue() -> Double {
-        var score = 0.0
-        for i in 0..<squares.count {
-            score = score + pieceSquareValue(squareIndex: i)
-        }
-        return score
+        return (0..<squares.count).reduce(0.0, { (acc, i) in
+            return acc + pieceSquareValue(squareIndex: i)
+        })
     }
 
     /// Calculate score for the piece at the given square index.
@@ -94,7 +92,7 @@ extension Board {
     }
 
     // MARK:- Piece-square tables
-    
+
     // White Pawn
     private static let WPSquareValues = [
         0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,

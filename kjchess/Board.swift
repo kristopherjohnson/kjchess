@@ -63,6 +63,17 @@ public struct Board {
         self.squares = squares
     }
 
+    /// Given an index into the `squares` array, return the associated `Location`.
+    public func location(squareIndex: Int) -> Location {
+        return Location(squareIndex % Board.filesCount,
+                        squareIndex / Board.filesCount)
+    }
+
+    /// Given a location, return the associated index into the `squares` array.
+    public func squareIndex(location: Location) -> Int {
+        return location.file + location.rank * Board.filesCount
+    }
+
     /// Return `Piece` at the specified `Location`.
     public subscript(location: Location) -> Piece? {
         return squares[location.rank * Board.filesCount + location.file]
@@ -164,7 +175,7 @@ public struct Board {
         var newSquares = Array(squares)
 
         for (piece, location) in pieceLocations {
-            newSquares[location.rank * Board.filesCount + location.file] = piece
+            newSquares[squareIndex(location: location)] = piece
         }
 
         return Board(newSquares)
@@ -172,30 +183,10 @@ public struct Board {
 
     /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
     public func pieces(player: Player) -> [(Piece, Location)] {
-        // TODO: Create the result sequence lazily
         var result = [(Piece, Location)]()
-        for rank in 0..<Board.ranksCount {
-            let file0 = rank * Board.filesCount
-            for file in 0..<Board.filesCount {
-                let index = file0 + file
-                if let piece = squares[index], piece.player == player {
-                    result.append((piece, Location(file, rank)))
-                }
-            }
-        }
-        return result
-    }
-
-    /// Return locations that contain the specified piece.
-    public func locations(piece: Piece) -> [Location] {
-        var result = [Location]()
-        for rank in 0..<Board.ranksCount {
-            let file0 = rank * Board.filesCount
-            for file in 0..<Board.filesCount {
-                let index = file0 + file
-                if let p = squares[index], piece == p {
-                    result.append(Location(file, rank))
-                }
+        for squareIndex in 0..<squares.count {
+            if let piece = squares[squareIndex], piece.player == player {
+                result.append((piece, location(squareIndex: squareIndex)))
             }
         }
         return result
@@ -205,14 +196,10 @@ public struct Board {
     ///
     /// If there is more than one king of the given color, returns the first one found.
     public func kingLocation(player: Player) -> Location? {
-        let piece = Piece(player, .king)
-        for rank in 0..<Board.ranksCount {
-            let file0 = rank * Board.filesCount
-            for file in 0..<Board.filesCount {
-                let index = file0 + file
-                if let p = squares[index], piece == p {
-                    return Location(file, rank)
-                }
+        let king = Piece(player, .king)
+        for squareIndex in 0..<squares.count {
+            if let piece = squares[squareIndex], piece == king {
+                return location(squareIndex: squareIndex)
             }
         }
         return nil

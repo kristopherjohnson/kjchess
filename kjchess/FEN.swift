@@ -129,15 +129,7 @@ extension Position: CustomStringConvertible {
 extension Board {
     /// Return FEN representation of the board's pieces.
     public var fen: String {
-        var ranks = [String]()
-        ranks.reserveCapacity(Board.ranksCount)
-
-        for i in 0..<Board.ranksCount {
-            let rank = fenRank(7 - i)
-            ranks.append(rank)
-        }
-
-        return ranks.joined(separator: "/")
+        return (0..<Board.ranksCount).map{ fenRank(7 - $0) }.joined(separator: "/")
     }
 
     /// Initialize `Board` from the first field of a FEN record.
@@ -178,7 +170,8 @@ extension Board {
             rankString.append(Board.fenSquare(piece: at(file: i, rank: rank)))
         }
 
-        // There is probably a more elegant way to do this
+        // Reduce strings of "1"s.
+        // (There is probably a more elegant way to do this.)
         rankString = rankString.replacingOccurrences(of: "11111111", with: "8")
         rankString = rankString.replacingOccurrences(of: "1111111", with: "7")
         rankString = rankString.replacingOccurrences(of: "111111", with: "6")

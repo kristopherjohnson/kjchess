@@ -72,20 +72,9 @@ public struct Board {
         self.squares = squares
     }
 
-    /// Given an index into the `squares` array, return the associated `Location`.
-    public func location(squareIndex: Int) -> Location {
-        return Location(squareIndex % Board.filesCount,
-                        squareIndex / Board.filesCount)
-    }
-
-    /// Given a location, return the associated index into the `squares` array.
-    public func squareIndex(location: Location) -> Int {
-        return location.file + location.rank * Board.filesCount
-    }
-
     /// Return `Piece` at the specified `Location`.
     public subscript(location: Location) -> Piece? {
-        return squares[location.rank * Board.filesCount + location.file]
+        return squares[location.squareIndex]
     }
 
     /// Return `Piece` at the specified location.
@@ -178,49 +167,49 @@ public struct Board {
 
         case .move(let piece, let from, let to),
              .capture(let piece, let from, let to, _):
-            squares[squareIndex(location: from)] = nil
-            squares[squareIndex(location: to)] = piece
+            squares[from.squareIndex] = nil
+            squares[to.squareIndex] = piece
 
         case .promote(let player, let from, let to, let promoted),
              .promoteCapture(let player, let from, let to, _, let promoted):
-            squares[squareIndex(location: from)] = nil
-            squares[squareIndex(location: to)] = Piece(player, promoted)
+            squares[from.squareIndex] = nil
+            squares[to.squareIndex] = Piece(player, promoted)
 
         case .enPassantCapture(let player, let from, let to):
             let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
             let capturedPawnLocation = Location(to.file, captureRank)
-            squares[squareIndex(location: from)] = nil
-            squares[squareIndex(location: capturedPawnLocation)] = nil
-            squares[squareIndex(location: to)] = Piece(player, .pawn)
+            squares[from.squareIndex] = nil
+            squares[capturedPawnLocation.squareIndex] = nil
+            squares[to.squareIndex] = Piece(player, .pawn)
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                squares[squareIndex(location: e1)] = nil
-                squares[squareIndex(location: h1)] = nil
-                squares[squareIndex(location: f1)] = WR
-                squares[squareIndex(location: g1)] = WK
+                squares[e1.squareIndex] = nil
+                squares[h1.squareIndex] = nil
+                squares[f1.squareIndex] = WR
+                squares[g1.squareIndex] = WK
 
             case .black:
-                squares[squareIndex(location: e8)] = nil
-                squares[squareIndex(location: h8)] = nil
-                squares[squareIndex(location: f8)] = BR
-                squares[squareIndex(location: g8)] = BK
+                squares[e8.squareIndex] = nil
+                squares[h8.squareIndex] = nil
+                squares[f8.squareIndex] = BR
+                squares[g8.squareIndex] = BK
             }
 
         case .castleQueenside(let player):
             switch player {
             case .white:
-                squares[squareIndex(location: e1)] = nil
-                squares[squareIndex(location: a1)] = nil
-                squares[squareIndex(location: d1)] = WR
-                squares[squareIndex(location: c1)] = WK
+                squares[e1.squareIndex] = nil
+                squares[a1.squareIndex] = nil
+                squares[d1.squareIndex] = WR
+                squares[c1.squareIndex] = WK
 
             case .black:
-                squares[squareIndex(location: e8)] = nil
-                squares[squareIndex(location: a8)] = nil
-                squares[squareIndex(location: d8)] = BR
-                squares[squareIndex(location: c8)] = BK
+                squares[e8.squareIndex] = nil
+                squares[a8.squareIndex] = nil
+                squares[d8.squareIndex] = BR
+                squares[c8.squareIndex] = BK
             }
 
         case .resign:
@@ -235,58 +224,56 @@ public struct Board {
         switch move {
 
         case .move(let piece, let from, let to):
-            squares[squareIndex(location: from)] = piece
-            squares[squareIndex(location: to)] = nil
+            squares[from.squareIndex] = piece
+            squares[to.squareIndex] = nil
 
         case .capture(let piece, let from, let to, let capturedKind):
-            squares[squareIndex(location: from)] = piece
-            squares[squareIndex(location: to)] = Piece(piece.player.opponent,
-                                                       capturedKind)
+            squares[from.squareIndex] = piece
+            squares[to.squareIndex] = Piece(piece.player.opponent, capturedKind)
 
         case .promote(let player, let from, let to, _):
-            squares[squareIndex(location: from)] = Piece(player, .pawn)
-            squares[squareIndex(location: to)] = nil
+            squares[from.squareIndex] = Piece(player, .pawn)
+            squares[to.squareIndex] = nil
 
         case .promoteCapture(let player, let from, let to, let capturedKind, _):
-            squares[squareIndex(location: from)] = Piece(player, .pawn)
-            squares[squareIndex(location: to)] = Piece(player.opponent,
-                                                       capturedKind)
+            squares[from.squareIndex] = Piece(player, .pawn)
+            squares[to.squareIndex] = Piece(player.opponent, capturedKind)
 
         case .enPassantCapture(let player, let from, let to):
             let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
             let capturedPawnLocation = Location(to.file, captureRank)
-            squares[squareIndex(location: from)] = Piece(player, .pawn)
-            squares[squareIndex(location: capturedPawnLocation)] = Piece(player.opponent, .pawn)
-            squares[squareIndex(location: to)] = nil
+            squares[from.squareIndex] = Piece(player, .pawn)
+            squares[capturedPawnLocation.squareIndex] = Piece(player.opponent, .pawn)
+            squares[to.squareIndex] = nil
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                squares[squareIndex(location: e1)] = WK
-                squares[squareIndex(location: h1)] = WR
-                squares[squareIndex(location: f1)] = nil
-                squares[squareIndex(location: g1)] = nil
+                squares[e1.squareIndex] = WK
+                squares[h1.squareIndex] = WR
+                squares[f1.squareIndex] = nil
+                squares[g1.squareIndex] = nil
 
             case .black:
-                squares[squareIndex(location: e8)] = BK
-                squares[squareIndex(location: h8)] = BR
-                squares[squareIndex(location: f8)] = nil
-                squares[squareIndex(location: g8)] = nil
+                squares[e8.squareIndex] = BK
+                squares[h8.squareIndex] = BR
+                squares[f8.squareIndex] = nil
+                squares[g8.squareIndex] = nil
             }
 
         case .castleQueenside(let player):
             switch player {
             case .white:
-                squares[squareIndex(location: e1)] = WK
-                squares[squareIndex(location: a1)] = WR
-                squares[squareIndex(location: d1)] = nil
-                squares[squareIndex(location: c1)] = nil
+                squares[e1.squareIndex] = WK
+                squares[a1.squareIndex] = WR
+                squares[d1.squareIndex] = nil
+                squares[c1.squareIndex] = nil
 
             case .black:
-                squares[squareIndex(location: e8)] = BK
-                squares[squareIndex(location: a8)] = BR
-                squares[squareIndex(location: d8)] = nil
-                squares[squareIndex(location: c8)] = nil
+                squares[e8.squareIndex] = BK
+                squares[a8.squareIndex] = BR
+                squares[d8.squareIndex] = nil
+                squares[c8.squareIndex] = nil
             }
 
         case .resign:
@@ -297,7 +284,7 @@ public struct Board {
     /// Return copy of board with the given `Piece` at the given `Location`.
     public func with(_ piece: Piece?, _ location: Location) -> Board {
         var newSquares = Array(squares)
-        newSquares[squareIndex(location: location)] = piece
+        newSquares[location.squareIndex] = piece
 
         return Board(newSquares)
     }
@@ -307,7 +294,7 @@ public struct Board {
         var newSquares = Array(squares)
 
         for (piece, location) in pieceLocations {
-            newSquares[squareIndex(location: location)] = piece
+            newSquares[location.squareIndex] = piece
         }
 
         return Board(newSquares)
@@ -318,7 +305,7 @@ public struct Board {
         var result = [(Piece, Location)]()
         for squareIndex in 0..<squares.count {
             if let piece = squares[squareIndex], piece.player == player {
-                result.append((piece, location(squareIndex: squareIndex)))
+                result.append((piece, Location(squareIndex: squareIndex)))
             }
         }
         return result
@@ -331,7 +318,7 @@ public struct Board {
         let king = Piece(player, .king)
         for squareIndex in 0..<squares.count {
             if let piece = squares[squareIndex], piece == king {
-                return location(squareIndex: squareIndex)
+                return Location(squareIndex: squareIndex)
             }
         }
         return nil

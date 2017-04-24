@@ -9,18 +9,40 @@ import Foundation
 
 /// Specifies a location on the chessboard.
 ///
-/// `file` is the "X-coordinate", and `rank` is the
-/// "Y-coordinate".  The zeroth rank is on the white
-/// side.
-///
 /// File and rank indexes are in the range 0...7.
 ///
 /// So, for example, the white queen's initial location
 /// (d1) is at `Location(3, 0)`, and the black king's
 /// initial location (e8) is at `Location(4, 7)`.
 public struct Location {
-    let file: Int
-    let rank: Int
+    let squareIndex: Int
+
+    /// The "X-coordinate" of a location.
+    ///
+    /// The leftmost rank is 0.
+    /// The rightmost rank is 7.
+    ///
+    /// - returns: Integer in the range 0...7.
+    var file: Int {
+        return squareIndex % Board.filesCount
+    }
+
+    /// The "Y-coordinate" of a location.
+    ///
+    /// The bottommost (white) rank is 0.
+    /// The topmost (black) rank is 7.
+    ///
+    /// - returns: Integer in the range 0...7.
+    var rank: Int {
+        return squareIndex / Board.filesCount
+    }
+
+    /// Initializer
+    ///
+    /// - parameter squareIndex: An index into a `Board.squares` array.
+    public init(squareIndex: Int) {
+        self.squareIndex = squareIndex
+    }
 
     /// Initializer
     ///
@@ -28,8 +50,7 @@ public struct Location {
     /// - parameter rank: an integer in the range `0...7`.
     public init(_ file: Int, _ rank: Int) {
         assert(Board.isValid(file: file, rank: rank), "file and rank must be valid")
-        self.file = file
-        self.rank = rank
+        self.squareIndex = file + rank * Board.filesCount
     }
 
     /// Initializer
@@ -42,8 +63,7 @@ public struct Location {
         if let file = Location.fileIndex(character: fileCharacter),
             let rank = Location.rankIndex(character: rankCharacter)
         {
-            self.file = file
-            self.rank = rank
+            self.squareIndex = file + rank * Board.filesCount
         }
         else {
             return nil
@@ -61,8 +81,7 @@ public struct Location {
         if let file = Location.fileIndex(character: chars.at(offset: 0)),
             let rank = Location.rankIndex(character: chars.at(offset: 1))
         {
-            self.file = file
-            self.rank = rank
+            self.squareIndex = file + rank * Board.filesCount
         }
         else {
             return nil
@@ -162,15 +181,14 @@ public struct Location {
 extension Location: Equatable {}
 
 public func == (_ lhs: Location, _ rhs: Location) -> Bool {
-    return lhs.file == rhs.file
-        && lhs.rank == rhs.rank
+    return lhs.squareIndex == rhs.squareIndex
 }
 
 // MARK:- Hashable
 
 extension Location: Hashable {
     public var hashValue: Int {
-        return (file << 3) | rank
+        return squareIndex
     }
 }
 

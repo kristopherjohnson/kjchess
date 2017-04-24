@@ -105,57 +105,9 @@ public struct Board {
     /// This method does not validate whether the move is valid
     /// of the specified pieces exist.
     public func after(_ move: Move) -> Board {
-        switch move {
-
-        case .move(let piece, let from, let to),
-             .capture(let piece, let from, let to, _):
-            return self.with((piece, to),
-                             (nil, from))
-
-        case .promote(let player, let from, let to, let promoted),
-             .promoteCapture(let player, let from, let to, _, let promoted):
-            return self.with((Piece(player, promoted), to),
-                             (nil, from))
-            
-        case .enPassantCapture(let player, let from, let to):
-            let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
-            let capturedPawnLocation = Location(to.file, captureRank)
-            return self
-                .with((Piece(player, .pawn), to),
-                      (nil, from),
-                      (nil, capturedPawnLocation))
-
-        case .castleKingside(let player):
-            switch player {
-            case .white:
-                return self.with((WK,  g1),
-                                 (WR,  f1),
-                                 (nil, e1),
-                                 (nil, h1))
-            case .black:
-                return self.with((BK,  g8),
-                                 (BR,  f8),
-                                 (nil, e8),
-                                 (nil, h8))
-            }
-
-        case .castleQueenside(let player):
-            switch player {
-            case .white:
-                return self.with((WK,  c1),
-                                 (WR,  d1),
-                                 (nil, e1),
-                                 (nil, a1))
-            case .black:
-                return self.with((BK,  c8),
-                                 (BR,  d8),
-                                 (nil, e8),
-                                 (nil, a8))
-            }
-
-        case .resign:
-            return self
-        }
+        var newBoard = self
+        newBoard.apply(move)
+        return newBoard
     }
 
     /// Applying the given `Move` to the `Board`, modifying it.

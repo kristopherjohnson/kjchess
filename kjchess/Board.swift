@@ -9,12 +9,8 @@ import Foundation
 
 /// Chess board.
 ///
-/// Representation is an 8x8 array.
-/// Each element may be a `Piece` or be empty (`nil`).
-///
-/// A `Board` is an immutable object.  Moves result in
-/// the creation of new `Board` instances, which may
-/// share rank arrays with other instances.
+/// Representation is an 8x8 array where each
+/// element may be a `Piece` or be empty (`nil`).
 public struct Board {
     public static let ranksCount = 8
     public static let filesCount = 8
@@ -84,20 +80,12 @@ public struct Board {
 
     /// Return `true` if specified `Location` has no piece on it.
     public func isEmpty(_ location: Location) -> Bool {
-        return self[location] == nil
+        return squares[location.squareIndex] == nil
     }
 
     /// Return `true` if specified square has no piece on it.
     public func isEmpty(file: Int, rank: Int) -> Bool {
         return at(file: file, rank: rank) == nil
-    }
-
-    /// Return `true` if specified square has a piece of the specified color.
-    public func hasPiece(file: Int, rank: Int, player: Player) -> Bool {
-        if let piece = at(file: file, rank: rank), piece.player == player {
-            return true
-        }
-        return false
     }
 
     /// Return copy of board after applying the given `Move`.

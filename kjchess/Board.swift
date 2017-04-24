@@ -55,7 +55,16 @@ public struct Board {
                  BP,  BP,  BP,  BP,  BP,  BP,  BP,  BP,
                  BR,  BN,  BB,  BQ,  BK,  BB,  BN,  BR])
 
-    public let squares: [Piece?]
+    /// The array that holds the board state.
+    ///
+    /// The array has 64 elements.  The first 8 are for squares
+    /// a1-a8, the next 8 are for b1-b8, and so on.
+    ///
+    /// `squares` is not marked `public` or `private`.  It should
+    /// be treated as if it's `private` to the `Board` type and
+    /// its extensions, but Swift 3 doesn't provide that kind of
+    /// access control specification.
+    var squares: [Piece?]
 
     public init(_ squares: [Piece?]) {
         assert(squares.count == Board.squaresCount,
@@ -120,14 +129,12 @@ public struct Board {
                              (nil, from))
             
         case .enPassantCapture(let player, let from, let to):
-            let capturedPieceRank
-                = (player == .white)
-                    ? to.rank - 1
-                    : to.rank + 1
+            let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
+            let capturedPawnLocation = Location(to.file, captureRank)
             return self
                 .with((Piece(player, .pawn), to),
                       (nil, from),
-                      (nil, Location(to.file, capturedPieceRank)))
+                      (nil, capturedPawnLocation))
 
         case .castleKingside(let player):
             switch player {
@@ -162,10 +169,135 @@ public struct Board {
         }
     }
 
+    /// Applying the given `Move` to the `Board`, modifying it.
+    ///
+    /// This method does not validate whether the move is valid
+    /// of the specified pieces exist.
+    public mutating func apply(_ move: Move) {
+        switch move {
+
+        case .move(let piece, let from, let to),
+             .capture(let piece, let from, let to, _):
+            squares[squareIndex(location: from)] = nil
+            squares[squareIndex(location: to)] = piece
+
+        case .promote(let player, let from, let to, let promoted),
+             .promoteCapture(let player, let from, let to, _, let promoted):
+            squares[squareIndex(location: from)] = nil
+            squares[squareIndex(location: to)] = Piece(player, promoted)
+
+        case .enPassantCapture(let player, let from, let to):
+            let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
+            let capturedPawnLocation = Location(to.file, captureRank)
+            squares[squareIndex(location: from)] = nil
+            squares[squareIndex(location: capturedPawnLocation)] = nil
+            squares[squareIndex(location: to)] = Piece(player, .pawn)
+
+        case .castleKingside(let player):
+            switch player {
+            case .white:
+                squares[squareIndex(location: e1)] = nil
+                squares[squareIndex(location: h1)] = nil
+                squares[squareIndex(location: f1)] = WR
+                squares[squareIndex(location: g1)] = WK
+
+            case .black:
+                squares[squareIndex(location: e8)] = nil
+                squares[squareIndex(location: h8)] = nil
+                squares[squareIndex(location: f8)] = BR
+                squares[squareIndex(location: g8)] = BK
+            }
+
+        case .castleQueenside(let player):
+            switch player {
+            case .white:
+                squares[squareIndex(location: e1)] = nil
+                squares[squareIndex(location: a1)] = nil
+                squares[squareIndex(location: d1)] = WR
+                squares[squareIndex(location: c1)] = WK
+
+            case .black:
+                squares[squareIndex(location: e8)] = nil
+                squares[squareIndex(location: a8)] = nil
+                squares[squareIndex(location: d8)] = BR
+                squares[squareIndex(location: c8)] = BK
+            }
+
+        case .resign:
+            break
+        }
+    }
+
+    /// Reverse the effect of the given `Move`, restoring the `Board` to its previous state.
+    ///
+    /// Results are undefined if the given move was not the last one applied to the board.
+    public mutating func unapply(_ move: Move) {
+        switch move {
+
+        case .move(let piece, let from, let to):
+            squares[squareIndex(location: from)] = piece
+            squares[squareIndex(location: to)] = nil
+
+        case .capture(let piece, let from, let to, let capturedKind):
+            squares[squareIndex(location: from)] = piece
+            squares[squareIndex(location: to)] = Piece(piece.player.opponent,
+                                                       capturedKind)
+
+        case .promote(let player, let from, let to, _):
+            squares[squareIndex(location: from)] = Piece(player, .pawn)
+            squares[squareIndex(location: to)] = nil
+
+        case .promoteCapture(let player, let from, let to, let capturedKind, _):
+            squares[squareIndex(location: from)] = Piece(player, .pawn)
+            squares[squareIndex(location: to)] = Piece(player.opponent,
+                                                       capturedKind)
+
+        case .enPassantCapture(let player, let from, let to):
+            let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
+            let capturedPawnLocation = Location(to.file, captureRank)
+            squares[squareIndex(location: from)] = Piece(player, .pawn)
+            squares[squareIndex(location: capturedPawnLocation)] = Piece(player.opponent, .pawn)
+            squares[squareIndex(location: to)] = nil
+
+        case .castleKingside(let player):
+            switch player {
+            case .white:
+                squares[squareIndex(location: e1)] = WK
+                squares[squareIndex(location: h1)] = WR
+                squares[squareIndex(location: f1)] = nil
+                squares[squareIndex(location: g1)] = nil
+
+            case .black:
+                squares[squareIndex(location: e8)] = BK
+                squares[squareIndex(location: h8)] = BR
+                squares[squareIndex(location: f8)] = nil
+                squares[squareIndex(location: g8)] = nil
+            }
+
+        case .castleQueenside(let player):
+            switch player {
+            case .white:
+                squares[squareIndex(location: e1)] = WK
+                squares[squareIndex(location: a1)] = WR
+                squares[squareIndex(location: d1)] = nil
+                squares[squareIndex(location: c1)] = nil
+
+            case .black:
+                squares[squareIndex(location: e8)] = BK
+                squares[squareIndex(location: a8)] = BR
+                squares[squareIndex(location: d8)] = nil
+                squares[squareIndex(location: c8)] = nil
+            }
+
+        case .resign:
+            break
+        }
+    }
+
     /// Return copy of board with the given `Piece` at the given `Location`.
     public func with(_ piece: Piece?, _ location: Location) -> Board {
         var newSquares = Array(squares)
-        newSquares[location.rank * Board.filesCount + location.file] = piece
+        newSquares[squareIndex(location: location)] = piece
 
         return Board(newSquares)
     }
@@ -207,7 +339,6 @@ public struct Board {
 }
 
 // MARK:- Equatable
-
 extension Board: Equatable {}
 public func ==(lhs: Board, rhs: Board) -> Bool {
     if lhs.squares.count != rhs.squares.count {

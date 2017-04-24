@@ -26,6 +26,23 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[e2])
     }
 
+    func testApplyAndUnapplyMove() {
+        let b1 = Board.newGame
+
+        var b2 = b1
+
+        let move = Move.move(piece: WP,
+                             from: e2, to: e4)
+        b2.apply(move)
+
+        XCTAssertEqual(WP, b2[e4])
+        XCTAssertEqual(nil, b2[e2])
+
+        b2.unapply(move)
+
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+
     func testAfterCapture() {
         let b1 = Board.empty.with((WQ, d1),
                                   (BQ, d8))
@@ -41,6 +58,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[d1])
     }
 
+    func testApplyAndUnapplyCapture() {
+        let b1 = Board.empty.with((WQ, d1),
+                                  (BQ, d8))
+
+        var b2 = b1
+
+        let move = Move.capture(piece: WQ,
+                                from: d1, to: d8,
+                                captured: .queen)
+
+        b2.apply(move)
+
+        XCTAssertEqual(WQ, b2[d8])
+        XCTAssertEqual(nil, b2[d1])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+    
     func testAfterWhiteEnPassantCapture() {
         let b1 = Board.empty.with((WP, e5),
                                   (BP, d5))
@@ -54,6 +90,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(WP, b2[d6])
         XCTAssertEqual(nil, b2[e5])
         XCTAssertEqual(nil, b2[d5])
+    }
+
+    func testApplyAndUnapplyWhiteEnPassantCapture() {
+        let b1 = Board.empty.with((WP, e5),
+                                  (BP, d5))
+
+        var b2 = b1
+
+        let move = Move.enPassantCapture(player: .white,
+                                         from: e5, to: d6)
+
+        b2.apply(move)
+
+        XCTAssertEqual(WP, b2[d6])
+        XCTAssertEqual(nil, b2[e5])
+        XCTAssertEqual(nil, b2[d5])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
     }
 
     func testAfterBlackEnPassantCapture() {
@@ -71,6 +126,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[g4])
     }
 
+    func testApplyAndUnapplyBlackEnPassantCapture() {
+        let b1 = Board.empty.with((WP, f4),
+                                  (BP, g4))
+
+        var b2 = b1
+
+        let move = Move.enPassantCapture(player: .black,
+                                         from: g4, to: f3)
+
+        b2.apply(move)
+
+        XCTAssertEqual(BP, b2[f3])
+        XCTAssertEqual(nil, b2[f4])
+        XCTAssertEqual(nil, b2[g4])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+    
     func testAfterWhiteKingsideCastling() {
         let b1 = Board.empty.with((WK, e1),
                                   (WR, h1))
@@ -86,6 +160,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[h1])
     }
 
+    func testApplyAndUnapplyWhiteKingsideCastling() {
+        let b1 = Board.empty.with((WK, e1),
+                                  (WR, h1))
+
+        var b2 = b1
+
+        let move = Move.castleKingside(player: .white)
+
+        b2.apply(move)
+
+        XCTAssertEqual(WK, b2[g1])
+        XCTAssertEqual(WR, b2[f1])
+        XCTAssertEqual(nil, b2[e1])
+        XCTAssertEqual(nil, b2[h1])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+    
     func testAfterBlackKingsideCastling() {
         let b1 = Board.empty.with((BK, e8),
                                   (BR, h8))
@@ -101,6 +194,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[h8])
     }
 
+    func testApplyAndUnapplyBlackKingsideCastling() {
+        let b1 = Board.empty.with((BK, e8),
+                                  (BR, h8))
+
+        var b2 = b1
+
+        let move = Move.castleKingside(player: .black)
+
+        b2.apply(move)
+
+        XCTAssertEqual(BK, b2[g8])
+        XCTAssertEqual(BR, b2[f8])
+        XCTAssertEqual(nil, b2[e8])
+        XCTAssertEqual(nil, b2[h8])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+    
     func testAfterWhiteQueensideCastling() {
         let b1 = Board.empty.with((WK, e1),
                                   (WR, a1))
@@ -114,6 +226,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(WR, b2[d1])
         XCTAssertEqual(nil, b2[e1])
         XCTAssertEqual(nil, b2[a1])
+    }
+
+    func testApplyAndUnapplyWhiteQueensideCastling() {
+        let b1 = Board.empty.with((WK, e1),
+                                  (WR, a1))
+
+        var b2 = b1
+
+        let move = Move.castleQueenside(player: .white)
+
+        b2.apply(move)
+
+        XCTAssertEqual(WK, b2[c1])
+        XCTAssertEqual(WR, b2[d1])
+        XCTAssertEqual(nil, b2[e1])
+        XCTAssertEqual(nil, b2[a1])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
     }
 
     func testAfterBlackQueensideCastling() {
@@ -131,6 +262,25 @@ class BoardTests: XCTestCase {
         XCTAssertEqual(nil, b2[a8])
     }
 
+    func testApplyAndUnapplyBlackQueensideCastling() {
+        let b1 = Board.empty.with((BK, e8),
+                                  (BR, a8))
+
+        var b2 = b1
+
+        let move = Move.castleQueenside(player: .black)
+
+        b2.apply(move)
+
+        XCTAssertEqual(BK, b2[c8])
+        XCTAssertEqual(BR, b2[d8])
+        XCTAssertEqual(nil, b2[e8])
+        XCTAssertEqual(nil, b2[a8])
+
+        b2.unapply(move)
+        XCTAssertEqual(b1, b2, "Should be the same after unapply()")
+    }
+    
     func testPieces() {
         let board = Board.newGame
 

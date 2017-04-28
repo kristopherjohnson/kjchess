@@ -16,6 +16,9 @@
 		4E7613421EA0325A00F277BE /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* Evaluation.swift */; };
 		4E7613441EA1807300F277BE /* bestMoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613431EA1807300F277BE /* bestMoveTests.swift */; };
 		4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84B2321E86F0E100E381D3 /* NotationTests.swift */; };
+		4E9D88071EB35D9B007F38D9 /* PositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88061EB35D9B007F38D9 /* PositionTests.swift */; };
+		4E9D88091EB36AF6007F38D9 /* CastlingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */; };
+		4E9D880A1EB36AF6007F38D9 /* CastlingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */; };
 		4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA11E8B2BAE007F94D0 /* main.swift */; };
 		4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
 		4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
@@ -92,6 +95,8 @@
 		4E7613401EA0325A00F277BE /* Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluation.swift; sourceTree = "<group>"; };
 		4E7613431EA1807300F277BE /* bestMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bestMoveTests.swift; sourceTree = "<group>"; };
 		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
+		4E9D88061EB35D9B007F38D9 /* PositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionTests.swift; sourceTree = "<group>"; };
+		4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastlingOptions.swift; sourceTree = "<group>"; };
 		4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "kjchess-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB68EA11E8B2BAE007F94D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UCIEngine.swift; sourceTree = "<group>"; };
@@ -188,6 +193,7 @@
 				4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */,
 				4E6607C01E95CDB100B3B866 /* bestMove.swift */,
 				4EF6CF891E757328001103A8 /* Board.swift */,
+				4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */,
 				4EFF4FE31E913F7C00D30942 /* ChessError.swift */,
 				4E7613401EA0325A00F277BE /* Evaluation.swift */,
 				4EDF0BE81E9ADE8000EA1588 /* FEN.swift */,
@@ -223,6 +229,7 @@
 				4EFF4FD91E8F781300D30942 /* parseCoordinateMoveTests.swift */,
 				4EFF4FE61E91415B00D30942 /* Position_after_coordinateMoveTests.swift */,
 				4EF6CF8D1E75E889001103A8 /* Position_legalMovesTests.swift */,
+				4E9D88061EB35D9B007F38D9 /* PositionTests.swift */,
 				4EB68EAC1E8DE285007F94D0 /* UCIEngineTests.swift */,
 			);
 			path = kjchessTests;
@@ -369,6 +376,7 @@
 				4EFF4FE51E913F7C00D30942 /* ChessError.swift in Sources */,
 				4EDF0BF01E9AED7B00EA1588 /* Array_appendRepeating.swift in Sources */,
 				4EFF4FDF1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
+				4E9D880A1EB36AF6007F38D9 /* CastlingOptions.swift in Sources */,
 				4EDF0BEA1E9ADF9E00EA1588 /* FEN.swift in Sources */,
 				4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */,
 				4EFF4FD21E8F203E00D30942 /* Piece.swift in Sources */,
@@ -404,6 +412,7 @@
 				4EB68EAA1E8DCA3D007F94D0 /* log.swift in Sources */,
 				4EDF0BEC1E9AE36400EA1588 /* String_whitespaceSeparatedTokens.swift in Sources */,
 				4EFF4FE11E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */,
+				4E9D88091EB36AF6007F38D9 /* CastlingOptions.swift in Sources */,
 				4EDF0BEF1E9AED7B00EA1588 /* Array_appendRepeating.swift in Sources */,
 				4EF6CF901E75E932001103A8 /* Position_legalMoves.swift in Sources */,
 				4EFF4FD71E8F748300D30942 /* parseCoordinateMove.swift in Sources */,
@@ -425,6 +434,7 @@
 				4EFF4FE71E91415B00D30942 /* Position_after_coordinateMoveTests.swift in Sources */,
 				4EFF4FDA1E8F781300D30942 /* parseCoordinateMoveTests.swift in Sources */,
 				4EF6CF741E747D76001103A8 /* kjchessTests.swift in Sources */,
+				4E9D88071EB35D9B007F38D9 /* PositionTests.swift in Sources */,
 				4EFF4FDC1E902EBE00D30942 /* LocationTests.swift in Sources */,
 				4EF6CF921E75EF50001103A8 /* BoardTests.swift in Sources */,
 				4E76133F1EA031CD00F277BE /* EvaluationTests.swift in Sources */,

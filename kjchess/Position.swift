@@ -12,46 +12,65 @@ import Foundation
 /// Contains the current board layout, the player to move,
 /// and complete history of moves.
 public struct Position {
+
+    /// Information needed to undo a move applied to a Position.
+    public struct MoveDelta {
+        let move: Move
+        let enPassantCaptureLocation: Location?
+        let halfmoveClock: Int
+        let moveNumber: Int
+        let castlingOptions: CastlingOptions
+    }
+    
     // Important: When data members are added, be sure to update func ==()
     // at the bottom of this file.
 
-    public let board: Board
-    public let toMove: Player
+    public fileprivate(set) var board: Board
+    public fileprivate(set) var toMove: Player
 
-    public let moves: [Move]
-
-    // These flags are false if the associated king or rook has been moved.
-    // Their states do not reflect whether a castling move is legal based
-    // upon piece locations.
-    public let whiteCanCastleKingside: Bool
-    public let whiteCanCastleQueenside: Bool
-    public let blackCanCastleKingside: Bool
-    public let blackCanCastleQueenside: Bool
+    public fileprivate(set) var moves: [Move]
 
     /// En-passant target square
     ///
     /// Set whenever previous move was a two-square pawn move.
     ///
     /// This is set even if there is no pawn in position to make the en-passant capture.
-    public let enPassantCaptureLocation: Location?
+    public fileprivate(set) var enPassantCaptureLocation: Location?
 
     /// Number of halfmoves since the last capture or pawn advance.
-    public let halfmoveClock: Int
+    public fileprivate(set) var halfmoveClock: Int
 
     /// The number of the full move.
     ///
     /// Incremented after Black's move.
-    public let moveNumber: Int
+    public fileprivate(set) var moveNumber: Int
+
+    // These flags are false if the associated king or rook has been moved.
+    // Their states do not reflect whether a castling move is legal based
+    // upon piece locations.
+    public fileprivate(set) var castlingOptions: CastlingOptions
+
+    public var whiteCanCastleKingside: Bool {
+        return castlingOptions.contains(.whiteCanCastleKingside)
+    }
+
+    public var whiteCanCastleQueenside: Bool {
+        return castlingOptions.contains(.whiteCanCastleQueenside)
+    }
+    public var blackCanCastleKingside: Bool {
+        return castlingOptions.contains(.blackCanCastleKingside)
+    }
+
+    public var blackCanCastleQueenside: Bool {
+        return castlingOptions.contains(.blackCanCastleQueenside)
+    }
 
     /// Initializer.
     public init(board: Board,
                 toMove: Player,
                 moves: [Move],
                 enPassantCaptureLocation: Location? = nil,
-                whiteCanCastleKingside: Bool = true,
-                whiteCanCastleQueenside: Bool = true,
-                blackCanCastleKingside: Bool = true,
-                blackCanCastleQueenside: Bool = true,
+                castlingOptions: CastlingOptions = CastlingOptions.all,
                 halfmoveClock: Int = 0,
                 moveNumber: Int = 1)
     {
@@ -59,10 +78,7 @@ public struct Position {
         self.toMove = toMove
         self.moves = moves
         self.enPassantCaptureLocation = enPassantCaptureLocation
-        self.whiteCanCastleKingside = whiteCanCastleKingside
-        self.whiteCanCastleQueenside = whiteCanCastleQueenside
-        self.blackCanCastleKingside = blackCanCastleKingside
-        self.blackCanCastleQueenside = blackCanCastleQueenside
+        self.castlingOptions = castlingOptions
         self.halfmoveClock = halfmoveClock
         self.moveNumber = moveNumber
     }
@@ -74,34 +90,46 @@ public struct Position {
 
     /// Return new position after applying a move.
     public func after(_ move: Move) -> Position {
+        var newPosition = self
+        let _ = newPosition.apply(move)
+        return newPosition
+    }
+
+    /// Apply a move to a position, mutating it.
+    ///
+    /// - returns: A `MoveDelta` that can be used to `unapply()` the move.
+    public mutating func apply(_ move: Move) -> MoveDelta {
         assert(move.player == toMove)
-        
-        let newBoard = board.after(move)
-        let newToMove = toMove.opponent
-        var newMoves = Array(moves)
-        newMoves.append(move)
 
-        let newEnPassantCaptureLocation = enPassantCaptureLocation(after: move)
+        let delta = MoveDelta(move: move,
+                              enPassantCaptureLocation: enPassantCaptureLocation,
+                              halfmoveClock: halfmoveClock,
+                              moveNumber: moveNumber,
+                              castlingOptions: castlingOptions)
 
-        let (newWhiteCanCastleKingside,
-             newWhiteCanCastleQueenside,
-             newBlackCanCastleKingside,
-             newBlackCanCastleQueenside) = castlingState(after: move)
+        board.apply(move)
+        toMove = toMove.opponent
+        moves.append(move)
+        enPassantCaptureLocation = enPassantCaptureLocation(after: move)
+        castlingOptions = castlingOptions(after: move)
+        halfmoveClock = halfmoveClock(after: move)
+        moveNumber = moveNumber(after: move)
 
-        let newHalfmoveClock = halfmoveClock(after: move)
+        return delta
+    }
 
-        let newMoveNumber = moveNumber(after: move)
-
-        return Position(board: newBoard,
-                        toMove: newToMove,
-                        moves: newMoves,
-                        enPassantCaptureLocation: newEnPassantCaptureLocation,
-                        whiteCanCastleKingside: newWhiteCanCastleKingside,
-                        whiteCanCastleQueenside: newWhiteCanCastleQueenside,
-                        blackCanCastleKingside: newBlackCanCastleKingside,
-                        blackCanCastleQueenside: newBlackCanCastleQueenside,
-                        halfmoveClock: newHalfmoveClock,
-                        moveNumber: newMoveNumber)
+    /// Undo a move, mutating this position.
+    ///
+    /// Results are undefined if the given delta is not for the
+    /// last move applied to the board.
+    public mutating func unapply(_ delta: MoveDelta) {
+        board.unapply(delta.move)
+        toMove = delta.move.player
+        moves.removeLast()
+        enPassantCaptureLocation = delta.enPassantCaptureLocation
+        castlingOptions = delta.castlingOptions
+        halfmoveClock = delta.halfmoveClock
+        moveNumber = delta.moveNumber
     }
 
     /// Get the move that led to this position.
@@ -126,46 +154,40 @@ public struct Position {
         return moves.map { $0.description }.joined(separator: " ")
     }
 
-    /// Determine new values for the CanCastle properties after a move.
-    private func castlingState(after move: Move) -> (Bool, Bool, Bool, Bool) {
-        var newWhiteCanCastleKingside = whiteCanCastleKingside
-        var newWhiteCanCastleQueenside = whiteCanCastleQueenside
-        var newBlackCanCastleKingside = blackCanCastleKingside
-        var newBlackCanCastleQueenside = blackCanCastleQueenside
+    /// Determine new value for the `castlingOptions` property after a move.
+    private func castlingOptions(after move: Move) -> CastlingOptions {
+        var newCastlingOptions = castlingOptions
 
         switch move.piece {
         case WK:
-            newWhiteCanCastleKingside = false
-            newWhiteCanCastleQueenside = false
+            newCastlingOptions.remove(.whiteCanCastleKingside)
+            newCastlingOptions.remove(.whiteCanCastleQueenside)
 
         case BK:
-            newBlackCanCastleKingside = false
-            newBlackCanCastleQueenside = false
+            newCastlingOptions.remove(.blackCanCastleKingside)
+            newCastlingOptions.remove(.blackCanCastleQueenside)
 
         case WR:
             if move.from == a1 {
-                newWhiteCanCastleQueenside = false
+                newCastlingOptions.remove(.whiteCanCastleQueenside)
             }
             else if move.from == h1 {
-                newWhiteCanCastleKingside = false
+                newCastlingOptions.remove(.whiteCanCastleKingside)
             }
 
         case BR:
             if move.from == a8 {
-                newBlackCanCastleQueenside = false
+                newCastlingOptions.remove(.blackCanCastleQueenside)
             }
             else if move.from == h8 {
-                newBlackCanCastleKingside = false
+                newCastlingOptions.remove(.blackCanCastleKingside)
             }
 
         default:
             break
         }
 
-        return (newWhiteCanCastleKingside,
-                newWhiteCanCastleQueenside,
-                newBlackCanCastleKingside,
-                newBlackCanCastleQueenside)
+        return newCastlingOptions
     }
 
     /// If move is a two-square pawn move, return the square behind the move destination.
@@ -242,5 +264,117 @@ extension Position {
             && self.blackCanCastleQueenside == rhs.blackCanCastleQueenside
             && self.halfmoveClock == rhs.halfmoveClock
             && self.moveNumber == rhs.moveNumber
+    }
+}
+
+extension Position { // MARK:- FEN
+
+    /// Return FEN record for the position.
+    public var fen: String {
+        return [
+            board.fen,
+            fenPlayerToMove,
+            fenCastlingOptions,
+            fenEnPassantCaptureLocation,
+            fenHalfmoveClock,
+            fenMoveNumber
+        ].joined(separator: " ")
+    }
+
+    /// Initialize from a FEN (Forsyth-Edwards Notation) record.
+    public init(fen: String) throws {
+        let tokens = fen.whitespaceSeparatedTokens()
+        if tokens.count != 6 {
+            throw ChessError.fenStringRequiresExactlySixFields(fen: fen)
+        }
+
+        board = try Board(fenBoard: tokens[0])
+
+        toMove = try Position.playerToMove(fenPlayerToMove: tokens[1])
+
+        moves = []
+
+        castlingOptions = Position.castlingOptions(fenCastlingOptions: tokens[2])
+
+        enPassantCaptureLocation = Location(tokens[3])
+
+        if let halfmoveClock = Int(tokens[4]), halfmoveClock >= 0 {
+            self.halfmoveClock = halfmoveClock
+        }
+        else {
+            throw ChessError.fenInvalidHalfmoveClock(fenHalfmoveClock: tokens[4])
+        }
+
+        if let moveNumber = Int(tokens[5]), moveNumber > 0 {
+            self.moveNumber = moveNumber
+        }
+        else {
+            throw ChessError.fenInvalidMoveNumber(fenMoveNumber: tokens[5])
+        }
+    }
+
+    private var fenPlayerToMove: String {
+        switch toMove {
+        case .white: return "w"
+        case .black: return "b"
+        }
+    }
+
+    private static func playerToMove(fenPlayerToMove: String) throws -> Player {
+        switch fenPlayerToMove {
+        case "w": return .white
+        case "b": return .black
+        default: throw ChessError.fenInvalidPlayerToMove(fenPlayerToMove: fenPlayerToMove);
+        }
+    }
+
+    private var fenCastlingOptions: String {
+        var result = ""
+
+        if whiteCanCastleKingside  { result.append("K") }
+        if whiteCanCastleQueenside { result.append("Q") }
+        if blackCanCastleKingside  { result.append("k") }
+        if blackCanCastleQueenside { result.append("q") }
+
+        if result.isEmpty {
+            return "-"
+        }
+        else {
+            return result
+        }
+    }
+
+    private static func castlingOptions(fenCastlingOptions opts: String) -> CastlingOptions {
+        var castlingOptions = CastlingOptions.none
+
+        if opts.contains("K") { castlingOptions.insert(.whiteCanCastleKingside)  }
+        if opts.contains("Q") { castlingOptions.insert(.whiteCanCastleQueenside) }
+        if opts.contains("k") { castlingOptions.insert(.blackCanCastleKingside)  }
+        if opts.contains("q") { castlingOptions.insert(.blackCanCastleQueenside) }
+
+        return castlingOptions
+    }
+
+    private var fenEnPassantCaptureLocation: String {
+        if let location = enPassantCaptureLocation {
+            return location.symbol
+        }
+        else {
+            return "-"
+        }
+    }
+
+    private var fenHalfmoveClock: String {
+        return halfmoveClock.description
+    }
+    
+    private var fenMoveNumber: String {
+        return moveNumber.description
+    }
+}
+
+extension Position: CustomStringConvertible {
+    public var description: String {
+        return fen
     }
 }

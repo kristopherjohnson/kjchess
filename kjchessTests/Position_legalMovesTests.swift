@@ -713,7 +713,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, h1))
 
         let pos = Position(board: board, toMove: .white, moves: [],
-                           whiteCanCastleKingside: false)
+                           castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
 
@@ -728,7 +728,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, h8))
 
         let pos = Position(board: board, toMove: .black, moves: [],
-                           blackCanCastleKingside: false)
+                           castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
 
@@ -743,7 +743,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, a1))
 
         let pos = Position(board: board, toMove: .white, moves: [],
-                           whiteCanCastleQueenside: false)
+                           castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
 
@@ -758,7 +758,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, a8))
 
         let pos = Position(board: board, toMove: .black, moves: [],
-                           blackCanCastleQueenside: false)
+                           castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
 

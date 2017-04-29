@@ -12,8 +12,11 @@ import Foundation
 /// - returns: A `Move`, the score, and the principal variation, or `nil` if there are no legal moves.
 public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double, [Move])? {
 
+    // we distribute the search over multiple CPU cores by starting
+    // an asynchronous GCD task for each possible move.
+
     var moves = position.legalMoves()
-    moves.sort(by: capturesFirst)
+    moves.shuffle()
 
     var bestMoves = [(Move, [Move])]()
     var bestScore: Double
@@ -21,16 +24,24 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
     let queue = DispatchQueue(label: "bestMove")
     let group = DispatchGroup()
 
+    // Only allow 4 tasks to run simultaneously.
+    // (On 2013 MacBook Pro, allowing more tasks to run actually
+    // makes things slower.  This parameter should be tunable.)
+    let consecutiveTasks = 4
+    let semaphore = DispatchSemaphore(value: consecutiveTasks)
+
     switch position.toMove {
     case .white:
         bestScore = -Double.infinity
         for move in moves {
             DispatchQueue.global().async(group: group) {
+                semaphore.wait()
                 var newPosition = position.after(move)
                 let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
                                                         alpha: -Double.infinity,
                                                         beta: Double.infinity)
+                semaphore.signal()
                 queue.sync {
                     if moveScore > bestScore {
                         bestScore = moveScore
@@ -46,11 +57,13 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
         bestScore = Double.infinity
         for move in moves {
             DispatchQueue.global().async(group: group) {
+                semaphore.wait()
                 var newPosition = position.after(move)
                 let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
                                                         alpha: -Double.infinity,
                                                         beta: Double.infinity)
+                semaphore.signal()
                 queue.sync {
                     if moveScore < bestScore {
                         bestScore = moveScore

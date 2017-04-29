@@ -19,6 +19,8 @@
 		4E9D88071EB35D9B007F38D9 /* PositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88061EB35D9B007F38D9 /* PositionTests.swift */; };
 		4E9D88091EB36AF6007F38D9 /* CastlingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */; };
 		4E9D880A1EB36AF6007F38D9 /* CastlingOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */; };
+		4E9D881F1EB4F91E007F38D9 /* Array_shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D881E1EB4F91E007F38D9 /* Array_shuffle.swift */; };
+		4E9D88201EB4F91E007F38D9 /* Array_shuffle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D881E1EB4F91E007F38D9 /* Array_shuffle.swift */; };
 		4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA11E8B2BAE007F94D0 /* main.swift */; };
 		4EB68EA71E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
 		4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */; };
@@ -97,6 +99,7 @@
 		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
 		4E9D88061EB35D9B007F38D9 /* PositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionTests.swift; sourceTree = "<group>"; };
 		4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CastlingOptions.swift; sourceTree = "<group>"; };
+		4E9D881E1EB4F91E007F38D9 /* Array_shuffle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array_shuffle.swift; sourceTree = "<group>"; };
 		4EB68E9F1E8B2BAE007F94D0 /* kjchess-cli */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = "kjchess-cli"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4EB68EA11E8B2BAE007F94D0 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 		4EB68EA61E8B2C6E007F94D0 /* UCIEngine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UCIEngine.swift; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 				4EED14321EABAEC800E6F097 /* Array_appending.swift */,
 				4EDF0BEE1E9AED7B00EA1588 /* Array_appendRepeating.swift */,
 				4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */,
+				4E9D881E1EB4F91E007F38D9 /* Array_shuffle.swift */,
 				4E6607C01E95CDB100B3B866 /* bestMove.swift */,
 				4EF6CF891E757328001103A8 /* Board.swift */,
 				4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */,
@@ -381,6 +385,7 @@
 				4EB68EA21E8B2BAE007F94D0 /* main.swift in Sources */,
 				4EFF4FD21E8F203E00D30942 /* Piece.swift in Sources */,
 				4EB68EAB1E8DCA3D007F94D0 /* log.swift in Sources */,
+				4E9D88201EB4F91E007F38D9 /* Array_shuffle.swift in Sources */,
 				4E6607C51E95CFAA00B3B866 /* Array_randomPick.swift in Sources */,
 				4EFF4FD01E8F203500D30942 /* Location.swift in Sources */,
 				4EFF4FD41E8F204500D30942 /* Position_legalMoves.swift in Sources */,
@@ -407,6 +412,7 @@
 				4EFF4FDE1E904EAC00D30942 /* String_CharacterView_at.swift in Sources */,
 				4E6607C11E95CDB100B3B866 /* bestMove.swift in Sources */,
 				4EF6CF8A1E757328001103A8 /* Board.swift in Sources */,
+				4E9D881F1EB4F91E007F38D9 /* Array_shuffle.swift in Sources */,
 				4EF6CF881E7572F9001103A8 /* Piece.swift in Sources */,
 				4EED14331EABAEC800E6F097 /* Array_appending.swift in Sources */,
 				4EB68EAA1E8DCA3D007F94D0 /* log.swift in Sources */,

@@ -26,5 +26,10 @@ clean:
 play: kjchess-cli
 	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -ec '$(CURDIR)/build/Release/kjchess-cli' -ed '$(CURDIR)/build/Release'"
 
-.PHONY: all kjchess-cli kjchess kjchessTests test clean
+# Run a script that gets the Black response to e2e4, and show elapsed time.
+time: SHELL:=/bin/bash
+time: kjchess-cli
+	(export PATH='$(CURDIR)/build/Release:$$PATH'; time scripts/time-e2e4-response.sh)
+
+.PHONY: all kjchess-cli kjchess kjchessTests test clean play time
 

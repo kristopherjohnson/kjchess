@@ -17,9 +17,9 @@ public class UCIEngine {
 
     /// Search depth used when determining best move.
     ///
-    /// A search depth of 4 provides moves in a few seconds on
-    /// an Early 2013 MacBook Pro.
-    public var searchDepth = 5
+    /// A search depth of 6 provides moves in about 30 seconds
+    /// on an Early 2013 MacBook Pro.
+    public var searchDepth = 6
     
     /// Function called to read a line of input.
     ///

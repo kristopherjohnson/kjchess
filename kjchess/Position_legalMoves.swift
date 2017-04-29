@@ -374,11 +374,12 @@ extension Position {
                 break
             }
         }
-        else {
-            // Otherwise, ensure King is not left in check.
-            // TODO: Only need to do this if king was already in check
-            // or if a piece is being moved from the king's diagonal,
-            // file, or rank.
+        else if isInCheck
+            || from.isSameDiagonal(kingLocation)
+            || from.isSameRank(kingLocation)
+            || from.isSameFile(kingLocation)
+        {
+            // Ensure King is not left in check.
             let newPosition = after(move)
             if newPosition.isAttacked(location: kingLocation, by: opponent) {
                 return false

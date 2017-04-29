@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 /// Which player, white or black?
 public enum Player {
     case white

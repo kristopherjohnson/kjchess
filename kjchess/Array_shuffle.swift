@@ -5,7 +5,7 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
+import Darwin
 
 extension Array {
     /// Shuffle the elements of the array randomly.

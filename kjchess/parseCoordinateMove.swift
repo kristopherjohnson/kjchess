@@ -5,10 +5,8 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-import os.log
-
-/// Given a string like "e2e4" or "e7e8q", return the `from` and `to` locations, and optional promotion type.
+/// Given a string like "e2e4" or "e7e8q", return the `from` and `to`
+/// locations, and optional promotion type.
 ///
 /// - returns: (from, to, promoted?), or `nil` if not a valid coordinate move string.
 public func parseCoordinateMove(_ moveString: String)

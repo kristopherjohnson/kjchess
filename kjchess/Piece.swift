@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 /// The type of piece.
 public enum PieceKind {
     case pawn

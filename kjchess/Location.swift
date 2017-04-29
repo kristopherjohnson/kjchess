@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 /// Specifies a location on the chessboard.
 ///
 /// File and rank indexes are in the range 0...7.

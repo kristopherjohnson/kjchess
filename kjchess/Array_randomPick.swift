@@ -5,7 +5,7 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
+import Darwin
 
 extension Array {
     /// Pseudorandomly select an element of the array.

@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 extension Position {
     /// Return position after applying specified move in coordinate notation.
     ///

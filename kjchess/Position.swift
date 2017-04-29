@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 /// A chess position.
 ///
 /// Contains the current board layout, the player to move,

@@ -2,11 +2,8 @@
 //  String_whitespaceSeparatedTokens.swift
 //  kjchess
 //
-//  Created by Kristopher Johnson on 4/9/17.
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
-
-import Foundation
 
 extension String {
     /// Split a `String` into whitespace-separated tokens.

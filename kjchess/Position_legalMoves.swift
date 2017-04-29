@@ -5,8 +5,6 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
 extension Position {
 
     /// Generate sequence of legal moves for this `Position`.

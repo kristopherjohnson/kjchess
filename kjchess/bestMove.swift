@@ -27,7 +27,8 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                var newPosition = position.after(move)
+                let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
                                                         alpha: -Double.infinity,
                                                         beta: Double.infinity)
@@ -48,7 +49,8 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
         for move in moves {
             group.enter()
             DispatchQueue.global().async {
-                let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+                var newPosition = position.after(move)
+                let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
                                                         alpha: -Double.infinity,
                                                         beta: Double.infinity)
@@ -76,9 +78,14 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
     }
 }
 
-private func minimaxSearch(position: Position, depth: Int, alpha: Double, beta: Double)
-    -> (Double, [Move]) {
-
+/// Search for best move from the specified position.
+///
+/// This function mutates the position while evaluating moves.
+/// When it returns, the position will match its original
+/// state.
+private func minimaxSearch(position: inout Position, depth: Int, alpha: Double, beta: Double)
+    -> (Double, [Move])
+{
     if depth < 1 {
         let evaluation = Evaluation(position)
         return (evaluation.score, [])
@@ -95,13 +102,17 @@ private func minimaxSearch(position: Position, depth: Int, alpha: Double, beta: 
     let d = depth - 1
 
     switch position.toMove {
+
     case .white:
         bestScore = -Double.infinity
         for move in moves {
-            let (moveScore, movePV) = minimaxSearch(position: position.after(move),
-                                                   depth: d,
-                                                   alpha: a,
-                                                   beta: b)
+            let undo = position.apply(move)
+            let (moveScore, movePV) = minimaxSearch(position: &position,
+                                                    depth: d,
+                                                    alpha: a,
+                                                    beta: b)
+            position.unapply(undo)
+
             if moveScore > bestScore {
                 bestScore = moveScore
                 pv = movePV.prepending(move)
@@ -111,13 +122,17 @@ private func minimaxSearch(position: Position, depth: Int, alpha: Double, beta: 
                 break // beta cut-off
             }
         }
+
     case .black:
         bestScore = Double.infinity
         for move in moves {
-            let (moveScore, movePV) = minimaxSearch(position: position.after(move),
+            let undo = position.apply(move)
+            let (moveScore, movePV) = minimaxSearch(position: &position,
                                                     depth: d,
                                                     alpha: a,
                                                     beta: b)
+            position.unapply(undo)
+
             if moveScore < bestScore {
                 bestScore = moveScore
                 pv = movePV.prepending(move)
@@ -136,5 +151,16 @@ private func minimaxSearch(position: Position, depth: Int, alpha: Double, beta: 
 ///
 /// Such an ordering should lead to better alpha-beta pruning.
 private func capturesFirst(lhs: Move, rhs: Move) -> Bool {
-    return lhs.isCapture && !rhs.isCapture
+    if lhs.isCapture {
+        if !rhs.isCapture {
+            // Captures before non-captures
+            return true
+        }
+
+        // If both captures, order by material value of the captured piece.
+        return lhs.capturedPiece!.materialValue > rhs.capturedPiece!.materialValue
+    }
+    else {
+        return false
+    }
 }

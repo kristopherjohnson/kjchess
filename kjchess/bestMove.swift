@@ -25,8 +25,7 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
     case .white:
         bestScore = -Double.infinity
         for move in moves {
-            group.enter()
-            DispatchQueue.global().async {
+            DispatchQueue.global().async(group: group) {
                 var newPosition = position.after(move)
                 let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
@@ -40,15 +39,13 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
                     else if moveScore == bestScore {
                         bestMoves.append((move, movePV.prepending(move)))
                     }
-                    group.leave()
                 }
             }
         }
     case .black:
         bestScore = Double.infinity
         for move in moves {
-            group.enter()
-            DispatchQueue.global().async {
+            DispatchQueue.global().async(group: group) {
                 var newPosition = position.after(move)
                 let (moveScore, movePV) = minimaxSearch(position: &newPosition,
                                                         depth: searchDepth - 1,
@@ -62,7 +59,6 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
                     else if moveScore == bestScore {
                         bestMoves.append((move, movePV.prepending(move)))
                     }
-                    group.leave()
                 }
             }
         }

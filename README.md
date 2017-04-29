@@ -17,7 +17,7 @@ kjchess is usable, but not great.  The following features are implemented:
     - [Scid vs. Mac](http://scidvspc.sourceforge.net/#toc3)
     - [ChessX](http://chessx.sourceforge.net)
 
-The biggest weaknesses right now is that the move search is slow (a search depth of 5 leads to 5-20 seconds per move on my 2013 MacBook Pro).  The engine also doesn't save any information between moves, or ponder during the opponent's move.
+The biggest weaknesses right now is that the move search is slow (a search depth of 6 takes a few seconds per move on my 2013 MacBook Pro).  The engine also doesn't save any information between moves, or ponder during the opponent's move.
 
 kjchess is written in Swift, and requires features of macOS 10.12 Sierra.
 

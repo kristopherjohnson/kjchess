@@ -12,8 +12,8 @@
 		4E6607C41E95CFAA00B3B866 /* Array_randomPick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */; };
 		4E6607C51E95CFAA00B3B866 /* Array_randomPick.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */; };
 		4E76133F1EA031CD00F277BE /* EvaluationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E76133E1EA031CD00F277BE /* EvaluationTests.swift */; };
-		4E7613411EA0325A00F277BE /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* Evaluation.swift */; };
-		4E7613421EA0325A00F277BE /* Evaluation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* Evaluation.swift */; };
+		4E7613411EA0325A00F277BE /* evaluate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* evaluate.swift */; };
+		4E7613421EA0325A00F277BE /* evaluate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613401EA0325A00F277BE /* evaluate.swift */; };
 		4E7613441EA1807300F277BE /* bestMoveTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E7613431EA1807300F277BE /* bestMoveTests.swift */; };
 		4E84B2331E86F0E100E381D3 /* NotationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E84B2321E86F0E100E381D3 /* NotationTests.swift */; };
 		4E9D88071EB35D9B007F38D9 /* PositionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E9D88061EB35D9B007F38D9 /* PositionTests.swift */; };
@@ -94,7 +94,7 @@
 		4E6607C01E95CDB100B3B866 /* bestMove.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bestMove.swift; sourceTree = "<group>"; };
 		4E6607C31E95CFAA00B3B866 /* Array_randomPick.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Array_randomPick.swift; sourceTree = "<group>"; };
 		4E76133E1EA031CD00F277BE /* EvaluationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EvaluationTests.swift; sourceTree = "<group>"; };
-		4E7613401EA0325A00F277BE /* Evaluation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Evaluation.swift; sourceTree = "<group>"; };
+		4E7613401EA0325A00F277BE /* evaluate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = evaluate.swift; sourceTree = "<group>"; };
 		4E7613431EA1807300F277BE /* bestMoveTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = bestMoveTests.swift; sourceTree = "<group>"; };
 		4E84B2321E86F0E100E381D3 /* NotationTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotationTests.swift; sourceTree = "<group>"; };
 		4E9D88061EB35D9B007F38D9 /* PositionTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PositionTests.swift; sourceTree = "<group>"; };
@@ -199,7 +199,7 @@
 				4EF6CF891E757328001103A8 /* Board.swift */,
 				4E9D88081EB36AF6007F38D9 /* CastlingOptions.swift */,
 				4EFF4FE31E913F7C00D30942 /* ChessError.swift */,
-				4E7613401EA0325A00F277BE /* Evaluation.swift */,
+				4E7613401EA0325A00F277BE /* evaluate.swift */,
 				4EDF0BE81E9ADE8000EA1588 /* FEN.swift */,
 				4EF6CF691E747D76001103A8 /* Info.plist */,
 				4EF6CF681E747D76001103A8 /* kjchess.h */,
@@ -396,7 +396,7 @@
 				4EFF4FD51E8F204A00D30942 /* Position.swift in Sources */,
 				4EB68EA81E8B2C6E007F94D0 /* UCIEngine.swift in Sources */,
 				4EFF4FE21E913EDA00D30942 /* Position_after_coordinateMove.swift in Sources */,
-				4E7613421EA0325A00F277BE /* Evaluation.swift in Sources */,
+				4E7613421EA0325A00F277BE /* evaluate.swift in Sources */,
 				4EED14341EABAEC800E6F097 /* Array_appending.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -426,7 +426,7 @@
 				4EDF0BE91E9ADE8000EA1588 /* FEN.swift in Sources */,
 				4EF6CF821E74CA9F001103A8 /* Location.swift in Sources */,
 				4EF6CF801E747D8D001103A8 /* Position.swift in Sources */,
-				4E7613411EA0325A00F277BE /* Evaluation.swift in Sources */,
+				4E7613411EA0325A00F277BE /* evaluate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

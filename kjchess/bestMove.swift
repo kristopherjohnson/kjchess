@@ -96,8 +96,7 @@ private func minimaxSearch(position: inout Position, depth: Int, alpha: Double, 
     -> (Double, [Move])
 {
     if depth < 1 {
-        let evaluation = Evaluation(position)
-        return (evaluation.score, [])
+        return (evaluate(position: position), [])
     }
 
     var moves = position.legalMoves()

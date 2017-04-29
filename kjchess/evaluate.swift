@@ -5,40 +5,16 @@
 //  Copyright © 2017 Kristopher Johnson. All rights reserved.
 //
 
-import Foundation
-
-/// An evaluation of the score for a position.
+/// Determine score for the given position, based
+/// upon material and positional factors.
 ///
-/// Evaluations can change as a search proceeds.
-public class Evaluation {
-
-    /// The `Position` for which this evaluation was made.
-    public let position: Position
-
-    /// Moves that can be made from this position.
-    public let moves: [Move]
-
-    /// Score based upon material and positional factors.
-    ///
-    /// Positive value means white is ahead.
-    public let score: Double
-
-    /// Initializer.
-    public init(_ position: Position) {
-        self.position = position
-
-        let board = position.board
-
-        moves = position.legalMoves()
-
-        func materialValue<S: Sequence>(_ pieces: S) -> Double
-            where S.Iterator.Element == (Piece, Location)
-        {
-            return pieces.reduce(0.0) { $0 + $1.0.materialValue }
-        }
-
-        score = board.pieceSquareValue()
-    }
+/// Returns a value where one pawn is 1.0.
+/// A positive value means White is ahead; a negative
+/// value means Black is ahead.
+///
+/// - returns: Score value.
+public func evaluate(position: Position) -> Double {
+    return position.board.pieceSquareValue()
 }
 
 extension Board {

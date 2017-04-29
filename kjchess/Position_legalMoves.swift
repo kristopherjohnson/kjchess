@@ -16,10 +16,10 @@ extension Position {
             return possibleMoves()
         }
 
-        let attackedLocations = Set(locationsUnderAttack(by: toMove.opponent))
+        let isInCheck = isAttacked(location: kingLocation, by: toMove.opponent)
 
         return possibleMoves().filter {
-            isLegal(move: $0, kingLocation: kingLocation, attackedLocations: attackedLocations)
+            isLegal(move: $0, kingLocation: kingLocation, isInCheck: isInCheck)
         }
     }
 
@@ -35,31 +35,6 @@ extension Position {
         return pieces.flatMap({ (piece, location) in
             return self.moves(piece: piece, location: location)
         })
-    }
-
-    /// Generate array of locations under attack by the player who is not moving.
-    private func locationsUnderAttack(by player: Player) -> [Location] {
-        let pieces = board.pieces(player: player)
-        let moves = pieces.flatMap({ (piece, location) in
-            return self.moves(piece: piece, location: location)
-        })
-
-        // Determine whether specified move is attacking its destination.
-        //
-        // Returns `true` for all moves except pawn non-capture moves.
-        func isAttackingDestination(_ move: Move) -> Bool {
-            switch move {
-            case .move(let piece, _, _):
-                if piece.kind == .pawn {
-                    return false
-                }
-            default: break
-            }
-
-            return true
-        }
-
-        return moves.filter { isAttackingDestination($0) }.map { $0.to }
     }
 
     /// Generate array of moves for a `Piece` at the given `Location`.
@@ -253,6 +228,9 @@ extension Position {
         (0, 1), ( 0, -1)
     ]
 
+    private static let pieceKindsWithRookVectors: [PieceKind]
+        = [.rook, .queen]
+
     private func rookMoves(piece: Piece, location: Location) -> [Move] {
         return slideMoves(piece: piece,
                           location: location,
@@ -265,6 +243,9 @@ extension Position {
         (1,  1), (-1,  1),
         (1, -1), (-1, -1)
     ]
+
+    private static let pieceKindsWithBishopVectors: [PieceKind]
+        = [.bishop, .queen]
 
     private func bishopMoves(piece: Piece, location: Location) -> [Move] {
         return slideMoves(piece: piece,
@@ -295,7 +276,7 @@ extension Position {
         let player = piece.player
 
         var result = [Move]()
-        result.reserveCapacity(8)
+        result.reserveCapacity(10)
 
         for (h, v) in Position.eightDirections {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
@@ -361,60 +342,134 @@ extension Position {
     // MARK:- Legal moves
 
     /// Determine whether specified move is legal given the king's position.
-    ///
-    /// - todo: Optimize this. As-is, it generates a new position from the move and checks all possible responses for any move that _might_ put the king into check.
-    private func isLegal(move: Move, kingLocation: Location, attackedLocations: Set<Location>) -> Bool {
+    private func isLegal(move: Move, kingLocation: Location, isInCheck: Bool) -> Bool {
         let from = move.from
-
-        let responses = possibleOpponentResponses(move: move)
+        let opponent = move.player.opponent
 
         // If King moving, ensure it doesn't move into check.
         if from == kingLocation && !move.isResignation {
-            if responses.contains(where: { $0.isCapture && $0.to == move.to }) {
+            if isAttacked(location: move.to, by: opponent) {
                 return false
             }
 
             // If castling, can't be in check or move through attacked squares
             switch move {
             case .castleKingside(.white):
-                if attackedLocations.contains(kingLocation) ||
-                    attackedLocations.contains(f1)
-                {
+                if isInCheck || isAttacked(location: f1, by: opponent) {
                     return false
                 }
             case .castleQueenside(.white):
-                if attackedLocations.contains(kingLocation) ||
-                    attackedLocations.contains(d1)
-                {
+                if isInCheck || isAttacked(location: d1, by: opponent) {
                     return false
                 }
             case .castleKingside(.black):
-                if attackedLocations.contains(kingLocation) ||
-                    attackedLocations.contains(f8)
-                {
+                if isInCheck || isAttacked(location: f8, by: opponent) {
                     return false
                 }
             case .castleQueenside(.black):
-                if attackedLocations.contains(kingLocation) ||
-                    attackedLocations.contains(d8)
-                {
+                if isInCheck || isAttacked(location: d8, by: opponent) {
                     return false
                 }
             default:
                 break
             }
         }
-
-        // Otherwise, ensure King is not left in check
-        else if responses.contains(where: { $0.isCapture && $0.to == kingLocation }) {
-            return false
+        else {
+            // Otherwise, ensure King is not left in check.
+            // TODO: Only need to do this if king was already in check
+            // or if a piece is being moved from the king's diagonal,
+            // file, or rank.
+            let newPosition = after(move)
+            if newPosition.isAttacked(location: kingLocation, by: opponent) {
+                return false
+            }
         }
-        
+
         return true
     }
 
-    /// Get the moves that the opponent can make after the specified move is made.
-    private func possibleOpponentResponses(move: Move) -> [Move] {
-        return self.after(move).possibleMoves()
+    /// Determine whether a given square is under attack by any of a player's pieces.
+    private func isAttacked(location: Location, by player: Player) -> Bool {
+        let file = location.file
+        let rank = location.rank
+
+        // Check for knight attack.
+        for (h, v) in Position.knightJumps {
+            if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
+                if let attacker = board[attackerLocation] {
+                    if attacker.player == player && attacker.kind == .knight {
+                        return true
+                    }
+                }
+            }
+        }
+
+        // Check for rook or queen attack along file or rank.
+        for vector in Position.rookVectors {
+            if isAttackedBySlide(location: location,
+                                 player: player,
+                                 vector: vector,
+                                 kinds: Position.pieceKindsWithRookVectors) {
+                return true
+            }
+        }
+
+        // Check for bishop or queen attack along diagonals.
+        for vector in Position.bishopVectors {
+            if isAttackedBySlide(location: location,
+                                 player: player,
+                                 vector: vector,
+                                 kinds: Position.pieceKindsWithBishopVectors) {
+                return true
+            }
+        }
+
+        // Check for attack by king.
+        for (h, v) in Position.eightDirections {
+            if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
+                if let attacker = board[attackerLocation] {
+                    if attacker.player == player && attacker.kind == .king {
+                        return true
+                    }
+                }
+            }
+        }
+
+        // Check for attack by pawn.
+        for (h, v) in Position.pawnCaptureMoves(player: player) {
+            if let attackerLocation = Location.ifValid(file: file - h, rank: rank - v) {
+                if let attacker = board[attackerLocation] {
+                    if attacker.player == player && attacker.kind == .pawn {
+                        return true
+                    }
+                }
+            }
+        }
+
+        return false
+    }
+
+    private func isAttackedBySlide(location: Location,
+                                   player: Player,
+                                   vector: (Int, Int),
+                                   kinds: [PieceKind]) -> Bool
+    {
+        let (h, v) = vector
+        var file = location.file + h
+        var rank = location.rank + v
+        while let attackerLocation = Location.ifValid(file: file, rank: rank) {
+            if let attacker = board[attackerLocation] {
+                if attacker.player == player {
+                    return kinds.contains(attacker.kind)
+                }
+
+                return false
+            }
+            else {
+                file = file + h
+                rank = rank + v
+            }
+        }
+        return false
     }
 }

@@ -19,7 +19,7 @@ public class UCIEngine {
     ///
     /// A search depth of 4 provides moves in a few seconds on
     /// an Early 2013 MacBook Pro.
-    public var searchDepth = 4
+    public var searchDepth = 5
     
     /// Function called to read a line of input.
     ///

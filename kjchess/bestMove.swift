@@ -9,12 +9,14 @@ import Foundation
 
 /// Return the best move for the specified position.
 ///
+/// - parameter position: The `Position` for which a move should be found.
+/// - parameter searchDepth: Minimax search depth.
+/// - parameter concurrentTasks: Number of asynchronous minimax tasks to run.
+///
 /// - returns: A `Move`, the score, and the principal variation, or `nil` if there are no legal moves.
-public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double, [Move])? {
-
-    // we distribute the search over multiple CPU cores by starting
-    // an asynchronous GCD task for each possible move.
-
+public func bestMove(position: Position, searchDepth: Int = 1, concurrentTasks: Int = 1)
+    -> (Move, Double, [Move])?
+{
     var moves = position.legalMoves()
     moves.shuffle()
 
@@ -24,11 +26,7 @@ public func bestMove(position: Position, searchDepth: Int = 1) -> (Move, Double,
     let queue = DispatchQueue(label: "bestMove")
     let group = DispatchGroup()
 
-    // Only allow 4 tasks to run simultaneously.
-    // (On 2013 MacBook Pro, allowing more tasks to run actually
-    // makes things slower.  This parameter should be tunable.)
-    let consecutiveTasks = 4
-    let semaphore = DispatchSemaphore(value: consecutiveTasks)
+    let semaphore = DispatchSemaphore(value: concurrentTasks)
 
     switch position.toMove {
     case .white:

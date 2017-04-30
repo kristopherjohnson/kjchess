@@ -24,7 +24,7 @@ clean:
 # Launch XBoard, using PolyGlot UCI adapter with kjchess UCI engine.
 # Human plays white; kjchess plays black.
 play: kjchess-cli
-	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -ec '$(CURDIR)/build/Release/kjchess-cli' -ed '$(CURDIR)/build/Release'"
+	"$(XBOARD)" -clockMode false -fcp "'$(POLYGLOT)' '$(CURDIR)/polyglot/kjchess.ini' -ec '$(CURDIR)/build/Release/kjchess-cli --enable-log' -ed '$(CURDIR)/build/Release'"
 
 # Run a script that gets the Black response to e2e4, and show elapsed time.
 time: SHELL:=/bin/bash

@@ -20,7 +20,13 @@ public class UCIEngine {
     /// A search depth of 6 provides moves in a few seconds
     /// on an Early 2013 MacBook Pro.
     public var searchDepth = 6
-    
+
+    /// Number of concurrent move search tasks that will run.
+    ///
+    /// On an Early 2013 MacBook Pro, values above 4 lead to
+    /// slower searches.
+    public var concurrentTasks = 4
+
     /// Function called to read a line of input.
     ///
     /// By default, this reads a line from standard input.
@@ -248,12 +254,14 @@ public class UCIEngine {
         // TODO: look at the additional tokens.  For now, we immediately return a bestmove.
 
         let startTime = CACurrentMediaTime()
-        if let (move, score, pv) = bestMove(position: position, searchDepth: searchDepth) {
+        if let (move, score, pv) = bestMove(position: position,
+                                            searchDepth: searchDepth,
+                                            concurrentTasks: concurrentTasks) {
             let endTime = CACurrentMediaTime()
             let searchTimeMs = Int(((endTime - startTime) * 1000.0).rounded())
 
             // score could be +/-Infinity, so clamp it before converting to centipawns.
-            let clampedScore = min(30000.0, max(-30000.0, score))
+            let clampedScore = min(32767.0, max(-32767.0, score))
             let scoreCentipawns = Int((clampedScore * 100).rounded())
 
             var pvString: String

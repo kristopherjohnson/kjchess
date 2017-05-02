@@ -8,10 +8,6 @@
 import Foundation
 import os.log
 
-let versionMajor = 1
-let versionMinor = 0
-let versionString = "\(versionMajor).\(versionMinor)"
-
 /// Errors that can be thrown in this file.
 enum CLIError: Error {
     case invalidOptionValue(optionName: String, invalidValue: String)

@@ -29,28 +29,32 @@ extension Position {
     /// the player's king in check or that it doesn't result
     /// in a repeated board position.
     private func possibleMoves() -> [Move] {
-        let pieces = board.pieces(player: toMove)
-        return pieces.flatMap({ (piece, location) in
-            return self.moves(piece: piece, location: location)
-        })
+        let piecesLocations = board.pieces(player: toMove)
+
+        var moves = [Move]()
+        moves.reserveCapacity(200)
+        for (piece, location) in piecesLocations {
+            addMoves(piece: piece, location: location, to: &moves)
+        }
+        return moves
     }
 
-    /// Generate array of moves for a `Piece` at the given `Location`.
-    private func moves(piece: Piece, location: Location) -> [Move] {
+    /// Add moves for a `Piece` at the given `Location` to an array.
+    private func addMoves(piece: Piece, location: Location,
+                          to moves: inout [Move]) {
         switch piece.kind {
-        case .pawn:   return pawnMoves(piece: piece, location: location)
-        case .knight: return knightMoves(piece: piece, location: location)
-        case .rook:   return rookMoves(piece: piece, location: location)
-        case .bishop: return bishopMoves(piece: piece, location: location)
-        case .queen:  return queenMoves(piece: piece, location: location)
-        case .king:   return kingMoves(piece: piece, location: location)
+        case .pawn:   addPawnMoves(piece: piece, location: location, to: &moves)
+        case .knight: addKnightMoves(piece: piece, location: location, to: &moves)
+        case .rook:   addRookMoves(piece: piece, location: location, to: &moves)
+        case .bishop: addBishopMoves(piece: piece, location: location, to: &moves)
+        case .queen:  addQueenMoves(piece: piece, location: location, to: &moves)
+        case .king:   addKingMoves(piece: piece, location: location, to: &moves)
         }
     }
 
-    private func slideMoves(piece: Piece, location: Location, vectors: [(Int, Int)]) -> [Move] {
+    private func addSlideMoves(piece: Piece, location: Location, vectors: [(Int, Int)],
+                               to moves: inout [Move]) {
         let player = piece.player
-        var result = [Move]()
-        result.reserveCapacity(14)
 
         for (h, v) in vectors {
             var file = location.file + h
@@ -58,22 +62,20 @@ extension Position {
             while let targetLocation = Location.ifValid(file: file, rank: rank) {
                 if let occupant = board[targetLocation] {
                     if occupant.player != player {
-                        result.append(.capture(piece: piece,
-                                               from: location,
-                                               to: targetLocation,
-                                               captured: occupant.kind))
+                        moves.append(.capture(piece: piece,
+                                              from: location,
+                                              to: targetLocation,
+                                              captured: occupant.kind))
                     }
                     break
                 }
                 else {
-                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                    moves.append(.move(piece: piece, from: location, to: targetLocation))
                     file = file + h
                     rank = rank + v
                 }
             }
         }
-
-        return result
     }
 
     // MARK:- Pawn
@@ -109,13 +111,11 @@ extension Position {
         }
     }
 
-    private func pawnMoves(piece: Piece, location: Location) -> [Move] {
+    private func addPawnMoves(piece: Piece, location: Location,
+                              to moves: inout [Move]) {
         let player = piece.player
         let file = location.file
         let rank = location.rank
-
-        var result = [Move]()
-        result.reserveCapacity(8)
 
         if Board.minRank < rank && rank < Board.maxRank {
             let promotionRank = Position.pawnPromotionRank(player: player)
@@ -126,22 +126,22 @@ extension Position {
 
                 if to.rank == promotionRank {
                     for kind in PieceKind.promotionKinds {
-                        result.append(.promote(player: player,
-                                               from: location,
-                                               to: to,
-                                               promoted: kind))
+                        moves.append(.promote(player: player,
+                                              from: location,
+                                              to: to,
+                                              promoted: kind))
                     }
                 }
                 else {
-                    result.append(.move(piece: piece, from: location, to: to))
+                    moves.append(.move(piece: piece, from: location, to: to))
 
                     let startRank = Position.pawnStartRank(player: player)
                     if rank == startRank {
                         let jumpRank = startRank + 2 * moveDirection
                         if board.isEmpty(file: file, rank: jumpRank) {
-                            result.append(.move(piece: piece,
-                                                from: location,
-                                                to: Location(file, jumpRank)))
+                            moves.append(.move(piece: piece,
+                                               from: location,
+                                               to: Location(file, jumpRank)))
                         }
                     }
                 }
@@ -155,32 +155,30 @@ extension Position {
                         if occupant.player == opponent {
                             if captureLocation.rank == promotionRank {
                                 for kind in PieceKind.promotionKinds {
-                                    result.append(.promoteCapture(player: player,
-                                                                  from: location,
-                                                                  to: captureLocation,
-                                                                  captured: occupant.kind,
-                                                                  promoted: kind))
+                                    moves.append(.promoteCapture(player: player,
+                                                                 from: location,
+                                                                 to: captureLocation,
+                                                                 captured: occupant.kind,
+                                                                 promoted: kind))
                                 }
                             }
                             else {
-                                result.append(.capture(piece: piece,
-                                                       from: location,
-                                                       to: captureLocation,
-                                                       captured: occupant.kind))
+                                moves.append(.capture(piece: piece,
+                                                      from: location,
+                                                      to: captureLocation,
+                                                      captured: occupant.kind))
                             }
                         }
                     }
                     else if let enPassantCaptureLocation = enPassantCaptureLocation,
                         captureLocation == enPassantCaptureLocation {
-                        result.append(.enPassantCapture(player: player,
-                                                        from: location,
-                                                        to: enPassantCaptureLocation))
+                        moves.append(.enPassantCapture(player: player,
+                                                       from: location,
+                                                       to: enPassantCaptureLocation))
                     }
                 }
             }
         }
-
-        return result
     }
 
     // MARK:- Knight
@@ -192,31 +190,27 @@ extension Position {
         (-2, 1), (-2, -1)
     ]
 
-    private func knightMoves(piece: Piece, location: Location) -> [Move] {
+    private func addKnightMoves(piece: Piece, location: Location,
+                                to moves: inout [Move]) {
         let file = location.file
         let rank = location.rank
         let player = piece.player
-
-        var result = [Move]()
-        result.reserveCapacity(8)
 
         for (h, v) in Position.knightJumps {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
                 if let occupant = board[targetLocation] {
                     if occupant.player != player {
-                        result.append(.capture(piece: piece,
-                                               from: location,
-                                               to: targetLocation,
-                                               captured: occupant.kind))
+                        moves.append(.capture(piece: piece,
+                                              from: location,
+                                              to: targetLocation,
+                                              captured: occupant.kind))
                     }
                 }
                 else {
-                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                    moves.append(.move(piece: piece, from: location, to: targetLocation))
                 }
             }
         }
-
-        return result
     }
 
     // MARK:- Rook
@@ -229,10 +223,12 @@ extension Position {
     private static let pieceKindsWithRookVectors: [PieceKind]
         = [.rook, .queen]
 
-    private func rookMoves(piece: Piece, location: Location) -> [Move] {
-        return slideMoves(piece: piece,
-                          location: location,
-                          vectors: Position.rookVectors)
+    private func addRookMoves(piece: Piece, location: Location,
+                              to moves: inout [Move]) {
+        addSlideMoves(piece: piece,
+                      location: location,
+                      vectors: Position.rookVectors,
+                      to: &moves)
     }
 
     // MARK:- Bishop
@@ -245,10 +241,12 @@ extension Position {
     private static let pieceKindsWithBishopVectors: [PieceKind]
         = [.bishop, .queen]
 
-    private func bishopMoves(piece: Piece, location: Location) -> [Move] {
-        return slideMoves(piece: piece,
-                          location: location,
-                          vectors: Position.bishopVectors)
+    private func addBishopMoves(piece: Piece, location: Location,
+                                to moves: inout [Move]) {
+        addSlideMoves(piece: piece,
+                      location: location,
+                      vectors: Position.bishopVectors,
+                      to: &moves)
     }
 
     // MARK:- Queen
@@ -260,34 +258,36 @@ extension Position {
         (1, -1), (-1, -1)
     ]
 
-    private func queenMoves(piece: Piece, location: Location) -> [Move] {
-        return slideMoves(piece: piece,
-                          location: location,
-                          vectors: Position.eightDirections)
+    private func addQueenMoves(piece: Piece, location: Location,
+                               to moves: inout [Move]) {
+        addSlideMoves(piece: piece,
+                      location: location,
+                      vectors: Position.eightDirections,
+                      to: &moves)
     }
 
     // MARK:- King
 
-    private func kingMoves(piece: Piece, location: Location) -> [Move] {
+    private func addKingMoves(piece: Piece, location: Location,
+                              to moves: inout [Move]) {
         let file = location.file
         let rank = location.rank
         let player = piece.player
-
-        var result = [Move]()
-        result.reserveCapacity(10)
 
         for (h, v) in Position.eightDirections {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
                 if let occupant = board[targetLocation] {
                     if occupant.player != player {
-                        result.append(.capture(piece: piece,
+                        moves.append(.capture(piece: piece,
                                                from: location,
                                                to: targetLocation,
                                                captured: occupant.kind))
                     }
                 }
                 else {
-                    result.append(.move(piece: piece, from: location, to: targetLocation))
+                    moves.append(.move(piece: piece,
+                                       from: location,
+                                       to: targetLocation))
                 }
             }
         }
@@ -300,7 +300,7 @@ extension Position {
                 board[g1] == nil &&
                 board[h1] == WR
             {
-                result.append(.castleKingside(player: player))
+                moves.append(.castleKingside(player: player))
             }
 
             if whiteCanCastleQueenside &&
@@ -310,7 +310,7 @@ extension Position {
                 board[b1] == nil &&
                 board[a1] == WR
             {
-                result.append(.castleQueenside(player: player))
+                moves.append(.castleQueenside(player: player))
             }
 
         case .black:
@@ -320,7 +320,7 @@ extension Position {
                 board[g8] == nil &&
                 board[h8] == BR
             {
-                result.append(.castleKingside(player: player))
+                moves.append(.castleKingside(player: player))
             }
 
             if blackCanCastleQueenside &&
@@ -330,11 +330,9 @@ extension Position {
                 board[b8] == nil &&
                 board[a8] == BR
             {
-                result.append(.castleQueenside(player: player))
+                moves.append(.castleQueenside(player: player))
             }
         }
-        
-        return result
     }
 
     // MARK:- Legal moves

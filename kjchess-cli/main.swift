@@ -12,6 +12,7 @@ import os.log
 enum CLIError: Error {
     case invalidOptionValue(optionName: String, invalidValue: String)
     case missingOptionValue(optionName: String)
+    case unableToRedirectInput(path: String)
 }
 
 extension CLIError: LocalizedError {
@@ -21,6 +22,8 @@ extension CLIError: LocalizedError {
             return "\"\(invalidValue)\" is not a valid value for option --\"\(optionName)\""
         case let .missingOptionValue(optionName):
             return "Missing value for option \"--\(optionName)\""
+        case let .unableToRedirectInput(path):
+            return "Unable to read input from path \"\(path)\""
         }
     }
 }
@@ -38,6 +41,8 @@ func showHelp(optionDefinitions: [CommandLineOptionDefinition]) {
     print("options:")
     printHelp(optionDefinitions: optionDefinitions, firstColumnWidth: 30)
 }
+
+// MARK: main() begins here
 
 // Disable output buffering
 setbuf(__stdoutp, nil)
@@ -65,6 +70,11 @@ do {
                                     letter: "d",
                                     valueType: .string("N"),
                                     briefHelp: "Search depth (default \(engine.searchDepth))"),
+
+        CommandLineOptionDefinition(name: "input-path",
+                                    letter: "i",
+                                    valueType: .string("PATH"),
+                                    briefHelp: "Read input from file instead of stdin"),
 
         CommandLineOptionDefinition(name: "version",
                                     letter: "v",
@@ -133,6 +143,18 @@ do {
             }
         default:
             throw CLIError.missingOptionValue(optionName: "concurrent-tasks")
+        }
+    }
+
+    if let uciTestInputOptionValue = options.value(optionNamed: "input-path") {
+        switch uciTestInputOptionValue {
+        case .string(let value):
+            if freopen(value, "r", stdin) == nil {
+                throw CLIError.unableToRedirectInput(path: value)
+            }
+
+        default:
+            throw CLIError.missingOptionValue(optionName: "input-path")
         }
     }
 

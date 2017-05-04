@@ -66,15 +66,15 @@ do {
                                     valueType: .noValue,
                                     briefHelp: "Enable system log output"),
 
+        CommandLineOptionDefinition(name: "input-path",
+                                    letter: "i",
+                                    valueType: .string("PATH"),
+                                    briefHelp: "Read from file instead of standard input"),
+
         CommandLineOptionDefinition(name: "search-depth",
                                     letter: "d",
                                     valueType: .string("N"),
                                     briefHelp: "Search depth (default \(engine.searchDepth))"),
-
-        CommandLineOptionDefinition(name: "input-path",
-                                    letter: "i",
-                                    valueType: .string("PATH"),
-                                    briefHelp: "Read input from file instead of stdin"),
 
         CommandLineOptionDefinition(name: "version",
                                     letter: "v",

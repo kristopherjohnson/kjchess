@@ -54,6 +54,7 @@ Note: On macOS, XBoard and PolyGlot can be installed from [Homebrew](https://bre
 - `-h`, `--help`: Show command-line help
 - `-t N`, `--concurrent-tasks=N`: Number of concurrent tasks (default 4)
 - `-l`, `--enable-log`: Enable system log output
+- `-i PATH`, `--input-path=PATH`: Read from file instead of standard input
 - `-d N`, `--search-depth=N`: Search depth (default 6)
 - `-v`, `--version`: Show version information
 

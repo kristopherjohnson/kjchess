@@ -42,7 +42,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
     func test_e7e8q() {
         let initialBoard = Board.empty.with(WP, e7)
-        let initialPos = Position(board: initialBoard, toMove: .white, moves: [])
+        let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
             let pos = try initialPos.after(coordinateMove: "e7e8q")
@@ -58,7 +58,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
     func test_e7e8n() {
         let initialBoard = Board.empty.with(WP, e7)
-        let initialPos = Position(board: initialBoard, toMove: .white, moves: [])
+        let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
             let pos = try initialPos.after(coordinateMove: "e7e8n")
@@ -87,7 +87,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
     func testReject_e7e8_nopromote() {
         let initialBoard = Board.empty.with(WP, e7)
-        let initialPos = Position(board: initialBoard, toMove: .white, moves: [])
+        let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
             let _ = try initialPos.after(coordinateMove: "e7e8")
@@ -101,7 +101,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
     func testReject_e6e8q() {
         let initialBoard = Board.empty.with(WP, e6)
-        let initialPos = Position(board: initialBoard, toMove: .white, moves: [])
+        let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
             let _ = try initialPos.after(coordinateMove: "e6e8q")

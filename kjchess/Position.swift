@@ -26,8 +26,6 @@ public struct Position {
     public fileprivate(set) var board: Board
     public fileprivate(set) var toMove: Player
 
-    public fileprivate(set) var moves: [Move]
-
     /// En-passant target square
     ///
     /// Set whenever previous move was a two-square pawn move.
@@ -66,7 +64,6 @@ public struct Position {
     /// Initializer.
     public init(board: Board,
                 toMove: Player,
-                moves: [Move],
                 enPassantCaptureLocation: Location? = nil,
                 castlingOptions: CastlingOptions = CastlingOptions.all,
                 halfmoveClock: Int = 0,
@@ -74,7 +71,6 @@ public struct Position {
     {
         self.board = board
         self.toMove = toMove
-        self.moves = moves
         self.enPassantCaptureLocation = enPassantCaptureLocation
         self.castlingOptions = castlingOptions
         self.halfmoveClock = halfmoveClock
@@ -83,7 +79,7 @@ public struct Position {
 
     /// Return position for the start of a new game.
     public static func newGame() -> Position {
-        return Position(board: Board.newGame, toMove: .white, moves: [])
+        return Position(board: Board.newGame, toMove: .white)
     }
 
     /// Return new position after applying a move.
@@ -107,7 +103,6 @@ public struct Position {
 
         board.apply(move)
         toMove = toMove.opponent
-        moves.append(move)
         enPassantCaptureLocation = enPassantCaptureLocation(after: move)
         castlingOptions = castlingOptions(after: move)
         halfmoveClock = halfmoveClock(after: move)
@@ -123,33 +118,10 @@ public struct Position {
     public mutating func unapply(_ delta: MoveDelta) {
         board.unapply(delta.move)
         toMove = delta.move.player
-        moves.removeLast()
         enPassantCaptureLocation = delta.enPassantCaptureLocation
         castlingOptions = delta.castlingOptions
         halfmoveClock = delta.halfmoveClock
         moveNumber = delta.moveNumber
-    }
-
-    /// Get the move that led to this position.
-    ///
-    /// - returns: `Move` or `nil` if move information is not available.
-    public var lastMove: Move? {
-        return moves.last
-    }
-
-    /// Get the last move's description.
-    ///
-    /// - returns: Move description, or "?" if last move is unavailable.
-    public var lastMoveDescription: String {
-        return lastMove?.description ?? "?"
-    }
-
-    /// Get the list of moves as a space-delimited string.
-    public var movesDescription: String {
-        if moves.isEmpty {
-            return "?"
-        }
-        return moves.map { $0.description }.joined(separator: " ")
     }
 
     /// Determine new value for the `castlingOptions` property after a move.
@@ -236,7 +208,6 @@ extension Position: Equatable {}
 public func ==(lhs: Position, rhs: Position) -> Bool {
     return lhs.board == rhs.board
         && lhs.toMove == rhs.toMove
-        && lhs.moves == rhs.moves
         && lhs.enPassantCaptureLocation == rhs.enPassantCaptureLocation
         && lhs.whiteCanCastleKingside == rhs.whiteCanCastleKingside
         && lhs.whiteCanCastleQueenside == rhs.whiteCanCastleQueenside
@@ -244,25 +215,6 @@ public func ==(lhs: Position, rhs: Position) -> Bool {
         && lhs.blackCanCastleQueenside == rhs.blackCanCastleQueenside
         && lhs.halfmoveClock == rhs.halfmoveClock
         && lhs.moveNumber == rhs.moveNumber
-}
-
-extension Position {
-    /// Determine whether two Positions are equivalent, ignoring the `moves` values.
-    ///
-    /// This is useful for comparing a position with a FEN representation,
-    /// which does not include the moves that led to the position, or
-    /// identifying transpositions.
-    public func isEqualDisregardingMoves(_ rhs: Position) -> Bool {
-        return self.board == rhs.board
-            && self.toMove == rhs.toMove
-            && self.enPassantCaptureLocation == rhs.enPassantCaptureLocation
-            && self.whiteCanCastleKingside == rhs.whiteCanCastleKingside
-            && self.whiteCanCastleQueenside == rhs.whiteCanCastleQueenside
-            && self.blackCanCastleKingside == rhs.blackCanCastleKingside
-            && self.blackCanCastleQueenside == rhs.blackCanCastleQueenside
-            && self.halfmoveClock == rhs.halfmoveClock
-            && self.moveNumber == rhs.moveNumber
-    }
 }
 
 extension Position { // MARK:- FEN
@@ -289,8 +241,6 @@ extension Position { // MARK:- FEN
         board = try Board(fenBoard: tokens[0])
 
         toMove = try Position.playerToMove(fenPlayerToMove: tokens[1])
-
-        moves = []
 
         castlingOptions = Position.castlingOptions(fenCastlingOptions: tokens[2])
 

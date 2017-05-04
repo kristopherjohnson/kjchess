@@ -192,7 +192,7 @@ class UCIEngineTests: XCTestCase {
             .after(Move.move(piece: WN, from: g1, to: f3))
             .after(Move.move(piece: BP, from: e7, to: e6))
             .after(Move.move(piece: WB, from: f1, to: c4))
-        XCTAssertTrue(engine!.position.isEqualDisregardingMoves(expectedPosition))
+        XCTAssertEqual(engine!.position, expectedPosition)
     }
 
     func testHandleCheckmate() {

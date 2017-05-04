@@ -15,8 +15,6 @@ class kjchessTests: XCTestCase {
 
         XCTAssertEqual(.white, pos.toMove)
 
-        XCTAssertEqual(0, pos.moves.count)
-
         let b = pos.board
 
         XCTAssertEqual(WR, b[a1])

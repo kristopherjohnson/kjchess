@@ -48,7 +48,7 @@ class FENTests: XCTestCase {
             let expectedPosition = Position.newGame()
                 .after(Move.move(piece: WP, from: e2, to: e4))
 
-            XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+            XCTAssertEqual(pos, expectedPosition)
 
             XCTAssertEqual(fen, pos.fen)
         }
@@ -67,7 +67,7 @@ class FENTests: XCTestCase {
                 .after(Move.move(piece: WP, from: e2, to: e4))
                 .after(Move.move(piece: BP, from: c7, to: c5))
 
-            XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+            XCTAssertEqual(pos, expectedPosition)
 
             XCTAssertEqual(fen, pos.fen)
         }
@@ -87,7 +87,7 @@ class FENTests: XCTestCase {
                 .after(Move.move(piece: BP, from: c7, to: c5))
                 .after(Move.move(piece: WN, from: g1, to: f3))
 
-            XCTAssertTrue(pos.isEqualDisregardingMoves(expectedPosition))
+            XCTAssertEqual(pos, expectedPosition)
 
             XCTAssertEqual(fen, pos.fen)
         }

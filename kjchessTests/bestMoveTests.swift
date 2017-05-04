@@ -20,7 +20,7 @@ class bestMoveTests: XCTestCase {
         let board = Board.empty.with((WQ, e4),
                                      (BQ, b7))
 
-        let pos = Position(board: board, toMove: .white, moves: [])
+        let pos = Position(board: board, toMove: .white)
 
         for _ in 0..<repeats {
             if let (move, _, pv) = bestMove(position: pos) {
@@ -42,7 +42,7 @@ class bestMoveTests: XCTestCase {
                                      (BQ, d5),
                                      (BB, f5))
 
-        let pos = Position(board: board, toMove: .white, moves: [])
+        let pos = Position(board: board, toMove: .white)
 
         for _ in 0..<repeats {
             if let (move, _, pv) = bestMove(position: pos) {
@@ -64,7 +64,7 @@ class bestMoveTests: XCTestCase {
                                      (BP, d7),
                                      (BP, a4))
 
-        let pos = Position(board: board, toMove: .white, moves: [])
+        let pos = Position(board: board, toMove: .white)
         for _ in 0..<repeats {
             if let (move, _, pv) = bestMove(position: pos, searchDepth: 2) {
                 XCTAssertEqual(move,

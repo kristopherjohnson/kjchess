@@ -12,15 +12,23 @@ extension Position {
     /// This method is `mutating` because it might temporarily
     /// apply a move to check whether the king is left in check.
     public mutating func legalMoves() -> [Move] {
+        let possibles = possibleMoves()
+
         guard let kingLocation = board.kingLocation(player: toMove) else {
-            return possibleMoves()
+            return possibles
         }
 
         let isInCheck = isAttacked(location: kingLocation, by: toMove.opponent)
 
-        return possibleMoves().filter {
-            isLegal(move: $0, kingLocation: kingLocation, isInCheck: isInCheck)
+        var result = [Move]()
+        result.reserveCapacity(possibles.count)
+        for move in possibles {
+            if isLegal(move: move, kingLocation: kingLocation, isInCheck: isInCheck) {
+                result.append(move)
+            }
         }
+
+        return result
     }
 
     /// Generate array of possible moves for this `Position`.

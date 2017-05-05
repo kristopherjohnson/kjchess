@@ -17,7 +17,8 @@ import Foundation
 public func bestMove(position: Position, searchDepth: Int = 1, concurrentTasks: Int = 1)
     -> (Move, Double, [Move])?
 {
-    var moves = position.legalMoves()
+    var positionCopy = position
+    var moves = positionCopy.legalMoves()
     moves.shuffle()
 
     var bestMoves = [(Move, [Move])]()

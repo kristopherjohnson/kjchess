@@ -11,7 +11,7 @@ import kjchess
 class Position_legalMovesTests: XCTestCase {
 
     func testWhiteNewGameMoves() {
-        let pos = Position.newGame()
+        var pos = Position.newGame()
 
         let expectedMoves = [
            "WPa2-a3", "WPa2-a4",
@@ -40,7 +40,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.newGame.with((WP,  e4),
                                        (nil, e2))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
            "BPa7-a6", "BPa7-a5",
@@ -76,7 +76,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BP, e5),
                                      (BN, f5))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WPe4xBd5",
@@ -99,7 +99,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WP, d4),
                                      (WN, e4))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BPd5xBc4",
@@ -119,7 +119,7 @@ class Position_legalMovesTests: XCTestCase {
     func testKnightMovesEmptyBoard() {
         let board = Board.empty.with(WN, d4)
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
            "WNd4-c6",
@@ -154,7 +154,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WP, b3),
                                      (WP, b5))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         // Note: Filter out the moves that the pawns could make.
         let moves = pos.legalMoves().filter { $0.from == d4 }
@@ -175,7 +175,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BQ, b3),
                                      (BQ, b5))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
            "WNd4xQc6",
@@ -201,7 +201,7 @@ class Position_legalMovesTests: XCTestCase {
     func testRookMovesEmptyBoard() {
         let board = Board.empty.with(WR, d4)
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
            "WRd4-d1",
@@ -241,7 +241,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BQ, g4),
                                      (BQ, h4))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WRd4xQd2",
@@ -269,7 +269,7 @@ class Position_legalMovesTests: XCTestCase {
     func testBishopMovesEmptyBoard() {
         let board = Board.empty.with(WB, e4)
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WBe4-a8",
@@ -308,7 +308,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WQ, f2),
                                      (WQ, g1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BBd4-c3",
@@ -335,7 +335,7 @@ class Position_legalMovesTests: XCTestCase {
     func testQueenEmptyBoard() {
         let board = Board.empty.with(BQ, c3)
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BQc3-a1",
@@ -390,7 +390,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WQ, d2),
                                      (WQ, d6))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BQd4-c3",
@@ -425,7 +425,7 @@ class Position_legalMovesTests: XCTestCase {
     func testKingEmptyBoard() {
         let board = Board.empty.with(WK, e3)
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WKe3-e4",
@@ -453,7 +453,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BP, c3),
                                      (BP, d3),
                                      (BP, e3))
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WKd4-d5",
@@ -483,7 +483,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WP, b2),
                                      (BQ, h8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WPa2-a3",
@@ -509,7 +509,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BP, h7),
                                      (WB, a1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BPh7-h6",
@@ -534,7 +534,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WB, e2),
                                      (BQ, e8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WKe1-d1",
@@ -560,7 +560,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BB, g5),
                                      (WR, a5))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BKh5-h6",
@@ -585,7 +585,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, a4),
                                      (BQ, h6))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let expectedMoves = [
             "WKe5-d5",
@@ -611,7 +611,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WQ, e1),
                                      (WR, f1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let expectedMoves = [
             "BNg8-e7"
@@ -632,7 +632,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((WK, e1),
                                      (WR, h1))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
         XCTAssertTrue(pos.whiteCanCastleKingside)
         XCTAssertTrue(pos.whiteCanCastleQueenside)
 
@@ -652,7 +652,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((BK, e8),
                                      (BR, h8))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
         XCTAssertTrue(pos.blackCanCastleKingside)
         XCTAssertTrue(pos.blackCanCastleQueenside)
 
@@ -672,7 +672,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((WK, e1),
                                      (WR, a1))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
         XCTAssertTrue(pos.whiteCanCastleKingside)
         XCTAssertTrue(pos.whiteCanCastleQueenside)
 
@@ -692,7 +692,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((BK, e8),
                                      (BR, a8))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
         XCTAssertTrue(pos.blackCanCastleKingside)
         XCTAssertTrue(pos.blackCanCastleQueenside)
 
@@ -712,7 +712,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((WK, e1),
                                      (WR, h1))
 
-        let pos = Position(board: board, toMove: .white,
+        var pos = Position(board: board, toMove: .white,
                            castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
@@ -727,7 +727,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((BK, e8),
                                      (BR, h8))
 
-        let pos = Position(board: board, toMove: .black,
+        var pos = Position(board: board, toMove: .black,
                            castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
@@ -742,7 +742,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((WK, e1),
                                      (WR, a1))
 
-        let pos = Position(board: board, toMove: .white,
+        var pos = Position(board: board, toMove: .white,
                            castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
@@ -757,7 +757,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((BK, e8),
                                      (BR, a8))
 
-        let pos = Position(board: board, toMove: .black,
+        var pos = Position(board: board, toMove: .black,
                            castlingOptions: CastlingOptions.none)
 
         let moves = pos.legalMoves()
@@ -773,7 +773,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, h1),
                                      (BR, e8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let moves = pos.legalMoves()
 
@@ -788,7 +788,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, h1),
                                      (BR, f8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let moves = pos.legalMoves()
 
@@ -803,7 +803,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, a1),
                                      (BR, e8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let moves = pos.legalMoves()
 
@@ -818,7 +818,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (WR, a1),
                                      (BR, d8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let moves = pos.legalMoves()
 
@@ -833,7 +833,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, h8),
                                      (WR, e1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let moves = pos.legalMoves()
 
@@ -848,7 +848,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, h8),
                                      (WR, f1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let moves = pos.legalMoves()
 
@@ -863,7 +863,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, a8),
                                      (WR, e1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let moves = pos.legalMoves()
 
@@ -878,7 +878,7 @@ class Position_legalMovesTests: XCTestCase {
                                      (BR, a8),
                                      (WR, d1))
 
-        let pos = Position(board: board, toMove: .black)
+        var pos = Position(board: board, toMove: .black)
 
         let moves = pos.legalMoves()
 
@@ -894,7 +894,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .black)
 
-        let pos1 = pos.after(.move(piece: BP, from: d7, to: d5))
+        var pos1 = pos.after(.move(piece: BP, from: d7, to: d5))
 
         XCTAssertEqual(pos1.enPassantCaptureLocation, d6)
 
@@ -912,7 +912,7 @@ class Position_legalMovesTests: XCTestCase {
 
         let pos = Position(board: board, toMove: .white)
 
-        let pos1 = pos.after(.move(piece: WP, from: e2, to: e4))
+        var pos1 = pos.after(.move(piece: WP, from: e2, to: e4))
 
         XCTAssertEqual(pos1.enPassantCaptureLocation, e3)
 
@@ -928,7 +928,7 @@ class Position_legalMovesTests: XCTestCase {
         let board = Board.empty.with((WP, g7),
                                      (BR, h8))
 
-        let pos = Position(board: board, toMove: .white)
+        var pos = Position(board: board, toMove: .white)
 
         let moves = pos.legalMoves()
 

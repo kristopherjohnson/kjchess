@@ -14,7 +14,7 @@ class FENTests: XCTestCase {
         do {
             let fen = ""
 
-            let _ = try Position(fen: fen)
+            _ = try Position(fen: fen)
 
             XCTFail("Empty FEN should cause an error to be thrown")
         }

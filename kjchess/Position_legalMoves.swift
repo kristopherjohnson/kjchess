@@ -9,7 +9,9 @@ extension Position {
 
     /// Generate sequence of legal moves for this `Position`.
     ///
-    public func legalMoves() -> [Move] {
+    /// This method is `mutating` because it might temporarily
+    /// apply a move to check whether the king is left in check.
+    public mutating func legalMoves() -> [Move] {
         guard let kingLocation = board.kingLocation(player: toMove) else {
             return possibleMoves()
         }
@@ -338,7 +340,7 @@ extension Position {
     // MARK:- Legal moves
 
     /// Determine whether specified move is legal given the king's position.
-    private func isLegal(move: Move, kingLocation: Location, isInCheck: Bool) -> Bool {
+    private mutating func isLegal(move: Move, kingLocation: Location, isInCheck: Bool) -> Bool {
         let from = move.from
         let opponent = move.player.opponent
 
@@ -376,8 +378,10 @@ extension Position {
             || from.isSameFile(kingLocation)
         {
             // Ensure King is not left in check.
-            let newPosition = after(move)
-            if newPosition.isAttacked(location: kingLocation, by: opponent) {
+            let undo = apply(move)
+            let isLeftInCheck = isAttacked(location: kingLocation, by: opponent)
+            unapply(undo)
+            if isLeftInCheck {
                 return false
             }
         }

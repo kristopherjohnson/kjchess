@@ -14,8 +14,10 @@ extension Position {
     ///
     /// - throws: `ChessError` if the move string doesn't have valid syntax or does not identify a legal move from this position.
     public func after(coordinateMove: String) throws -> Position {
-        let move = try find(coordinateMove: coordinateMove)
-        return after(move)
+        var newPosition = self
+        let move = try newPosition.find(coordinateMove: coordinateMove)
+        _ = newPosition.apply(move)
+        return newPosition
     }
 
     /// Return position after applying specified moves in coordinate notation.
@@ -40,7 +42,7 @@ extension Position {
     /// - returns: The `Move`.
     ///
     /// - throws: `ChessError` if the move string doesn't have valid syntax or does not identify a legal move from this position.
-    public func find(coordinateMove: String) throws -> Move {
+    public mutating func find(coordinateMove: String) throws -> Move {
         guard let (from, to, promotedKind) = parseCoordinateMove(coordinateMove) else {
             throw ChessError.invalidCoordinateMove(move: coordinateMove)
         }

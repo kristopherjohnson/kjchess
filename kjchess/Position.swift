@@ -85,7 +85,7 @@ public struct Position {
     /// Return new position after applying a move.
     public func after(_ move: Move) -> Position {
         var newPosition = self
-        let _ = newPosition.apply(move)
+        _ = newPosition.apply(move)
         return newPosition
     }
 

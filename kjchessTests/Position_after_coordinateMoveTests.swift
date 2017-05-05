@@ -74,7 +74,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
     
     func testReject_e2e5() {
         do {
-            let _ = try Position.newGame().after(
+            _ = try Position.newGame().after(
                 coordinateMove: "e2e5");
 
             XCTFail("e2e5 should throw an error");
@@ -90,7 +90,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
         let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
-            let _ = try initialPos.after(coordinateMove: "e7e8")
+            _ = try initialPos.after(coordinateMove: "e7e8")
             XCTFail("e7e8 is not valid for a pawn without specifying promoted piece")
         }
         catch (let error) {
@@ -104,7 +104,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
         let initialPos = Position(board: initialBoard, toMove: .white)
 
         do {
-            let _ = try initialPos.after(coordinateMove: "e6e8q")
+            _ = try initialPos.after(coordinateMove: "e6e8q")
             XCTFail("e6e8q is not valid")
         }
         catch (let error) {

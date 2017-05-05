@@ -71,7 +71,7 @@ class UCIEngineTests: XCTestCase {
     func send(_ lines: String...) {
         for line in lines {
             toEngineQueue?.async {
-                let _ = self.engine?.processInput(line)
+                _ = self.engine?.processInput(line)
             }
         }
     }

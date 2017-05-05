@@ -106,7 +106,7 @@
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument
-            argument = "--concurrent-tasks=4"
+            argument = "--concurrent-tasks=3"
             isEnabled = "YES">
          </CommandLineArgument>
          <CommandLineArgument

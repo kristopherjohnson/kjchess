@@ -243,6 +243,7 @@ public struct Board {
     /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
     public func pieces(player: Player) -> [(Piece, Location)] {
         var result = [(Piece, Location)]()
+        result.reserveCapacity(16)
         for squareIndex in 0..<squares.count {
             if let piece = squares[squareIndex], piece.player == player {
                 result.append((piece, Location(squareIndex: squareIndex)))

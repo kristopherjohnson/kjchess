@@ -18,7 +18,7 @@ class PositionTests: XCTestCase {
         let undo = pos2.apply(.move(piece: WP, from: e2, to: e4))
 
         XCTAssertEqual(WP, pos2.board[e4])
-        XCTAssertEqual(nil, pos2.board[e2])
+        XCTAssertEqual(xx, pos2.board[e2])
 
         pos2.unapply(undo)
 

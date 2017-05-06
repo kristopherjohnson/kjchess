@@ -7,6 +7,7 @@
 
 /// Which player, white or black?
 public enum Player {
+    case empty
     case white
     case black
 
@@ -14,6 +15,9 @@ public enum Player {
         switch self {
         case .white: return "W"
         case .black: return "B"
+        case .empty:
+            assert(false)
+            return " "
         }
     }
 
@@ -21,6 +25,9 @@ public enum Player {
         switch self {
         case .white: return .black
         case .black: return .white
+        case .empty:
+            assert(false)
+            return .empty
         }
     }
 }
@@ -32,6 +39,7 @@ extension Player: CustomStringConvertible {
         switch self {
         case .white: return "white"
         case .black: return "black"
+        case .empty: return "(empty)"
         }
     }
 }

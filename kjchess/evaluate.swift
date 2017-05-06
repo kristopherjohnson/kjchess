@@ -37,7 +37,11 @@ extension Board {
     /// The score combines the material value of the piece with
     /// a value based upon its current location.
     private func pieceSquareValue(squareIndex: Int) -> Double {
-        guard let piece = squares[squareIndex] else { return 0.0 }
+        let piece = squares[squareIndex]
+
+        if piece.isEmpty {
+            return 0.0
+        }
 
         let materialValue = piece.materialValue
         let squareValue = Board.squareValues(piece: piece)[squareIndex]
@@ -64,10 +68,23 @@ extension Board {
         case (.black, .rook):   return BRSquareValues
         case (.black, .queen):  return BQSquareValues
         case (.black, .king):   return BKSquareValues
+
+        default:                return emptySquareValues
         }
     }
 
     // MARK:- Piece-square tables
+
+    private static let emptySquareValues = [
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+        0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00, 0.00,
+    ]
 
     // White Pawn
     private static let WPSquareValues = [
@@ -230,7 +247,8 @@ extension Piece {
         case .bishop: return 3.3
         case .rook:   return 5.0
         case .queen:  return 9.0
-        case .king:   return 20000.0
+        case .king:   return 200.0
+        case .empty:  return 0.0
         }
     }
 }

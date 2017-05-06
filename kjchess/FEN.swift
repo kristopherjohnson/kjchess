@@ -27,17 +27,12 @@ extension Board {
         self.squares = try Board.squares(fenRanks: ranks)
     }
 
-    private static func fenSquare(piece: Piece?) -> String {
-        if let piece = piece {
-            return piece.fen
-        }
-        else {
-            return "1"
-        }
+    private static func fenSquare(piece: Piece) -> String {
+        return piece.fen
     }
 
-    private static func squares(fenRanks: [String]) throws -> [Piece?] {
-        var result = [Piece?]()
+    private static func squares(fenRanks: [String]) throws -> [Piece] {
+        var result = [Piece]()
         result.reserveCapacity(squaresCount)
 
         for i in 0..<ranksCount {
@@ -68,23 +63,23 @@ extension Board {
         return rankString
     }
 
-    private static func rankSquares(fenRank: String) throws -> [Piece?] {
+    private static func rankSquares(fenRank: String) throws -> [Piece] {
         if fenRank == "8" {
-            return [Piece?](repeating: nil, count: 8)
+            return [Piece](repeating: xx, count: 8)
         }
 
-        var result = [Piece?]()
+        var result = [Piece]()
         result.reserveCapacity(filesCount)
 
         for char in fenRank.characters {
             switch char {
-            case "1": result.append(nil)
-            case "2": result.appendRepeating(element: nil, count: 2)
-            case "3": result.appendRepeating(element: nil, count: 3)
-            case "4": result.appendRepeating(element: nil, count: 4)
-            case "5": result.appendRepeating(element: nil, count: 5)
-            case "6": result.appendRepeating(element: nil, count: 6)
-            case "7": result.appendRepeating(element: nil, count: 7)
+            case "1": result.append(xx)
+            case "2": result.appendRepeating(element: xx, count: 2)
+            case "3": result.appendRepeating(element: xx, count: 3)
+            case "4": result.appendRepeating(element: xx, count: 4)
+            case "5": result.appendRepeating(element: xx, count: 5)
+            case "6": result.appendRepeating(element: xx, count: 6)
+            case "7": result.appendRepeating(element: xx, count: 7)
 
             case "P": result.append(WP)
             case "N": result.append(WN)
@@ -131,6 +126,10 @@ extension Piece {
         case (.black, .rook):   return "r"
         case (.black, .queen):  return "q"
         case (.black, .king):   return "k"
+        case (.empty, .empty):  return "1"
+        default:
+            assert(false)
+            return "1"
         }
     }
 }

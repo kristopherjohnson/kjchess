@@ -49,7 +49,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
             let brd = pos.board
             XCTAssertEqual(WQ, brd[e8])
-            XCTAssertNil(brd[e7])
+            XCTAssertEqual(xx, brd[e7])
         }
         catch (let error) {
             XCTFail(error.localizedDescription)
@@ -65,7 +65,7 @@ class Position_after_coordinateMoveTests: XCTestCase {
 
             let brd = pos.board
             XCTAssertEqual(WN, brd[e8])
-            XCTAssertNil(brd[e7])
+            XCTAssertEqual(xx, brd[e7])
         }
         catch (let error) {
             XCTFail(error.localizedDescription)

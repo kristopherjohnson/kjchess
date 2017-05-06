@@ -22,7 +22,7 @@ public func bestMove(position: Position, searchDepth: Int = 1, concurrentTasks: 
     moves.shuffle()
 
     var bestMoves = [(Move, [Move])]()
-    var bestScore: Double
+    var bestScore = 0.0
 
     let queue = DispatchQueue(label: "bestMove")
     let group = DispatchGroup()
@@ -74,6 +74,8 @@ public func bestMove(position: Position, searchDepth: Int = 1, concurrentTasks: 
                 }
             }
         }
+    case .empty:
+        assert(false)
     }
 
     group.wait()
@@ -149,6 +151,9 @@ private func minimaxSearch(position: inout Position, depth: Int, alpha: Double, 
                 break // alpha cut-off
             }
         }
+    case .empty:
+        assert(false)
+        bestScore = 0.0
     }
 
     return (bestScore, pv)

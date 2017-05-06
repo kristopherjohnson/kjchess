@@ -59,19 +59,22 @@ extension Position {
         case .bishop: addBishopMoves(piece: piece, location: location, to: &moves)
         case .queen:  addQueenMoves(piece: piece, location: location, to: &moves)
         case .king:   addKingMoves(piece: piece, location: location, to: &moves)
+        case .empty:  break
         }
     }
 
     private func addSlideMoves(piece: Piece, location: Location, vectors: [(Int, Int)],
                                to moves: inout [Move]) {
         let player = piece.player
+        let opponent = player.opponent
 
         for (h, v) in vectors {
             var file = location.file + h
             var rank = location.rank + v
             while let targetLocation = Location.ifValid(file: file, rank: rank) {
-                if let occupant = board[targetLocation] {
-                    if occupant.player != player {
+                let occupant = board[targetLocation]
+                if !occupant.isEmpty {
+                    if occupant.player == opponent {
                         moves.append(.capture(piece: piece,
                                               from: location,
                                               to: targetLocation,
@@ -97,6 +100,7 @@ extension Position {
         switch player {
         case .white: return whitePawnCaptureMoves
         case .black: return blackPawnCaptureMoves
+        case .empty: return []
         }
     }
 
@@ -104,6 +108,7 @@ extension Position {
         switch player {
         case .white: return 1
         case .black: return -1
+        case .empty: return 0
         }
     }
 
@@ -111,6 +116,7 @@ extension Position {
         switch player {
         case .white: return Board.maxRank
         case .black: return Board.minRank
+        case .empty: return 0
         }
     }
 
@@ -118,6 +124,7 @@ extension Position {
         switch player {
         case .white: return Board.minRank + 1
         case .black: return Board.maxRank - 1
+        case .empty: return 0
         }
     }
 
@@ -161,7 +168,8 @@ extension Position {
             let captureMoves = Position.pawnCaptureMoves(player: player)
             for (h, v) in captureMoves {
                 if let captureLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                    if let occupant = board[captureLocation] {
+                    let occupant = board[captureLocation]
+                    if !occupant.isEmpty {
                         if occupant.player == opponent {
                             if captureLocation.rank == promotionRank {
                                 for kind in PieceKind.promotionKinds {
@@ -208,7 +216,8 @@ extension Position {
 
         for (h, v) in Position.knightJumps {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                if let occupant = board[targetLocation] {
+                let occupant = board[targetLocation]
+                if !occupant.isEmpty {
                     if occupant.player != player {
                         moves.append(.capture(piece: piece,
                                               from: location,
@@ -217,7 +226,9 @@ extension Position {
                     }
                 }
                 else {
-                    moves.append(.move(piece: piece, from: location, to: targetLocation))
+                    moves.append(.move(piece: piece,
+                                       from: location,
+                                       to: targetLocation))
                 }
             }
         }
@@ -286,7 +297,8 @@ extension Position {
 
         for (h, v) in Position.eightDirections {
             if let targetLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                if let occupant = board[targetLocation] {
+                let occupant = board[targetLocation]
+                if !occupant.isEmpty {
                     if occupant.player != player {
                         moves.append(.capture(piece: piece,
                                                from: location,
@@ -306,8 +318,8 @@ extension Position {
         case .white:
             if whiteCanCastleKingside &&
                 board[e1] == WK &&
-                board[f1] == nil &&
-                board[g1] == nil &&
+                board[f1].isEmpty &&
+                board[g1].isEmpty &&
                 board[h1] == WR
             {
                 moves.append(.castleKingside(player: player))
@@ -315,9 +327,9 @@ extension Position {
 
             if whiteCanCastleQueenside &&
                 board[e1] == WK &&
-                board[d1] == nil &&
-                board[c1] == nil &&
-                board[b1] == nil &&
+                board[d1].isEmpty &&
+                board[c1].isEmpty &&
+                board[b1].isEmpty &&
                 board[a1] == WR
             {
                 moves.append(.castleQueenside(player: player))
@@ -326,8 +338,8 @@ extension Position {
         case .black:
             if blackCanCastleKingside &&
                 board[e8] == BK &&
-                board[f8] == nil &&
-                board[g8] == nil &&
+                board[f8].isEmpty &&
+                board[g8].isEmpty &&
                 board[h8] == BR
             {
                 moves.append(.castleKingside(player: player))
@@ -335,13 +347,17 @@ extension Position {
 
             if blackCanCastleQueenside &&
                 board[e8] == BK &&
-                board[d8] == nil &&
-                board[c8] == nil &&
-                board[b8] == nil &&
+                board[d8].isEmpty &&
+                board[c8].isEmpty &&
+                board[b8].isEmpty &&
                 board[a8] == BR
             {
                 moves.append(.castleQueenside(player: player))
             }
+
+        case .empty:
+            assert(false)
+            break
         }
     }
 
@@ -405,10 +421,9 @@ extension Position {
         // Check for knight attack.
         for (h, v) in Position.knightJumps {
             if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                if let attacker = board[attackerLocation] {
-                    if attacker.player == player && attacker.kind == .knight {
-                        return true
-                    }
+                let attacker = board[attackerLocation]
+                if attacker.player == player && attacker.kind == .knight {
+                    return true
                 }
             }
         }
@@ -436,10 +451,9 @@ extension Position {
         // Check for attack by king.
         for (h, v) in Position.eightDirections {
             if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                if let attacker = board[attackerLocation] {
-                    if attacker.player == player && attacker.kind == .king {
-                        return true
-                    }
+                let attacker = board[attackerLocation]
+                if attacker.player == player && attacker.kind == .king {
+                    return true
                 }
             }
         }
@@ -447,10 +461,9 @@ extension Position {
         // Check for attack by pawn.
         for (h, v) in Position.pawnCaptureMoves(player: player) {
             if let attackerLocation = Location.ifValid(file: file - h, rank: rank - v) {
-                if let attacker = board[attackerLocation] {
-                    if attacker.player == player && attacker.kind == .pawn {
-                        return true
-                    }
+                let attacker = board[attackerLocation]
+                if attacker.player == player && attacker.kind == .pawn {
+                    return true
                 }
             }
         }
@@ -467,7 +480,8 @@ extension Position {
         var file = location.file + h
         var rank = location.rank + v
         while let attackerLocation = Location.ifValid(file: file, rank: rank) {
-            if let attacker = board[attackerLocation] {
+            let attacker = board[attackerLocation]
+            if !attacker.isEmpty {
                 if attacker.player == player {
                     return kinds.contains(attacker.kind)
                 }

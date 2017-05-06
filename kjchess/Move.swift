@@ -111,6 +111,9 @@ public enum Move {
             switch player {
             case .white: return e1
             case .black: return e8
+            case .empty:
+                assert(false)
+                return a1
             }
         }
     }
@@ -138,16 +141,25 @@ public enum Move {
             switch player {
             case .white: return g1
             case .black: return g8
+            case .empty:
+                assert(false)
+                return a1
             }
         case .castleQueenside(let player):
             switch player {
             case .white: return c1
             case .black: return c8
+            case .empty:
+                assert(false)
+                return a1
             }
         case .resign(let player):
             switch player {
             case .white: return e1
             case .black: return e8
+            case .empty:
+                assert(false)
+                return a1
             }
         }
     }
@@ -342,12 +354,18 @@ public enum Move {
             switch player {
             case .white: return "e1g1"
             case .black: return "e8g8"
+            case .empty:
+                assert(false)
+                return "0000"
             }
 
         case .castleQueenside(let player):
             switch player {
             case .white: return "e1c1"
             case .black: return "e8c8"
+            case .empty:
+                assert(false)
+                return "0000"
             }
 
         case .resign:

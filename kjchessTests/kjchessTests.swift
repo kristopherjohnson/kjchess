@@ -55,7 +55,7 @@ class kjchessTests: XCTestCase {
 
         for rank in 2...5 {
             for file in 0...7 {
-                XCTAssertNil(b.at(file: file, rank: rank))
+                XCTAssertEqual(xx, b.at(file: file, rank: rank))
             }
         }
     }

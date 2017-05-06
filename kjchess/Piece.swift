@@ -7,6 +7,7 @@
 
 /// The type of piece.
 public enum PieceKind {
+    case empty
     case pawn
     case knight
     case bishop
@@ -27,6 +28,9 @@ public enum PieceKind {
         case .rook:   return "R"
         case .queen:  return "Q"
         case .king:   return "K"
+        case .empty:
+            assert(false)
+            return " "
         }
     }
 
@@ -39,6 +43,9 @@ public enum PieceKind {
         case .rook:   return "r"
         case .queen:  return "q"
         case .king:   return "k"
+        case .empty:
+            assert(false)
+            return " "
         }
     }
 
@@ -68,6 +75,7 @@ extension PieceKind: CustomStringConvertible {
         case .rook:   return "rook"
         case .queen:  return "queen"
         case .king:   return "king"
+        case .empty:  return "(empty)"
         }
     }
 }
@@ -86,6 +94,10 @@ public struct Piece {
         return "\(player.symbol)\(kind.symbol)"
     }
 
+    public var isEmpty: Bool {
+        return player == .empty
+    }
+
     /// Return Unicode character for this piece.
     public var figurine: String {
         switch (player, kind) {
@@ -95,12 +107,17 @@ public struct Piece {
         case (.white, .bishop): return "♗"
         case (.white, .knight): return "♘"
         case (.white, .pawn):   return "♙"
+
         case (.black, .king):   return "♚"
         case (.black, .queen):  return "♛"
         case (.black, .rook):   return "♜"
         case (.black, .bishop): return "♝"
         case (.black, .knight): return "♞"
         case (.black, .pawn):   return "♟"
+
+        default:
+            assert(false)
+            return " "
         }
     }
 }
@@ -137,6 +154,11 @@ extension Piece: Hashable {
         return (player.hashValue << 3) | kind.hashValue
     }
 }
+
+// MARK:- Global variables for pieces.
+
+/// Empty square.
+public let xx = Piece(.empty, .empty)
 
 public let WP = Piece(.white, .pawn)
 public let WN = Piece(.white, .knight)

@@ -265,6 +265,9 @@ extension Position { // MARK:- FEN
         switch toMove {
         case .white: return "w"
         case .black: return "b"
+        case .empty:
+            assert(false)
+            return ""
         }
     }
 

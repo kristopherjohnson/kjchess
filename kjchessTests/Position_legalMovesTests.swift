@@ -37,8 +37,8 @@ class Position_legalMovesTests: XCTestCase {
     }
 
     func testBlackNewGameMoves() {
-        let board = Board.newGame.with((WP,  e4),
-                                       (nil, e2))
+        let board = Board.newGame.with((WP, e4),
+                                       (xx, e2))
 
         var pos = Position(board: board, toMove: .black)
 

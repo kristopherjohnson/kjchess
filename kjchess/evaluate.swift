@@ -27,7 +27,7 @@ extension Board {
     /// See <https://chessprogramming.wikispaces.com/Simplified+evaluation+function>
     /// for more details.
     public func pieceSquareValue() -> Double {
-        return (0..<squares.count).reduce(0.0, { (acc, i) in
+        return (0..<Board.squaresCount).reduce(0.0, { (acc, i) in
             return acc + pieceSquareValue(squareIndex: i)
         })
     }
@@ -37,7 +37,7 @@ extension Board {
     /// The score combines the material value of the piece with
     /// a value based upon its current location.
     private func pieceSquareValue(squareIndex: Int) -> Double {
-        let piece = squares[squareIndex]
+        let piece = self[squareIndex]
 
         if piece.isEmpty {
             return 0.0

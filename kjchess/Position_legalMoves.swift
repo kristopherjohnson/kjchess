@@ -72,18 +72,20 @@ extension Position {
             var file = location.file + h
             var rank = location.rank + v
             while let targetLocation = Location.ifValid(file: file, rank: rank) {
-                let occupant = board[targetLocation]
-                if !occupant.isEmpty {
-                    if occupant.player == opponent {
+                let occupantPlayer = board.player[targetLocation.squareIndex]
+                if occupantPlayer != .empty {
+                    if occupantPlayer == opponent {
                         moves.append(.capture(piece: piece,
                                               from: location,
                                               to: targetLocation,
-                                              captured: occupant.kind))
+                                              captured: board.kind[targetLocation.squareIndex]))
                     }
                     break
                 }
                 else {
-                    moves.append(.move(piece: piece, from: location, to: targetLocation))
+                    moves.append(.move(piece: piece,
+                                       from: location,
+                                       to: targetLocation))
                     file = file + h
                     rank = rank + v
                 }
@@ -168,15 +170,15 @@ extension Position {
             let captureMoves = Position.pawnCaptureMoves(player: player)
             for (h, v) in captureMoves {
                 if let captureLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                    let occupant = board[captureLocation]
-                    if !occupant.isEmpty {
-                        if occupant.player == opponent {
+                    let occupantPlayer = board.player[captureLocation.squareIndex]
+                    if occupantPlayer != .empty {
+                        if occupantPlayer == opponent {
                             if captureLocation.rank == promotionRank {
                                 for kind in PieceKind.promotionKinds {
                                     moves.append(.promoteCapture(player: player,
                                                                  from: location,
                                                                  to: captureLocation,
-                                                                 captured: occupant.kind,
+                                                                 captured: board.kind[captureLocation.squareIndex],
                                                                  promoted: kind))
                                 }
                             }
@@ -184,7 +186,7 @@ extension Position {
                                 moves.append(.capture(piece: piece,
                                                       from: location,
                                                       to: captureLocation,
-                                                      captured: occupant.kind))
+                                                      captured: board.kind[captureLocation.squareIndex]))
                             }
                         }
                     }
@@ -421,8 +423,8 @@ extension Position {
         // Check for knight attack.
         for (h, v) in Position.knightJumps {
             if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                let attacker = board[attackerLocation]
-                if attacker.player == player && attacker.kind == .knight {
+                let attacker = board.player[attackerLocation.squareIndex]
+                if attacker == player && board.kind[attackerLocation.squareIndex] == .knight {
                     return true
                 }
             }
@@ -451,8 +453,8 @@ extension Position {
         // Check for attack by king.
         for (h, v) in Position.eightDirections {
             if let attackerLocation = Location.ifValid(file: file + h, rank: rank + v) {
-                let attacker = board[attackerLocation]
-                if attacker.player == player && attacker.kind == .king {
+                let attacker = board.player[attackerLocation.squareIndex]
+                if attacker == player && board.kind[attackerLocation.squareIndex] == .king {
                     return true
                 }
             }
@@ -461,8 +463,8 @@ extension Position {
         // Check for attack by pawn.
         for (h, v) in Position.pawnCaptureMoves(player: player) {
             if let attackerLocation = Location.ifValid(file: file - h, rank: rank - v) {
-                let attacker = board[attackerLocation]
-                if attacker.player == player && attacker.kind == .pawn {
+                let attacker = board.player[attackerLocation.squareIndex]
+                if attacker == player && board.kind[attackerLocation.squareIndex] == .pawn {
                     return true
                 }
             }
@@ -480,10 +482,10 @@ extension Position {
         var file = location.file + h
         var rank = location.rank + v
         while let attackerLocation = Location.ifValid(file: file, rank: rank) {
-            let attacker = board[attackerLocation]
-            if !attacker.isEmpty {
-                if attacker.player == player {
-                    return kinds.contains(attacker.kind)
+            let attacker = board.player[attackerLocation.squareIndex]
+            if attacker != .empty {
+                if attacker == player {
+                    return kinds.contains(board.kind[attackerLocation.squareIndex])
                 }
 
                 return false

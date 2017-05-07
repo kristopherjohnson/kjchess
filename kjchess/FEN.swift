@@ -24,7 +24,9 @@ extension Board {
             throw ChessError.fenStringRequiresExactlyEightRanks(fenBoard: fenBoard)
         }
 
-        self.squares = try Board.squares(fenRanks: ranks)
+        let squares = try Board.squares(fenRanks: ranks)
+        self.player = squares.map { $0.player }
+        self.kind = squares.map { $0.kind }
     }
 
     private static func fenSquare(piece: Piece) -> String {

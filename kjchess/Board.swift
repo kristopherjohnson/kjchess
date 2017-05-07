@@ -51,31 +51,62 @@ public struct Board {
                  BP,  BP,  BP,  BP,  BP,  BP,  BP,  BP,
                  BR,  BN,  BB,  BQ,  BK,  BB,  BN,  BR])
 
-    /// The array that holds the board state.
+    /// The arrays that hold the board state.
     ///
-    /// The array has 64 elements.  The first 8 are for squares
+    /// Each array has 64 elements.  The first 8 are for squares
     /// a1-a8, the next 8 are for b1-b8, and so on.
     ///
-    /// `squares` is not marked `public` or `private`.  It should
-    /// be treated as if it's `private` to the `Board` type and
+    /// The arrays are not marked `public` or `private`.  They
+    /// should be treated as `private` to the `Board` type and
     /// its extensions, but Swift 3 doesn't provide that kind of
     /// access control specification.
-    var squares: [Piece]
+
+    var player: [Player]
+    var kind: [PieceKind]
 
     public init(_ squares: [Piece]) {
         assert(squares.count == Board.squaresCount,
                "Number of squares must be 64")
-        self.squares = squares
+        self.player = squares.map { $0.player }
+        self.kind = squares.map { $0.kind }
+    }
+
+    public init(_ playerArray: [Player], _ kindArray: [PieceKind]) {
+        assert(playerArray.count == Board.squaresCount,
+               "Number of Player elements must be 64")
+        assert(kindArray.count == Board.squaresCount,
+               "Number of PieceKind elements must be 64")
+        self.player = playerArray
+        self.kind = kindArray
     }
 
     /// Return `Piece` at the specified `Location`.
-    public subscript(location: Location) -> Piece {
-        return squares[location.squareIndex]
+    public private(set) subscript(location: Location) -> Piece {
+        get {
+            let index = location.squareIndex
+            return Piece(player[index], kind[index])
+        }
+        set {
+            let index = location.squareIndex
+            player[index] = newValue.player
+            kind[index] = newValue.kind
+        }
+    }
+
+    private(set) subscript(squareIndex: Int) -> Piece {
+        get {
+            return Piece(player[squareIndex], kind[squareIndex])
+        }
+        set {
+            player[squareIndex] = newValue.player
+            kind[squareIndex] = newValue.kind
+        }
     }
 
     /// Return `Piece` at the specified location.
     public func at(file: Int, rank: Int) -> Piece {
-        return squares[rank * Board.filesCount + file]
+        let index = rank * Board.filesCount + file
+        return Piece(player[index], kind[index])
     }
 
     /// Return `Piece` at the specified location if it is not empty.
@@ -86,7 +117,7 @@ public struct Board {
 
     /// Return `true` if specified `Location` has no piece on it.
     public func isEmpty(_ location: Location) -> Bool {
-        return squares[location.squareIndex].isEmpty
+        return player[location.squareIndex] == .empty
     }
 
     /// Return `true` if specified square has no piece on it.
@@ -113,34 +144,34 @@ public struct Board {
 
         case .move(let piece, let from, let to),
              .capture(let piece, let from, let to, _):
-            squares[from.squareIndex] = xx
-            squares[to.squareIndex] = piece
+            self[from] = xx
+            self[to] = piece
 
         case .promote(let player, let from, let to, let promoted),
              .promoteCapture(let player, let from, let to, _, let promoted):
-            squares[from.squareIndex] = xx
-            squares[to.squareIndex] = Piece(player, promoted)
+            self[from] = xx
+            self[to] = Piece(player, promoted)
 
         case .enPassantCapture(let player, let from, let to):
             let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
             let capturedPawnLocation = Location(to.file, captureRank)
-            squares[from.squareIndex] = xx
-            squares[capturedPawnLocation.squareIndex] = xx
-            squares[to.squareIndex] = Piece(player, .pawn)
+            self[from] = xx
+            self[capturedPawnLocation] = xx
+            self[to] = Piece(player, .pawn)
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                squares[e1.squareIndex] = xx
-                squares[h1.squareIndex] = xx
-                squares[f1.squareIndex] = WR
-                squares[g1.squareIndex] = WK
+                self[e1] = xx
+                self[h1] = xx
+                self[f1] = WR
+                self[g1] = WK
 
             case .black:
-                squares[e8.squareIndex] = xx
-                squares[h8.squareIndex] = xx
-                squares[f8.squareIndex] = BR
-                squares[g8.squareIndex] = BK
+                self[e8] = xx
+                self[h8] = xx
+                self[f8] = BR
+                self[g8] = BK
 
             case .empty:
                 assert(false)
@@ -150,16 +181,16 @@ public struct Board {
         case .castleQueenside(let player):
             switch player {
             case .white:
-                squares[e1.squareIndex] = xx
-                squares[a1.squareIndex] = xx
-                squares[d1.squareIndex] = WR
-                squares[c1.squareIndex] = WK
+                self[e1] = xx
+                self[a1] = xx
+                self[d1] = WR
+                self[c1] = WK
 
             case .black:
-                squares[e8.squareIndex] = xx
-                squares[a8.squareIndex] = xx
-                squares[d8.squareIndex] = BR
-                squares[c8.squareIndex] = BK
+                self[e8] = xx
+                self[a8] = xx
+                self[d8] = BR
+                self[c8] = BK
 
             case .empty:
                 assert(false)
@@ -177,41 +208,41 @@ public struct Board {
         switch move {
 
         case .move(let piece, let from, let to):
-            squares[from.squareIndex] = piece
-            squares[to.squareIndex] = xx
+            self[from] = piece
+            self[to] = xx
 
         case .capture(let piece, let from, let to, let capturedKind):
-            squares[from.squareIndex] = piece
-            squares[to.squareIndex] = Piece(piece.player.opponent, capturedKind)
+            self[from] = piece
+            self[to] = Piece(piece.player.opponent, capturedKind)
 
         case .promote(let player, let from, let to, _):
-            squares[from.squareIndex] = Piece(player, .pawn)
-            squares[to.squareIndex] = xx
+            self[from] = Piece(player, .pawn)
+            self[to] = xx
 
         case .promoteCapture(let player, let from, let to, let capturedKind, _):
-            squares[from.squareIndex] = Piece(player, .pawn)
-            squares[to.squareIndex] = Piece(player.opponent, capturedKind)
+            self[from] = Piece(player, .pawn)
+            self[to] = Piece(player.opponent, capturedKind)
 
         case .enPassantCapture(let player, let from, let to):
             let captureRank = (player == .white) ? to.rank - 1 : to.rank + 1
             let capturedPawnLocation = Location(to.file, captureRank)
-            squares[from.squareIndex] = Piece(player, .pawn)
-            squares[capturedPawnLocation.squareIndex] = Piece(player.opponent, .pawn)
-            squares[to.squareIndex] = xx
+            self[from] = Piece(player, .pawn)
+            self[capturedPawnLocation] = Piece(player.opponent, .pawn)
+            self[to] = xx
 
         case .castleKingside(let player):
             switch player {
             case .white:
-                squares[e1.squareIndex] = WK
-                squares[h1.squareIndex] = WR
-                squares[f1.squareIndex] = xx
-                squares[g1.squareIndex] = xx
+                self[e1] = WK
+                self[h1] = WR
+                self[f1] = xx
+                self[g1] = xx
 
             case .black:
-                squares[e8.squareIndex] = BK
-                squares[h8.squareIndex] = BR
-                squares[f8.squareIndex] = xx
-                squares[g8.squareIndex] = xx
+                self[e8] = BK
+                self[h8] = BR
+                self[f8] = xx
+                self[g8] = xx
 
             case .empty:
                 assert(false)
@@ -220,16 +251,16 @@ public struct Board {
         case .castleQueenside(let player):
             switch player {
             case .white:
-                squares[e1.squareIndex] = WK
-                squares[a1.squareIndex] = WR
-                squares[d1.squareIndex] = xx
-                squares[c1.squareIndex] = xx
+                self[e1] = WK
+                self[a1] = WR
+                self[d1] = xx
+                self[c1] = xx
 
             case .black:
-                squares[e8.squareIndex] = BK
-                squares[a8.squareIndex] = BR
-                squares[d8.squareIndex] = xx
-                squares[c8.squareIndex] = xx
+                self[e8] = BK
+                self[a8] = BR
+                self[d8] = xx
+                self[c8] = xx
 
             case .empty:
                 assert(false)
@@ -242,30 +273,35 @@ public struct Board {
 
     /// Return copy of board with the given `Piece` at the given `Location`.
     public func with(_ piece: Piece, _ location: Location) -> Board {
-        var newSquares = Array(squares)
-        newSquares[location.squareIndex] = piece
+        var newPlayer = Array(player)
+        var newKind = Array(kind)
 
-        return Board(newSquares)
+        newPlayer[location.squareIndex] = piece.player
+        newKind[location.squareIndex] = piece.kind
+
+        return Board(newPlayer, newKind)
     }
 
     /// Return copy of board with the given `Pieces` at the given `Locations`.
     public func with(_ pieceLocations: (Piece, Location)...) -> Board {
-        var newSquares = Array(squares)
+        var newPlayer = Array(player)
+        var newKind = Array(kind)
 
         for (piece, location) in pieceLocations {
-            newSquares[location.squareIndex] = piece
+            newPlayer[location.squareIndex] = piece.player
+            newKind[location.squareIndex] = piece.kind
         }
 
-        return Board(newSquares)
+        return Board(newPlayer, newKind)
     }
 
     /// Return array of (`Piece`, `Location`) tuples indicating pieces for the specified player.
-    public func pieces(player: Player) -> [(Piece, Location)] {
+    public func pieces(player p: Player) -> [(Piece, Location)] {
         var result = [(Piece, Location)]()
         result.reserveCapacity(16)
-        for squareIndex in 0..<squares.count {
-            let piece = squares[squareIndex]
-            if piece.player == player {
+        for squareIndex in 0..<Board.squaresCount {
+            if player[squareIndex] == p {
+                let piece = Piece(p, kind[squareIndex])
                 result.append((piece, Location(squareIndex: squareIndex)))
             }
         }
@@ -275,11 +311,9 @@ public struct Board {
     /// Return location of the given player's king, or nil if there is no king on the board.
     ///
     /// If there is more than one king of the given color, returns the first one found.
-    public func kingLocation(player: Player) -> Location? {
-        let king = Piece(player, .king)
-        for squareIndex in 0..<squares.count {
-            let piece = squares[squareIndex]
-            if piece == king {
+    public func kingLocation(player p: Player) -> Location? {
+        for squareIndex in 0..<Board.squaresCount {
+            if kind[squareIndex] == .king  && player[squareIndex] == p {
                 return Location(squareIndex: squareIndex)
             }
         }
@@ -290,12 +324,8 @@ public struct Board {
 // MARK:- Equatable
 extension Board: Equatable {}
 public func ==(lhs: Board, rhs: Board) -> Bool {
-    if lhs.squares.count != rhs.squares.count {
-        return false
-    }
-
-    for i in 0..<lhs.squares.count {
-        if !(lhs.squares[i] == rhs.squares[i]) {
+    for i in 0..<Board.squaresCount {
+        if !(lhs.kind[i] == rhs.kind[i] && lhs.player[i] == rhs.player[i]) {
             return false
         }
     }
